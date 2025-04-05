@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}Receipts{% endblock %}
+{% block content %}
+<style>
+    body {
+        background: url("{{ url_for('static', filename='360_F_287658121_EGUothkFQW7j1bHooOoEagnGgGZYlzJp.jpg') }}") no-repeat center center fixed;
+        background-size: cover;
+    }
+    .container {
+        background: rgba(255, 255, 255, 0.9); /* Semi-transparent white for readability */
+    }
+</style>
+
+<h1>Manage Receipts</h1>
+
+<h2>Upload Receipt</h2>
+<form method="POST" action="{{ url_for('upload_receipt') }}" enctype="multipart/form-data">
+    <div class="mb-3">
+        <input type="file" class="form-control" name="receipt_image" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload Receipt</button>
+</form>
+
+<h2>Receipt Database</h2>
+{% if receipt_items %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Weight</th>
+            <th>Category</th>
+            <th>Purchase Date</th>
+            <th>Expiration Date</th>
+            <th>Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in receipt_items %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ item.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.weight }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.purchase_date }}</td>
+            <td>{{ item.expiration_date }}</td>
+            <td>
+                <button class="btn btn-sm btn-warning" onclick="editRow({{loop.index}})">Edit</button>
+            </td>
+        </tr>
+        <tr id="edit-{{ loop.index }}" style="display: none;">
+            <form method="POST" action="{{ url_for('edit_receipt', item_id=loop.index) }}">
+                <td>{{ loop.index }}</td>
+                <td><input type="text" name="name" value="{{ item.name }}" class="form-control"></td>
+                <td><input type="number" name="quantity" value="{{ item.quantity }}" class="form-control"></td>
+                <td><input type="number" name="weight" value="{{ item.weight }}" step="0.1" class="form-control"></td>
+                <td><input type="text" name="category" value="{{ item.category }}" class="form-control"></td>
+                <td><input type="date" name="purchase_date" value="{{ item.purchase_date }}" class="form-control"></td>
+                <td><input type="date" name="expiration_date" value="{{ item.expiration_date }}" class="form-control"></td>
+                <td><button type="submit" class="btn btn-sm btn-success">Save</button></td>
+            </form>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No receipt items found.</p>
+{% endif %}
+
+<script>
+    function editRow(id) {
+        const row = document.getElementById(`edit-${id}`);
+        row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+    }
+</script>
+{% endblock %}

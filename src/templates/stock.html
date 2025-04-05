@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Stock{% endblock %}
+{% block content %}
+<h1>Manage Stock</h1>
+
+<h2>Upload Stock</h2>
+<form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data">
+    <div class="mb-3">
+        <input type="file" class="form-control" name="stock_image" accept="image/*" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Upload Stock</button>
+</form>
+
+<h2>Stock Database</h2>
+{% if stock_items %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Weight</th>
+            <th>Category</th>
+            <th>Shelf Life (days)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in stock_items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.weight }}</td>
+            <td>{{ item.category }}</td>
+            <td>{{ item.shelf_life }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No stock items found.</p>
+{% endif %}
+{% endblock %}
