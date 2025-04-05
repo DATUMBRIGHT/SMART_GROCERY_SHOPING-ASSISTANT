@@ -1,0 +1,9 @@
+flask
+pydantic
+google-generativeai
+matplotlib
+pandas
+sentence-transformers 
+faiss-cpu 
+requests 
+numpy
