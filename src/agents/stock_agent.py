@@ -1,14 +1,36 @@
-import sqlite3
+import mysql.connector
 from pydantic import BaseModel, Field
 import google.generativeai as genai
 import os
 import json
+import yaml
+from dotenv import load_dotenv
+from datetime import datetime
 
 from loggers.custom_logger import logger
 
-# Database setup
-db_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'database')
-STOCK_DB_NAME = os.path.join(db_folder, 'stock.db')
+# Load environment variables and configuration
+load_dotenv()
+base_dir = os.path.dirname(os.path.abspath(__file__))
+config_file = os.path.join(base_dir, 'src', 'constants', 'config.yaml')
+
+with open(config_file, 'r') as file:
+    config = yaml.safe_load(file)
+    DB_NAME = config['database']['name']
+    HOST = config['database']['host']
+    USER = config['database']['user']
+    DB_PASSWORD = os.getenv('DB_PASSWORD')
+    PORT = config['database']['port']
+    GEMINI_MODEL = config['gemini']['model']
+
+# Database configuration
+db_config = {
+    "host": HOST,
+    "user": USER,
+    "password": DB_PASSWORD,
+    "database": DB_NAME,
+    "port": PORT
+}
 
 # Pydantic model for stock data validation
 class StockData(BaseModel):
@@ -18,14 +40,13 @@ class StockData(BaseModel):
     category: str = Field(..., description="Category of the item")
     shelf_life: int = Field(..., description="Shelf life of the item in days")
 
-
 # StockProcessorAgent class
 class StockProcessorAgent:
     def __init__(self, api_key):
         self.api_key = api_key
-        self.model_name = "gemini-1.5-flash"
+        self.model_name = GEMINI_MODEL
         genai.configure(api_key=self.api_key)
-        self.db_name = STOCK_DB_NAME
+        self.db_config = db_config
         # Create the table schema on initialization
         self.create_db_schema()
         logger.info("Database schema initialized.")
@@ -33,21 +54,23 @@ class StockProcessorAgent:
     def create_db_schema(self):
         """Create the database schema if it doesn't exist."""
         try:
-            conn = sqlite3.connect(self.db_name)
-            with conn:
-                conn.execute('''
-                    CREATE TABLE IF NOT EXISTS stock (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT,
-                        quantity INTEGER,
-                        weight TEXT,
-                        category TEXT,
-                        shelf_life INTEGER
-                    )
-                ''')
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS stock (
+                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    name TEXT,
+                    quantity INTEGER,
+                    weight TEXT,
+                    category TEXT,
+                    shelf_life INTEGER
+                )
+            ''')
+            conn.commit()
+            cursor.close()
             conn.close()
             logger.info("Database schema created successfully.")
-        except sqlite3.Error as e:
+        except mysql.connector.Error as e:
             logger.error(f"Error creating database schema: {e}")
             raise RuntimeError(f"Error creating database schema: {e}")
 
@@ -72,9 +95,9 @@ class StockProcessorAgent:
                 logger.info("Image read successfully.")
 
             prompt = (
-                "Extract all grocery items from the image, in exact format  (name, quantity, weight, "
-                "shelf_life, category) category e.g., fruit, vegetable, confectionery). Do not include price. "
-                "Shelf life is an estimate in days example 3, 2, 1, 375."
+                "Extract all grocery items from the image, in exact format 'name, quantity, weight, "
+                "shelf_life, category' (e.g., category: fruit, vegetable, confectionery). Do not include price. "
+                "Shelf life is an estimate in days (e.g., 3, 2, 1, 375). "
                 "If a grocery item doesn't have a quantity, set its quantity to 1. "
                 "If a grocery item doesn't have a weight, set its weight to 1.0. "
                 "Return the data in a well-structured JSON format, ready for DB insertion."
@@ -106,7 +129,7 @@ class StockProcessorAgent:
                     "name": item["name"],
                     "quantity": quantity,
                     "weight": weight,
-                    "category": item["category"],
+                     "category": item["category"],
                     "shelf_life": item["shelf_life"],
                 }
 
@@ -146,97 +169,97 @@ class StockProcessorAgent:
             raise ValueError("Data must be a list of dictionaries.")
 
         try:
-            # Create a new connection for this method
-            conn = sqlite3.connect(self.db_name)
-            
-            # Insert data into the table within a transaction
-            with conn:
-                for item in data:
-                    conn.execute('''
-                        INSERT INTO stock (name, quantity, weight, category, shelf_life)
-                        VALUES (?, ?, ?, ?, ?)
-                    ''', (item['name'], item['quantity'], item['weight'], item['category'], item['shelf_life']))
-            
-            # Close the connection when done
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            for item in data:
+                cursor.execute('''
+                    INSERT INTO stock (name, quantity, weight, category, shelf_life)
+                    VALUES (%s, %s, %s, %s, %s)
+                ''', (item['name'], item['quantity'], item['weight'], item['category'], item['shelf_life']))
+            conn.commit()
+            cursor.close()
             conn.close()
             logger.info("Data saved to database successfully.")
-
-        except sqlite3.Error as e:
+        except mysql.connector.Error as e:
             logger.error(f"Database error: {e}")
             raise RuntimeError(f"Database error: {e}")
-    
-    # Additional methods
+
     def fetch_all_items(self):
         """Fetch all items from the stock database."""
         try:
-            conn = sqlite3.connect(self.db_name)
-            cursor = conn.execute("SELECT id, name, quantity, weight, category, shelf_life FROM stock")
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("SELECT id, name, quantity, weight, category, shelf_life FROM stock")
             result = [
                 {
-                    "id": row[0], 
-                    "name": row[1], 
-                    "quantity": row[2], 
+                    "id": row[0],
+                    "name": row[1],
+                    "quantity": row[2],
                     "weight": row[3],
-                    "category": row[4], 
+                    "category": row[4],
                     "shelf_life": row[5]
                 }
                 for row in cursor.fetchall()
             ]
+            cursor.close()
             conn.close()
             return result
-        except sqlite3.Error as e:
+        except mysql.connector.Error as e:
             logger.error(f"Error fetching items: {e}")
             raise RuntimeError(f"Error fetching items: {e}")
-    
+
     def update_item(self, item_id, **kwargs):
         """Update a stock item with new values."""
         if not kwargs:
             logger.warning("No update data provided.")
             return
-            
+
         try:
             # Build the update SQL statement dynamically
             set_parts = []
             values = []
-            
+
             for key, value in kwargs.items():
                 if key in ["name", "quantity", "weight", "category", "shelf_life"]:
-                    set_parts.append(f"{key} = ?")
+                    set_parts.append(f"{key} = %s")
                     values.append(value)
-            
+
             if not set_parts:
                 logger.warning("No valid fields to update.")
                 return
-                
+
             values.append(item_id)  # Add the ID as the last parameter
-            
-            conn = sqlite3.connect(self.db_name)
-            with conn:
-                sql = f"UPDATE stock SET {', '.join(set_parts)} WHERE id = ?"
-                cursor = conn.execute(sql, values)
-                
-                if cursor.rowcount == 0:
-                    logger.warning(f"No item found with ID {item_id}.")
-                else:
-                    logger.info(f"Updated item ID {item_id}.")
-            
+
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            sql = f"UPDATE stock SET {', '.join(set_parts)} WHERE id = %s"
+            cursor.execute(sql, values)
+
+            if cursor.rowcount == 0:
+                logger.warning(f"No item found with ID {item_id}.")
+            else:
+                logger.info(f"Updated item ID {item_id}.")
+            conn.commit()
+            cursor.close()
             conn.close()
-            
-        except sqlite3.Error as e:
+
+        except mysql.connector.Error as e:
             logger.error(f"Error updating item: {e}")
             raise RuntimeError(f"Error updating item: {e}")
-    
+
     def delete_item(self, item_id):
         """Delete an item from the stock database."""
         try:
-            conn = sqlite3.connect(self.db_name)
-            with conn:
-                cursor = conn.execute("DELETE FROM stock WHERE id = ?", (item_id,))
-                if cursor.rowcount == 0:
-                    logger.warning(f"No item found with ID {item_id}.")
-                else:
-                    logger.info(f"Deleted item with ID {item_id}.")
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM stock WHERE id = %s", (item_id,))
+            if cursor.rowcount == 0:
+                logger.warning(f"No item found with ID {item_id}.")
+            else:
+                logger.info(f"Deleted item with ID {item_id}.")
+            conn.commit()
+            cursor.close()
             conn.close()
-        except sqlite3.Error as e:
+        except mysql.connector.Error as e:
             logger.error(f"Error deleting item: {e}")
             raise RuntimeError(f"Error deleting item: {e}")
