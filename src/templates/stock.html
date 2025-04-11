@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% block title %}Stock{% endblock %}
 {% block content %}
-<h1>Manage Stock</h1>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/stock.css') }}">
 
-<h2>Upload Stock</h2>
+
+<blockquote><h1>Manage Stock</h1>
+
+ 
+</blockquote>
+<h4> What do you have in your fridge today? </h4>
+
+
 <form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data">
     <div class="mb-3">
-        <input type="file" class="form-control" name="stock_image" accept="image/*" required>
+        <label for="stock_image" class="form-label">Upload Stock Image</label>
+        <input type="file" class="form-control" id="stock_image" name="stock_image" accept=".png,.jpeg,.jpg" required>
     </div>
     <button type="submit" class="btn btn-primary">Upload Stock</button>
 </form>
@@ -16,23 +24,33 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Quantity</th>
             <th>Weight</th>
             <th>Category</th>
             <th>Shelf Life (days)</th>
+            
         </tr>
     </thead>
     <tbody>
         {% for item in stock_items %}
-        <tr>
+        <tr id="row-{{ item.id }}">
+            <td>{{ item.id }}</td>
             <td>{{ item.name }}</td>
             <td>{{ item.quantity }}</td>
             <td>{{ item.weight }}</td>
             <td>{{ item.category }}</td>
             <td>{{ item.shelf_life }}</td>
+            
         </tr>
+       
+        
         {% endfor %}
+        <form method="POST" action="{{ url_for('delete_stock') }}">
+            {{ form.hidden_tag() }} <!-- CSRF Token for protection -->
+            <button type="submit" class="btn btn-danger">Clear Stock</button>
+        </form>
     </tbody>
 </table>
 {% else %}
