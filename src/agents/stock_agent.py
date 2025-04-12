@@ -11,10 +11,10 @@ from loggers.custom_logger import logger
 
 # Load environment variables and configuration
 load_dotenv()
-base_dir = os.path.dirname(os.path.abspath(__file__))
-config_file = os.path.join(base_dir, 'src', 'constants', 'config.yaml')
+BASE_URL = os.path.join(os.path.dirname(__file__),'..')
+CONFIG_PATH = os.path.join(BASE_URL,'constants','config.yaml')
 
-with open(config_file, 'r') as file:
+with open(CONFIG_PATH, 'r') as file:
     config = yaml.safe_load(file)
     DB_NAME = config['database']['name']
     HOST = config['database']['host']
@@ -95,13 +95,17 @@ class StockProcessorAgent:
                 logger.info("Image read successfully.")
 
             prompt = (
-                "Extract all grocery items from the image, in exact format 'name, quantity, weight, "
-                "shelf_life, category' (e.g., category: fruit, vegetable, confectionery). Do not include price. "
-                "Shelf life is an estimate in days (e.g., 3, 2, 1, 375). "
-                "If a grocery item doesn't have a quantity, set its quantity to 1. "
-                "If a grocery item doesn't have a weight, set its weight to 1.0. "
-                "Return the data in a well-structured JSON format, ready for DB insertion."
-            )
+                    "Extract all grocery items from the receipt image and format the information as structured data. "
+                    "Each item should include the following fields: name, quantity, weight, category, shelf_life. "
+                    "Details about each field are as follows: "
+                    "1. name: The name of the grocery item. "
+                    "2. quantity: If no quantity is provided on the receipt, default to 1. "
+                    "3. weight: If no weight is provided on the receipt, default to 1.0. "
+                    "4. category: Categorize each item (e.g., fruit, vegetable, confectionery). "
+                    "5. shelf_life: Estimate the shelf_life of the item in days as an integer. "
+                    
+                    "Return the extracted data in a well-structured JSON format, ready for database insertion."
+                )
 
             model = genai.GenerativeModel(self.model_name)
             response = model.generate_content([
@@ -247,16 +251,16 @@ class StockProcessorAgent:
             logger.error(f"Error updating item: {e}")
             raise RuntimeError(f"Error updating item: {e}")
 
-    def delete_item(self, item_id):
+    def delete_stocks(self):
         """Delete an item from the stock database."""
         try:
             conn = mysql.connector.connect(**self.db_config)
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM stock WHERE id = %s", (item_id,))
+            cursor.execute("DELETE FROM stock")
             if cursor.rowcount == 0:
-                logger.warning(f"No item found with ID {item_id}.")
+                logger.warning(f"No item founds to delete.")
             else:
-                logger.info(f"Deleted item with ID {item_id}.")
+                logger.info(f"Deleted stocks succesfully")
             conn.commit()
             cursor.close()
             conn.close()

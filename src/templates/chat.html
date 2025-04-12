@@ -1,23 +1,44 @@
 {% extends "base.html" %}
 {% block title %}Chat{% endblock %}
 {% block content %}
-<h1>Chat with Your Assistant</h1>
+<div class="container mt-5">
+    <blockquote>
+        <h3> 🍎 Smart Grocery Assistant:</h3> Ready to help manage your groceries and reduce waste!</h3>
+        Ask me about expiration dates, meal suggestions, or shopping list recommendations.
+         Type 'exit' to end the session
+         </blockquote>
+    <h1>Chat with Your Assistant</h1>
 
-<form method="POST" action="{{ url_for('chat') }}" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="question" class="form-control" placeholder="Ask me anything about your groceries and recipes" required>
-        <button type="submit" class="btn btn-primary">Send</button>
-    </div>
-</form>
+    <!-- Display flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
-{% if question and response %}
-<div class="card">
-    <div class="card-header">Your Question</div>
-    <div class="card-body">{{ question }}</div>
+    
+
+    <!-- Chat form -->
+    <form method="POST" action="{{ url_for('chat') }}" class="mb-3">
+        {{ chat_form.hidden_tag() }}
+        <div class="input-group">
+            {{ chat_form.query(class="form-control", placeholder="Ask me anything about your groceries and recipes") }}
+            {{ chat_form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+
+    <!-- Display query and response -->
+    {% if query and response %}
+        <div class="card">
+            <div class="card-header">Your Question</div>
+            <div class="card-body">{{ query }}</div>
+        </div>
+        <div class="card mt-3">
+            <div class="card-header">Assistant's Response</div>
+            <div class="card-body">{{ response }}</div>
+        </div>
+    {% endif %}
 </div>
-<div class="card mt-3">
-    <div class="card-header">Assistant's Response</div>
-    <div class="card-body">{{ response }}</div>
-</div>
-{% endif %}
 {% endblock %}

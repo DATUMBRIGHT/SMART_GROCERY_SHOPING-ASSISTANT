@@ -12,6 +12,7 @@
 
 
 <form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data">
+    {{ stock_form.hidden_tag() }} 
     <div class="mb-3">
         <label for="stock_image" class="form-label">Upload Stock Image</label>
         <input type="file" class="form-control" id="stock_image" name="stock_image" accept=".png,.jpeg,.jpg" required>
@@ -48,7 +49,7 @@
         
         {% endfor %}
         <form method="POST" action="{{ url_for('delete_stock') }}">
-            {{ form.hidden_tag() }} <!-- CSRF Token for protection -->
+            {{ dsf.hidden_tag() }} <!-- CSRF Token for protection -->
             <button type="submit" class="btn btn-danger">Clear Stock</button>
         </form>
     </tbody>

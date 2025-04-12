@@ -7,14 +7,15 @@ import yaml
 import os
 from dotenv import load_dotenv
 
+
 from loggers.custom_logger import logger
 
 # Load environment variables and configuration
 load_dotenv()
-base_dir = os.path.dirname(os.path.abspath(__file__))
-config_file = os.path.join(base_dir, 'src', 'constants', 'config.yaml')
+BASE_URL = os.path.join(os.path.dirname(__file__),'..')
+CONFIG_PATH = os.path.join(BASE_URL,'constants','config.yaml')
 
-with open(config_file, 'r') as file:
+with open(CONFIG_PATH, 'r') as file:
     config = yaml.safe_load(file)
     DB_NAME = config['database']['name']
     HOST = config['database']['host']
@@ -37,6 +38,7 @@ class GroceryItem(BaseModel):
     quantity: int = Field(..., ge=0, description="Quantity of the item (must be non-negative)")
     weight: float = Field(default=0.0, ge=0.0, description="Weight of the item")
     category: str = Field(..., description="Category of the item (e.g., 'fruit', 'vegetable', etc.)")
+    price: float = Field(..., description="Price of the item")
     purchase_date: str = Field(..., description="Purchase date of the item (YYYY-MM-DD format)")
     expiration_date: str = Field(..., description="Expiration date of the item (YYYY-MM-DD format)")
 
@@ -70,6 +72,7 @@ class ReceiptProcessorAgent:
                     quantity INTEGER NOT NULL,
                     weight REAL DEFAULT 0.0,
                     category TEXT NOT NULL,
+                    price REAL NOT NULL,
                     purchase_date DATE NOT NULL,
                     expiration_date DATE NOT NULL
                 )
@@ -94,14 +97,21 @@ class ReceiptProcessorAgent:
                 logger.info("Receipt image read successfully.")
 
             prompt = (
-                "Extract all grocery items from the receipt image in the exact format (name, quantity, weight, "
-                "purchase_date, expiration_date, category) (e.g., category: fruit, vegetable, confectionery). "
-                "Do not include price. If a grocery item doesn't have a quantity, set its quantity to 1. "
-                "If a grocery item doesn't have a weight, set its weight to 1.0. "
-                "Extract the date on the receipt as the purchase_date and estimate the expiration_date from the purchase_date. "
-                "Return the data in well-structured JSON format with dates in YYYY-MM-DD, ready for database insertion."
-            )
+                    "Extract all grocery items from the receipt image and format the information as structured data. "
+                    "Each item should include the following fields: name, quantity, weight, category, purchase_date, and expiration_date. "
+                    "Details about each field are as follows: "
+                    "1. name: The name of the grocery item. "
+                    "2. quantity: If no quantity is provided on the receipt, default to 1. "
+                    "3. weight: If no weight is provided on the receipt, default to 1.0. "
+                    "4. category: Categorize each item (e.g., fruit, vegetable, confectionery,bakery,dairy). "
+                    "5. price : Extract the price from the receipt and store it as a float. if price unknown make it 0.0 "
+                    "6. purchase_date: Extract the date from the receipt and store it as a string in YYYY-MM-DD format. "
+                    "7. expiration_date: Estimate the expiration date based on the purchase_date and store it as a string in YYYY-MM-DD format. "
+                    "Exclude price information. "
+                    "Return the extracted data in a well-structured JSON format, ready for database insertion."
+                )
 
+            
             model = genai.GenerativeModel(self.model_name)
             response = model.generate_content([
                 {"mime_type": "image/jpeg", "data": image_data},
@@ -109,6 +119,7 @@ class ReceiptProcessorAgent:
             ])
 
             raw_data = response.text.strip()
+            print(raw_data)
             if raw_data.startswith("```json") and raw_data.endswith("```"):
                 raw_data = raw_data[7:-3].strip()
 
@@ -119,7 +130,7 @@ class ReceiptProcessorAgent:
 
             processed_data = []
             for item in parsed_data:
-                if not all(key in item for key in ["name", "quantity", "weight", "category", "purchase_date", "expiration_date"]):
+                if not all(key in item for key in ["name", "quantity", "weight", "category","price", "purchase_date", "expiration_date"]):
                     logger.error(f"Missing keys in item: {item}")
                     raise ValueError(f"Missing keys in item: {item}")
 
@@ -128,6 +139,7 @@ class ReceiptProcessorAgent:
                     quantity=int(item.get("quantity", 1)),
                     weight=float(item.get("weight", 1.0)),
                     category=item["category"],
+                    price=float(item.get("price",1.0)),
                     purchase_date=item["purchase_date"],
                     expiration_date=item["expiration_date"]
                 )
@@ -139,14 +151,14 @@ class ReceiptProcessorAgent:
             logger.error(f"Image file not found: {image_path}")
             raise RuntimeError(f"Image file not found: {image_path}")
         except json.JSONDecodeError as e:
-            logger.error(f"Failed to decode JSON from response: {e}")
-            raise RuntimeError(f"Failed to decode JSON from response: {e}")
+            logger.error(f"Couldnt Process Image. {e}")
+            raise RuntimeError(f"Couldnt Process Image. Make sure you have a real receipt!")
         except mysql.connector.Error as e:
             logger.error(f"Database error during processing: {e}")
             raise RuntimeError(f"Database error during processing: {e}")
         except Exception as e:
             logger.error(f"Error processing the image: {e}")
-            raise RuntimeError(f"Error processing the image: {e}")
+            raise RuntimeError(f"Error processing the image. Check if the image is a valid receipt and try again")
 
     def save_data(self, data):
         """Save data to the database."""
@@ -158,9 +170,9 @@ class ReceiptProcessorAgent:
             conn = mysql.connector.connect(**self.db_config)
             cursor = conn.cursor()
             cursor.executemany("""
-                INSERT INTO receipts (name, quantity, weight, category, purchase_date, expiration_date)
-                VALUES (%s, %s, %s, %s, %s, %s)
-            """, [(item["name"], item["quantity"], item["weight"], item["category"],
+                INSERT INTO receipts (name, quantity, weight, category, price, purchase_date, expiration_date)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, [(item["name"], item["quantity"], item["weight"], item["category"], item["price"],
                    item["purchase_date"], item["expiration_date"]) for item in data])
             conn.commit()
             cursor.close()
@@ -170,54 +182,12 @@ class ReceiptProcessorAgent:
             logger.error(f"Error saving data: {e}")
             raise RuntimeError(f"Error saving data: {e}")
 
-    def update_quantity(self, item_id, new_quantity):
-        """Update item quantity."""
-        if not isinstance(new_quantity, int) or new_quantity < 0:
-            logger.error("New quantity must be a non-negative integer.")
-            raise ValueError("New quantity must be a non-negative integer.")
-
-        try:
-            conn = mysql.connector.connect(**self.db_config)
-            cursor = conn.cursor()
-            cursor.execute("UPDATE receipts SET quantity = %s WHERE id = %s", (new_quantity, item_id))
-            conn.commit()
-            if cursor.rowcount == 0:
-                logger.warning(f"No item found with ID {item_id}.")
-                print(f"No item found with ID {item_id}.")
-            else:
-                logger.info(f"Updated item ID {item_id} to quantity {new_quantity}.")
-                print(f"Updated item ID {item_id} to quantity {new_quantity}.")
-            cursor.close()
-            conn.close()
-        except mysql.connector.Error as e:
-            logger.error(f"Error updating item: {e}")
-            raise RuntimeError(f"Error updating item: {e}")
-
-    def delete_item(self, item_id):
-        """Delete an item."""
-        try:
-            conn = mysql.connector.connect(**self.db_config)
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM receipts WHERE id = %s", (item_id,))
-            conn.commit()
-            if cursor.rowcount == 0:
-                logger.warning(f"No item found with ID {item_id}.")
-                print(f"No item found with ID {item_id}.")
-            else:
-                logger.info(f"Deleted item with ID {item_id}.")
-                print(f"Deleted item with ID {item_id}.")
-            cursor.close()
-            conn.close()
-        except mysql.connector.Error as e:
-            logger.error(f"Error deleting item: {e}")
-            raise RuntimeError(f"Error deleting item: {e}")
-
     def fetch_all_items(self):
         """Fetch all items."""
         try:
             conn = mysql.connector.connect(**self.db_config)
             cursor = conn.cursor()
-            cursor.execute("SELECT id, name, quantity, weight, category, purchase_date, expiration_date FROM receipts")
+            cursor.execute("SELECT id, name, quantity, weight, category, price, purchase_date, expiration_date FROM receipts")
             result = [
                 {
                     "id": row[0],
@@ -225,8 +195,9 @@ class ReceiptProcessorAgent:
                     "quantity": row[2],
                     "weight": row[3],
                     "category": row[4],
-                    "purchase_date": row[5].strftime("%Y-%m-%d") if row[5] else None,
-                    "expiration_date": row[6].strftime("%Y-%m-%d") if row[6] else None
+                    "price": row[5],
+                    "purchase_date": row[6].strftime("%Y-%m-%d") if row[5] else None,
+                    "expiration_date": row[7].strftime("%Y-%m-%d") if row[6] else None
                 }
                 for row in cursor.fetchall()
             ]

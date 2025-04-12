@@ -1,0 +1,18 @@
+database:
+  host: localhost
+  port: 3306
+  user: root
+  password: yourpassword
+  name: grocery_db
+  
+gemini:
+  model: gemini-1.5-flash
+  api_url: 
+  
+deepseek:
+  api_url: https://api.deepseek.com/chat/completions
+  model: deepseek-chat
+
+upload:
+  allowed_extensions: ['png', 'jpeg', 'jpg']
+  max_content_length: 16777216  # 16MB in bytes
