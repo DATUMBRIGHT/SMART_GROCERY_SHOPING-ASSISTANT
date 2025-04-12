@@ -7,3 +7,6 @@ sentence-transformers
 faiss-cpu 
 requests 
 numpy
+mysql-connector-python 
+pyyaml
+flask-wtf 
