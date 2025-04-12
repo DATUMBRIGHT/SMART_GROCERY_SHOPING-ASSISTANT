@@ -1,66 +1,75 @@
 {% extends "base.html" %}
 {% block title %}Receipts{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/receipt.css') }}">
+<div class="receipt-container">
+  <!-- Welcome Message -->
+  <blockquote class="welcome-blockquote">
+    <h2 class="welcome-title">Welcome to AI Grocery Shopping Assistant</h2>
+    <p class="welcome-text">
+      We are here to help you manage your groceries better, save money, and eat healthier.<br>
+      Upload a picture of your most recent grocery shopping receipt to get started!
+    </p>
+  </blockquote>
 
-<blockquote class="welcome-message">
-    <h2>Welcome to AI Grocery Shopping Assistant</h2>
-    We are here to help you not only manage your groceries better but also save money and eat healthier.<br>
-    Upload a picture of your most recent grocery shopping receipt to get started!
-</blockquote>
+  <!-- Manage Receipts Header -->
+  <h1 class="section-header">Manage Receipts</h1>
 
-<h1>Manage Receipts</h1>
-
-<h2>Upload Receipt</h2>
-<form method="POST" action="{{ url_for('upload_receipt') }}" enctype="multipart/form-data">
-    {{ form.hidden_tag() }} <!-- Includes CSRF token -->
-    <div class="mb-3">
+  <!-- Upload Receipt Form -->
+  <div class="form-container">
+    <h2 class="subsection-header">Upload Receipt</h2>
+    <form method="POST" action="{{ url_for('upload_receipt') }}" enctype="multipart/form-data" class="space-y-4">
+      {{ form.hidden_tag() }}
+      <div>
         <label for="receipt_image" class="form-label">Upload Receipt Image</label>
-        {{ form.receipt_image(class="form-control", accept=".png,.jpeg,.jpg", required=True, id="receipt_image") }}
-    </div>
-    {{ form.submit(class="btn btn-primary") }}
-</form>
+        {{ form.receipt_image(class="form-input", accept=".png,.jpeg,.jpg", required=True, id="receipt_image") }}
+      </div>
+      {{ form.submit(class="form-submit") }}
+    </form>
+  </div>
 
-<form method="POST" action="{{ url_for('delete_receipts') }}" onsubmit="return confirm('Are you sure you want to delete all receipts? This action cannot be undone.');">
-    {{ form.hidden_tag() }} <!-- Includes CSRF token -->
-    <button type="submit" class="btn btn-danger">Clear Receipts</button>
-</form>
+  <!-- Clear Receipts Form -->
+  <form method="POST" action="{{ url_for('delete_receipts') }}" onsubmit="return confirm('Are you sure you want to delete all receipts? This action cannot be undone.');" class="form-container">
+    {{ form.hidden_tag() }}
+    <button type="submit" class="clear-button">Clear Receipts</button>
+  </form>
 
-<h2>Receipt Database</h2>
-{% if receipt_items %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Weight</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Purchase Date</th>
-            <th>Expiration Date</th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in receipt_items %}
-        <tr id="row-{{ item.id }}">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.weight }}</td>
-            <td>{{ item.category }}</td>
-            <td> {{item.price}}</td>
-            <td>{{ item.purchase_date }}</td>
-            <td>{{ item.expiration_date }}</td>
-            
-        </tr>
-        
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<p>No receipt items found.</p>
-{% endif %}
-
+  <!-- Receipt Database -->
+  <div>
+    <h2 class="subsection-header">Receipt Database</h2>
+    {% if receipt_items %}
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr class="table-header">
+              <th class="table-cell">ID</th>
+              <th class="table-cell">Name</th>
+              <th class="table-cell">Quantity</th>
+              <th class="table-cell">Weight</th>
+              <th class="table-cell">Category</th>
+              <th class="table-cell">Price</th>
+              <th class="table-cell">Purchase Date</th>
+              <th class="table-cell">Expiration Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in receipt_items %}
+              <tr class="table-row">
+                <td class="table-cell">{{ item.id }}</td>
+                <td class="table-cell">{{ item.name }}</td>
+                <td class="table-cell">{{ item.quantity }}</td>
+                <td class="table-cell">{{ item.weight }}</td>
+                <td class="table-cell">{{ item.category }}</td>
+                <td class="table-cell">{{ item.price }}</td>
+                <td class="table-cell">{{ item.purchase_date }}</td>
+                <td class="table-cell">{{ item.expiration_date }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-items">No receipt items found.</p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}

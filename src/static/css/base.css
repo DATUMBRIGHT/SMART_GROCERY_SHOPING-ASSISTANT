@@ -1,0 +1,169 @@
+/* static/css/styles.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: url("../360_F_287658121_EGUothkFQW7j1bHooOoEagnGgGZYlzJp.jpg") no-repeat center center fixed;
+    background-size: cover;
+    color: #2c3e50;
+    line-height: 1.6;
+    position: relative;
+    z-index: 0;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Container for receipt.html and stock.html */
+.receipt-container, .stock-container {
+    background: rgba(255, 255, 255, 0.90); /* Translucent white background */
+    border-radius: 12px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    margin: 24px auto;
+    max-width: 896px; /* Matches max-w-4xl */
+}
+
+/* Welcome Blockquote */
+.welcome-blockquote {
+    margin-bottom: 24px;
+    padding: 16px;
+    background-color: #f0fdf4; /* bg-green-50 */
+    border-left: 4px solid #22c55e; /* border-green-500 */
+    color: #1f2937; /* text-gray-800 */
+}
+
+.welcome-title {
+    font-size: 1.25rem; /* text-xl */
+    font-weight: 600; /* font-semibold */
+    color: #16a34a; /* text-green-600 */
+}
+
+.welcome-text {
+    font-size: 0.875rem; /* text-sm */
+    margin-top: 4px;
+}
+
+/* Section Headers */
+.section-header {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: 600;
+    color: #16a34a; /* text-green-600 */
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.subsection-header {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 600;
+    color: #1f2937; /* text-gray-800 */
+    margin-bottom: 12px;
+}
+
+/* Form Styles */
+.form-container {
+    margin-bottom: 32px;
+}
+
+.form-label {
+    display: block;
+    font-size: 0.875rem; /* text-sm */
+    font-weight: 500;
+    color: #1f2937; /* text-gray-800 */
+    margin-bottom: 4px;
+}
+
+.form-input {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db; /* border-gray-300 */
+    background-color: #f9fafb; /* bg-gray-50 */
+    color: #1f2937; /* text-gray-800 */
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: #22c55e; /* focus:ring-green-500 */
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.5);
+}
+
+.form-submit {
+    padding: 8px 24px;
+    background-color: #22c55e; /* bg-green-500 */
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.form-submit:hover {
+    background-color: #16a34a; /* hover:bg-green-600 */
+}
+
+/* Clear Button */
+.clear-button {
+    padding: 8px 24px;
+    background-color: #ef4444; /* bg-red-500 */
+    color: white;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.clear-button:hover {
+    background-color: #dc2626; /* hover:bg-red-600 */
+}
+
+/* Table Styles */
+.table-container {
+    overflow-x: auto;
+}
+
+.table {
+    width: 100%;
+    font-size: 0.875rem; /* text-sm */
+    color: #1f2937; /* text-gray-800 */
+}
+
+.table-header {
+    background-color: #f3f4f6; /* bg-gray-100 */
+}
+
+.table-cell {
+    padding: 12px;
+    text-align: left;
+    font-weight: 600; /* For headers */
+}
+
+.table-row {
+    border-bottom: 1px solid #e5e7eb; /* border-gray-200 */
+    transition: background-color 0.3s;
+}
+
+.table-row:hover {
+    background-color: #f9fafb; /* hover:bg-gray-50 */
+}
+
+/* No Items Message */
+.no-items {
+    color: #4b5563; /* text-gray-600 */
+    text-align: center;
+}
+
+/* Chat Window (unchanged) */
+#chat-window {
+    scroll-behavior: smooth;
+}

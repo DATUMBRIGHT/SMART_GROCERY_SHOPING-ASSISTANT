@@ -1,44 +1,121 @@
 {% extends "base.html" %}
 {% block title %}Chat{% endblock %}
 {% block content %}
-<div class="container mt-5">
-    <blockquote>
-        <h3> 🍎 Smart Grocery Assistant:</h3> Ready to help manage your groceries and reduce waste!</h3>
-        Ask me about expiration dates, meal suggestions, or shopping list recommendations.
-         Type 'exit' to end the session
-         </blockquote>
-    <h1>Chat with Your Assistant</h1>
+<div class="flex flex-col h-[calc(100vh-80px)] max-w-4xl mx-auto mt-6 bg-white bg-opacity-95 rounded-xl shadow-lg">
+  <!-- Header -->
+  <header class="p-4 border-b border-gray-200">
+    <h1 class="text-2xl font-semibold text-green-600 flex items-center gap-2">
+      <span>🍎</span> Smart Grocery Assistant
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">
+      Ask about expiration dates, meal suggestions, or shopping lists. Type 'exit' to end.
+    </p>
+  </header>
 
-    <!-- Display flash messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    
-
-    <!-- Chat form -->
-    <form method="POST" action="{{ url_for('chat') }}" class="mb-3">
-        {{ chat_form.hidden_tag() }}
-        <div class="input-group">
-            {{ chat_form.query(class="form-control", placeholder="Ask me anything about your groceries and recipes") }}
-            {{ chat_form.submit(class="btn btn-primary") }}
+  <!-- Chat Window -->
+  <div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="animate-fade-in {% if message.is_user %}ml-auto bg-green-500 text-white{% else %}mr-auto bg-gray-100 text-gray-800{% endif %} max-w-[70%] rounded-lg p-3 shadow">
+          {% if message.is_user %}
+            <p class="text-sm">{{ message.text | safe }}</p>
+          {% else %}
+            <div class="text-sm">{{ message.text | safe }}</div>
+          {% endif %}
+          <span class="text-xs opacity-60 block mt-1">{{ message.timestamp }}</span>
         </div>
-    </form>
-
-    <!-- Display query and response -->
-    {% if query and response %}
-        <div class="card">
-            <div class="card-header">Your Question</div>
-            <div class="card-body">{{ query }}</div>
-        </div>
-        <div class="card mt-3">
-            <div class="card-header">Assistant's Response</div>
-            <div class="card-body">{{ response }}</div>
-        </div>
+      {% endfor %}
+    {% else %}
+      <div class="text-center text-gray-500 text-sm mt-4">
+        Start the conversation by asking a question!
+      </div>
     {% endif %}
+  </div>
+
+  <!-- Input Form -->
+  <form hx-post="{{ url_for('chat') }}" hx-target="#chat-window" hx-swap="beforeend" class="p-4 border-t border-gray-200 flex items-center gap-2">
+    {{ chat_form.hidden_tag() }}
+    {{ chat_form.query(class="flex-1 p-3 rounded-lg border border-gray-300 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500", placeholder="Ask about groceries or recipes...", autofocus=true) }}
+    <button type="submit" class="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+      </svg>
+    </button>
+  </form>
 </div>
+
+<style>
+  /* Animation for chat messages */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Style markdown content (from LLM output) */
+  .prose h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #16a34a; /* text-green-600 */
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose p {
+    font-size: 0.875rem;
+    color: #4b5563; /* text-gray-700 */
+    margin-bottom: 0.5rem;
+  }
+  .prose ul {
+    list-style-type: disc;
+    list-style-position: inside;
+    font-size: 0.875rem;
+    color: #4b5563; /* text-gray-700 */
+    margin-bottom: 0.5rem;
+  }
+  .prose li {
+    margin-bottom: 0.25rem;
+  }
+  .prose strong {
+    font-weight: 600;
+    color: #1f2937; /* text-gray-800 */
+  }
+  /* Highlight Pro Tip section */
+  .prose p:has(strong:contains("Pro Tip:")) {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #fefce8; /* bg-yellow-50 */
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  }
+  .prose p:has(strong:contains("Pro Tip:")) strong {
+    color: #d97706; /* text-yellow-600 */
+  }
+
+  /* Dark mode support */
+  @media (prefers-color-scheme: dark) {
+    .prose h3 {
+      color: #4ade80; /* dark:text-green-400 */
+    }
+    .prose p {
+      color: #e5e7eb; /* dark:text-gray-200 */
+    }
+    .prose ul {
+      color: #e5e7eb; /* dark:text-gray-200 */
+    }
+    .prose strong {
+      color: #f3f4f6; /* dark:text-gray-100 */
+    }
+    .prose p:has(strong:contains("Pro Tip:")) {
+      background-color: #78350f; /* dark:bg-yellow-900 */
+    }
+    .prose p:has(strong:contains("Pro Tip:")) strong {
+      color: #facc15; /* dark:text-yellow-400 */
+    }
+  }
+</style>
+
 {% endblock %}

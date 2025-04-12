@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, redirect, flash, request, jso
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import FileField, SubmitField,StringField
 from wtforms.validators import DataRequired, NumberRange
+from flask import session
 import mysql.connector
 import os
 from pathlib import Path
@@ -10,7 +11,8 @@ from dotenv import load_dotenv
 import random
 import yaml
 from mysql.connector import pooling
-
+from datetime import datetime
+from markdown import markdown
 from agents.grocery_agent import ReceiptProcessorAgent
 from agents.stock_agent import StockProcessorAgent
 from agents.grocery_analyzer import SmartGroceryAnalyzer
@@ -82,6 +84,9 @@ class DeleteStockForm(FlaskForm):
 class ChatForm(FlaskForm):
     query = StringField('Query', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class DeleteChatForm(FlaskForm):
+    submit = SubmitField('Delete Chat')
 
 @app.route('/')
 def index():
@@ -164,16 +169,83 @@ def upload_stock():
     return redirect(url_for('stock'))
 
 
+
+
+
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
     chat_form = ChatForm()
     response = None
     query = None
 
+    if 'chat_history' not in session:
+        session['chat_history'] = []
+
     if chat_form.validate_on_submit():
         query = chat_form.query.data
         try:
-            response = analyzer.query(query)
+            # Get raw response from the analyzer
+            raw_response = analyzer.query(query)
+            
+            # Convert markdown to HTML
+            html_response = markdown(raw_response, extensions=['extra'])
+            
+            # Wrap the HTML in a styled container with Tailwind classes
+            styled_response = f'''
+            <div class="prose prose-sm max-w-none">
+                {html_response}
+            </div>
+            <style>
+                .prose h3 {{
+                    @apply text-lg font-semibold text-green-600 flex items-center gap-2 mb-2;
+                }}
+                .prose p {{
+                    @apply text-sm text-gray-700 mb-2;
+                }}
+                .prose ul {{
+                    @apply list-disc list-inside text-sm text-gray-700 mb-2;
+                }}
+                .prose li {{
+                    @apply mb-1;
+                }}
+                .prose strong {{
+                    @apply font-semibold text-gray-800;
+                }}
+                /* Highlight Pro Tip section */
+                .prose p:has(strong:contains("Pro Tip:")) {{
+                    @apply mt-4 p-3 bg-yellow-50 rounded-lg shadow;
+                }}
+                .prose p:has(strong:contains("Pro Tip:")) strong {{
+                    @apply text-yellow-600;
+                }}
+            </style>
+            '''
+
+            response = styled_response
+            timestamp = datetime.now().strftime('%b %d, %H:%M')
+            session['chat_history'].append({
+                'text': query,
+                'is_user': True,
+                'timestamp': timestamp
+            })
+            session['chat_history'].append({
+                'text': response,
+                'is_user': False,
+                'timestamp': timestamp
+            })
+            session.modified = True
+            
+            if request.headers.get('HX-Request'):
+                return f'''
+                <div class="animate-fade-in ml-auto bg-green-500 text-white max-w-[70%] rounded-lg p-3 shadow">
+                    <p class="text-sm">{query}</p>
+                    <span class="text-xs opacity-60 block mt-1">{timestamp}</span>
+                </div>
+                <div class="animate-fade-in mr-auto bg-gray-100 text-gray-800 max-w-[70%] rounded-lg p-3 shadow">
+                    {response}
+                    <span class="text-xs opacity-60 block mt-1">{timestamp}</span>
+                </div>
+                '''
             flash("Query processed successfully", "success")
         except ValueError as e:
             logger.error(f"ValueError processing query: {str(e)}")
@@ -185,7 +257,7 @@ def chat():
         flash("Please enter a valid query", "danger")
         logger.warning("Invalid form submission on /chat")
 
-    return render_template('chat.html', chat_form=chat_form, response=response, query=query)
+    return render_template('chat.html', chat_form=chat_form, response=response, query=query, messages=session.get('chat_history', []))
 
 @app.route('/delete_receipts', methods=['POST'])
 def delete_receipts():
@@ -196,6 +268,8 @@ def delete_receipts():
         flash(f"Error deleting receipts: {str(e)}")
         logger.error(f"Error deleting receipts: {str(e)}")
     return redirect(url_for('index'))
+
+
 
 @app.route('/delete_stock', methods=['POST'])
 def delete_stock():
@@ -218,4 +292,4 @@ def delete_stock():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=5001)

@@ -1,60 +1,64 @@
 {% extends "base.html" %}
 {% block title %}Stock{% endblock %}
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/stock.css') }}">
+<div class="stock-container">
+  <!-- Manage Stock Header -->
+  <blockquote class="stock-blockquote">
+    <h1 class="stock-title">Manage Stock</h1>
+    <p class="stock-text">What do you have in your fridge today?</p>
+  </blockquote>
 
-
-<blockquote><h1>Manage Stock</h1>
-
- 
-</blockquote>
-<h4> What do you have in your fridge today? </h4>
-
-
-<form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data">
-    {{ stock_form.hidden_tag() }} 
-    <div class="mb-3">
+  <!-- Upload Stock Form -->
+  <div class="form-container">
+    <h2 class="subsection-header">Upload Stock Image</h2>
+    <form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data" class="space-y-4">
+      {{ stock_form.hidden_tag() }}
+      <div>
         <label for="stock_image" class="form-label">Upload Stock Image</label>
-        <input type="file" class="form-control" id="stock_image" name="stock_image" accept=".png,.jpeg,.jpg" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Upload Stock</button>
-</form>
+        {{ stock_form.stock_image(class="form-input", accept=".png,.jpeg,.jpg", required=True, id="stock_image") }}
+      </div>
+      {{ stock_form.submit(class="form-submit") }}
+    </form>
+  </div>
 
-<h2>Stock Database</h2>
-{% if stock_items %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Weight</th>
-            <th>Category</th>
-            <th>Shelf Life (days)</th>
-            
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in stock_items %}
-        <tr id="row-{{ item.id }}">
-            <td>{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.weight }}</td>
-            <td>{{ item.category }}</td>
-            <td>{{ item.shelf_life }}</td>
-            
-        </tr>
-       
-        
-        {% endfor %}
-        <form method="POST" action="{{ url_for('delete_stock') }}">
-            {{ dsf.hidden_tag() }} <!-- CSRF Token for protection -->
-            <button type="submit" class="btn btn-danger">Clear Stock</button>
-        </form>
-    </tbody>
-</table>
-{% else %}
-<p>No stock items found.</p>
-{% endif %}
+  <!-- Stock Database -->
+  <div>
+    <h2 class="subsection-header">Stock Database</h2>
+    {% if stock_items %}
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr class="table-header">
+              <th class="table-cell">ID</th>
+              <th class="table-cell">Name</th>
+              <th class="table-cell">Quantity</th>
+              <th class="table-cell">Weight</th>
+              <th class="table-cell">Category</th>
+              <th class="table-cell">Shelf Life (days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in stock_items %}
+              <tr class="table-row">
+                <td class="table-cell">{{ item.id }}</td>
+                <td class="table-cell">{{ item.name }}</td>
+                <td class="table-cell">{{ item.quantity }}</td>
+                <td class="table-cell">{{ item.weight }}</td>
+                <td class="table-cell">{{ item.category }}</td>
+                <td class="table-cell">{{ item.shelf_life }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- Clear Stock Form -->
+      <form method="POST" action="{{ url_for('delete_stock') }}" onsubmit="return confirm('Are you sure you want to delete all stock items? This action cannot be undone.');" class="form-clear-container">
+        {{ dsf.hidden_tag() }}
+        <button type="submit" class="clear-button">Clear Stock</button>
+      </form>
+    {% else %}
+      <p class="no-items">No stock items found.</p>
+    {% endif %}
+  </div>
+</div>
 {% endblock %}
