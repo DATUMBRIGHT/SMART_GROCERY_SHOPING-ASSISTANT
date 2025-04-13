@@ -14,5 +14,5 @@ deepseek:
   model: deepseek-chat
 
 upload:
-  allowed_extensions: ['png', 'jpeg', 'jpg']
+  allowed_extensions: ['.png', '.jpeg', '.jpg']
   max_content_length: 16777216  # 16MB in bytes

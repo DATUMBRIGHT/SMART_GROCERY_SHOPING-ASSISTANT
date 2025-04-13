@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, flash, request, jsonify
+from flask import Flask, render_template, url_for, redirect, flash, request, jsonify,send_from_directory
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import FileField, SubmitField,StringField
 from wtforms.validators import DataRequired, NumberRange
@@ -9,7 +9,9 @@ from pathlib import Path
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import random
+import uuid
 import yaml
+import arrow
 from mysql.connector import pooling
 from datetime import datetime
 from markdown import markdown
@@ -88,13 +90,16 @@ class ChatForm(FlaskForm):
 class DeleteChatForm(FlaskForm):
     submit = SubmitField('Delete Chat')
 
+
+#home page
 @app.route('/')
 def index():
     receipt_items = receipt_agent.fetch_all_items()
+    logger.info(f"Fetched {len(receipt_items)} receipt items")
     form = ReceiptUploadForm()
     return render_template('receipt.html', receipt_items=receipt_items, form=form)
 
-
+#stock page
 @app.route('/stock')    
 def stock():
     stock_items = stock_agent.fetch_all_items()
@@ -102,34 +107,50 @@ def stock():
     dsf = DeleteStockForm()
     return render_template('stock.html', stock_items=stock_items, stock_form=stock_form,dsf = dsf)
 
+
+#upload receipt page
 @app.route('/upload/receipt', methods=['POST'])
 def upload_receipt():
     form = ReceiptUploadForm()
     if not form.validate_on_submit():
         flash('Invalid form submission')
-        return redirect(url_for('index'))
+        receipt_items = receipt_agent.fetch_all_items()
+        return render_template('receipt.html', form=form, receipt_items=receipt_items)
     
     file = form.receipt_image.data
     filename = secure_filename(file.filename)
-    if not filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
-        flash(f"Invalid file type. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}")
-        return redirect(url_for('index'))
+    file_ext = os.path.splitext(filename)[1].lower()  # e.g., '.jpg'
+    if file_ext not in ALLOWED_EXTENSIONS:
+        flash(f"Invalid file type. Allowed types: {', '.join(ext.lstrip('.') for ext in ALLOWED_EXTENSIONS)}")
+        logger.warning(f"Invalid file type: {filename}")
+        receipt_items = receipt_agent.fetch_all_items()
+        return render_template('receipt.html', form=form, receipt_items=receipt_items)
     
-    temp_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    # Generate unique filename
+    unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+    temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
     file.save(temp_path)
     
     try:
+        # Process receipt but don't save to DB
         receipt_items = receipt_agent.process_receipt(temp_path)
-        receipt_agent.save_data(receipt_items)
-        flash(f"Processed and saved {len(receipt_items)} receipt items")
+        logger.info(f"Processed {len(receipt_items)} receipt items")
+        flash(f"Processed {len(receipt_items)} receipt items")
+        # Render receipt.html with filename and items
+        return render_template('receipt.html', form=form, filename=unique_filename, receipt_items=receipt_items)
     except Exception as e:
         flash(f"Error processing receipt: {str(e)}")
-    finally:
+        logger.error(f"Error processing receipt: {str(e)}")
+        # Delete image only on error
         if os.path.exists(temp_path):
             os.remove(temp_path)
+        receipt_items = receipt_agent.fetch_all_items()
+        return render_template('receipt.html', form=form, receipt_items=receipt_items)
+@app.route('/uploads/<filename>')
+def serve_image(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
     
-    return redirect(url_for('index'))
-
+#upload stock page
 @app.route('/upload/stock', methods=['POST'])
 def upload_stock():
     form = StockUploadForm()
@@ -168,13 +189,11 @@ def upload_stock():
     
     return redirect(url_for('stock'))
 
-
-
-
-
+#chat page
 @app.route('/chat', methods=['GET', 'POST'])
 def chat():
     chat_form = ChatForm()
+    clear_chat_form = DeleteChatForm() 
     response = None
     query = None
 
@@ -184,45 +203,16 @@ def chat():
     if chat_form.validate_on_submit():
         query = chat_form.query.data
         try:
-            # Get raw response from the analyzer
             raw_response = analyzer.query(query)
-            
-            # Convert markdown to HTML
             html_response = markdown(raw_response, extensions=['extra'])
-            
-            # Wrap the HTML in a styled container with Tailwind classes
             styled_response = f'''
             <div class="prose prose-sm max-w-none">
                 {html_response}
             </div>
-            <style>
-                .prose h3 {{
-                    @apply text-lg font-semibold text-green-600 flex items-center gap-2 mb-2;
-                }}
-                .prose p {{
-                    @apply text-sm text-gray-700 mb-2;
-                }}
-                .prose ul {{
-                    @apply list-disc list-inside text-sm text-gray-700 mb-2;
-                }}
-                .prose li {{
-                    @apply mb-1;
-                }}
-                .prose strong {{
-                    @apply font-semibold text-gray-800;
-                }}
-                /* Highlight Pro Tip section */
-                .prose p:has(strong:contains("Pro Tip:")) {{
-                    @apply mt-4 p-3 bg-yellow-50 rounded-lg shadow;
-                }}
-                .prose p:has(strong:contains("Pro Tip:")) strong {{
-                    @apply text-yellow-600;
-                }}
-            </style>
             '''
-
             response = styled_response
-            timestamp = datetime.now().strftime('%b %d, %H:%M')
+            timestamp = arrow.now().format('MMM D, HH:mm')
+
             session['chat_history'].append({
                 'text': query,
                 'is_user': True,
@@ -234,7 +224,7 @@ def chat():
                 'timestamp': timestamp
             })
             session.modified = True
-            
+
             if request.headers.get('HX-Request'):
                 return f'''
                 <div class="animate-fade-in ml-auto bg-green-500 text-white max-w-[70%] rounded-lg p-3 shadow">
@@ -257,8 +247,38 @@ def chat():
         flash("Please enter a valid query", "danger")
         logger.warning("Invalid form submission on /chat")
 
-    return render_template('chat.html', chat_form=chat_form, response=response, query=query, messages=session.get('chat_history', []))
+    return render_template('chat.html', chat_form=chat_form, clear_chat_form=clear_chat_form, response=response, query=query, messages=session.get('chat_history', []))
 
+#clear chat 
+@app.route('/clear_chat', methods=['POST'])
+def clear_chat():
+    try:
+        clear_chat_form = DeleteChatForm()
+        logger.debug(f"Clear chat form data: {request.form}, CSRF: {clear_chat_form.csrf_token.data}")
+        if clear_chat_form.validate_on_submit():
+            session['chat_history'] = []  # Clear chat history (your exact line)
+            session.modified = True
+            flash('Chat history cleared successfully', 'success')
+            logger.info("Chat history cleared successfully")
+            if request.headers.get('HX-Request'):
+                logger.debug("Returning HTMX response for clear chat")
+                return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>'
+            return redirect(url_for('chat'))  # Your redirect
+        else:
+            flash('Failed to clear chat history. Please try again.', 'error')  # Your message
+            logger.warning(f"Form validation failed: {clear_chat_form.errors}")
+            if request.headers.get('HX-Request'):
+                return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>', 400
+            return redirect(url_for('chat')), 400  # Your status
+    except Exception as e:
+        flash(f'An error occurred: {str(e)}', 'error')  # Your message
+        logger.error(f"Error clearing chat: {str(e)}")
+        if request.headers.get('HX-Request'):
+            return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>', 500
+        return redirect(url_for('chat')), 500
+
+
+#delete receipts
 @app.route('/delete_receipts', methods=['POST'])
 def delete_receipts():
     try:
@@ -270,7 +290,7 @@ def delete_receipts():
     return redirect(url_for('index'))
 
 
-
+#delete stock
 @app.route('/delete_stock', methods=['POST'])
 def delete_stock():
     
@@ -292,4 +312,4 @@ def delete_stock():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5001)
+    app.run(debug=True,port=5002)
