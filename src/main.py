@@ -146,6 +146,7 @@ def upload_receipt():
             os.remove(temp_path)
         receipt_items = receipt_agent.fetch_all_items()
         return render_template('receipt.html', form=form, receipt_items=receipt_items)
+
 @app.route('/uploads/<filename>')
 def serve_image(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
@@ -154,26 +155,36 @@ def serve_image(filename):
 @app.route('/upload/stock', methods=['POST'])
 def upload_stock():
     form = StockUploadForm()
-    
+    dsf = DeleteStockForm()
+
+    #check if form is not submitted render oroginal page
     if not form.validate_on_submit():
         flash('Invalid form submission. Please ensure you’ve selected a valid file.', 'danger')
         logger.warning("Invalid form submission")
         return redirect(url_for('stock'))
 
-    file = form.stock_image.data
+    file = form.stock_image.data #get data from form 
+    
+    #check if form has no data stock image file
     if not file:
         flash('No file selected', 'danger')
         logger.error("No file selected")
         return redirect(url_for('stock'))
+    
 
+    #get secure file name
     filename = secure_filename(file.filename)
     if not filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
         flash(f"Invalid file type. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}", 'danger')
         return redirect(url_for('stock'))
     
+    #generate unique filename
+    filename = f"{uuid.uuid4().hex}{os.path.splitext(filename)[1].lower()}"
+    
     temp_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     try:
-        file.save(temp_path)
+        file.save(temp_path) #save image
+        logger.info(f"Saved image to {temp_path}")
         stock_items = stock_agent.process_stock_image(temp_path)
         stock_agent.save_to_db(stock_items)
         flash(f"Processed and saved {len(stock_items)} stock items", 'success')
@@ -183,11 +194,8 @@ def upload_stock():
     except Exception as e:
         logger.error(f"Unexpected error processing stock: {str(e)}")
         flash(f"Unexpected error: {str(e)}", 'danger')
-    finally:
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
     
-    return redirect(url_for('stock'))
+    return render_template('stock.html', stock_items=stock_items, stock_form=form,filename = filename,dsf = dsf)
 
 #chat page
 @app.route('/chat', methods=['GET', 'POST'])
