@@ -128,24 +128,36 @@ def upload_receipt():
     
     # Generate unique filename
     unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+    session['receipt_filename'] = unique_filename
     temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
     file.save(temp_path)
     
     try:
         # Process receipt but don't save to DB
         receipt_items = receipt_agent.process_receipt(temp_path)
+        session['receipt_items'] = receipt_items
+        receipt_agent.save_data(receipt_items)
         logger.info(f"Processed {len(receipt_items)} receipt items")
         flash(f"Processed {len(receipt_items)} receipt items")
-        # Render receipt.html with filename and items
-        return render_template('receipt.html', form=form, filename=unique_filename, receipt_items=receipt_items)
+       
+        
+        # Handle GET request
+        filename = session.get('receipt_filename')
+        receipt_items = session.get('receipt_items', receipt_agent.fetch_all_items())
+        return render_template('receipt.html', form=form, filename=filename,receipt_items=receipt_items)
+        
+        
     except Exception as e:
         flash(f"Error processing receipt: {str(e)}")
         logger.error(f"Error processing receipt: {str(e)}")
+        receipt_items = None
         # Delete image only on error
         if os.path.exists(temp_path):
             os.remove(temp_path)
-        receipt_items = receipt_agent.fetch_all_items()
+        
         return render_template('receipt.html', form=form, receipt_items=receipt_items)
+    
+    
 
 @app.route('/uploads/<filename>')
 def serve_image(filename):
@@ -194,6 +206,7 @@ def upload_stock():
     except Exception as e:
         logger.error(f"Unexpected error processing stock: {str(e)}")
         flash(f"Unexpected error: {str(e)}", 'danger')
+    # Handle GET request
     
     return render_template('stock.html', stock_items=stock_items, stock_form=form,filename = filename,dsf = dsf)
 

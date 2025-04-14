@@ -119,14 +119,14 @@
 </style>
 
 <!-- Clear Chat Button -->
-<form method="POST" action="{{ url_for('clear_chat') }}" hx-post="{{ url_for('clear_chat') }}" hx-target="#chat-messages" hx-swap="outerHTML">
-  {{ clear_chat_form.hidden_tag() }}
-  <button 
-  type="submit" 
-  class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition" 
-  onclick="return confirm('Do you want to clear the chat? This action cannot be undone!');">
-    Clear Chat
-</button>
-</form>
+<form method="POST" action="{{ url_for('clear_chat') }}" 
+        hx-post="{{ url_for('clear_chat') }}" 
+        hx-target="#chat-window" 
+        hx-swap="outerHTML"
+        class="p-2 border-t">
+    {{ clear_chat_form.hidden_tag() }}
+    <button type="submit" class="...">
+      Clear Chat
+    </button>
 </div>
 {% endblock %}
