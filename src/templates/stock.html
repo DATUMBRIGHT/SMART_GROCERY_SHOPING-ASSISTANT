@@ -12,12 +12,12 @@
   <div class="form-container">
     <h2 class="subsection-header">Upload Stock Image</h2>
     <form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data" class="space-y-4">
-      {{ stock_form.hidden_tag() }}
+      {{form.hidden_tag() }}
       <div>
         <label for="stock_image" class="form-label">Upload Stock Image</label>
-        {{ stock_form.stock_image(class="form-input", accept=".png,.jpeg,.jpg", required=True, id="stock_image") }}
+        {{form.stock_image(class="form-input", accept=".png,.jpeg,.jpg", required=True, id="stock_image") }}
       </div>
-      {{ stock_form.submit(class="form-submit") }}
+      {{form.submit(class="form-submit") }}
     </form>
   </div>
 
@@ -51,7 +51,7 @@
           <tbody>
             {% for item in stock_items %}
               <tr class="table-row">
-                <td class="table-cell">{{ item.id }}</td>
+                <td class="table-cell">{{ loop.index }}</td>
                 <td class="table-cell">{{ item.name }}</td>
                 <td class="table-cell">{{ item.quantity }}</td>
                 <td class="table-cell">{{ item.weight }}</td>

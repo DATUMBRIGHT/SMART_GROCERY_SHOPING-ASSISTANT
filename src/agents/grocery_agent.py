@@ -59,6 +59,7 @@ class ReceiptProcessorAgent:
         self.db_config = DB_CONFIG
         # Initialize database schema on startup
         self.create_db_schema()
+        self.create_image_db()
 
     def create_db_schema(self):
         """Creates the database schema if it doesn't already exist."""
@@ -75,6 +76,7 @@ class ReceiptProcessorAgent:
                     price REAL NOT NULL,
                     purchase_date DATE NOT NULL,
                     expiration_date DATE NOT NULL
+            
                 )
             """)
             conn.commit()
@@ -84,7 +86,9 @@ class ReceiptProcessorAgent:
         except mysql.connector.Error as e:
             logger.error(f"Error creating database schema: {e}")
             raise RuntimeError(f"Error creating database schema: {e}")
+        
 
+    #process and get data from receipt image
     def process_receipt(self, image_path):
         """Process a receipt image and extract grocery items."""
         if not isinstance(image_path, str) or not image_path.endswith((".png", ".jpeg", ".jpg")):
@@ -160,6 +164,8 @@ class ReceiptProcessorAgent:
             logger.error(f"Error processing the image: {e}")
             raise RuntimeError(f"Error processing the image. Check if the image is a valid receipt and try again")
 
+    
+    #save items to db
     def save_data(self, data):
         """Save data to the database."""
         if not data or not isinstance(data, list):
@@ -182,6 +188,8 @@ class ReceiptProcessorAgent:
             logger.error(f"Error saving data: {e}")
             raise RuntimeError(f"Error saving data: {e}")
 
+   
+    #fetch all items from db
     def fetch_all_items(self):
         """Fetch all items."""
         try:
@@ -208,6 +216,7 @@ class ReceiptProcessorAgent:
             logger.error(f"Error fetching items: {e}")
             raise RuntimeError(f"Error fetching items: {e}")
 
+    #delete all items form db
     def delete_all_items(self):
         """Delete all items."""
         try:
@@ -221,3 +230,87 @@ class ReceiptProcessorAgent:
         except mysql.connector.Error as e:
             logger.error(f"Error deleting all items: {e}")
             raise RuntimeError(f"Error deleting all items: {e}")
+        
+    #create image db
+    def create_image_db(self):
+        """Creates the database schema for image data if it doesn't already exist."""
+        try:
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("""
+                CREATE TABLE IF NOT EXISTS receiptimages (
+                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    image_path TEXT NOT NULL
+                )
+            """)
+            conn.commit()
+            logger.info("Image database schema created successfully.")
+        except mysql.connector.Error as e:
+            logger.error(f"Error creating image database schema: {e}")
+            raise RuntimeError(f"Error creating image database schema: {e}")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+    
+    #save image to db
+    def save_image(self, image_path):
+        """Save image path to the database."""
+        if not image_path or not isinstance(image_path, str):
+            logger.error("Image file name must be a non-empty string")
+            raise ValueError("Image file name must be a non-empty string")
+        try:
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO receiptimages (image_path) VALUES (%s)", (image_path,))
+            conn.commit()
+            logger.info(f"Saved image path to database: {image_path}")
+        except mysql.connector.Error as e:
+            logger.error(f"Error saving image: {e}")
+            raise RuntimeError(f"Error saving image: {e}")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+    
+    #get latest image
+    def get_latest_filename(self):
+        """Query database for most recent filename."""
+        try:
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("SELECT image_path FROM receiptimages ORDER BY id DESC LIMIT 1")
+            result = cursor.fetchone()
+            logger.debug(f"Latest filename: {result[0] if result else None}")
+            return result[0] if result else None
+        except mysql.connector.Error as e:
+            logger.error(f"Error fetching latest filename: {e}")
+            raise RuntimeError(f"Error fetching latest filename: {e}")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+    
+    #delete image froim db
+    def clear_image_db(self):
+        """Clear all entries from receiptimages table."""
+        try:
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM receiptimages")
+            conn.commit()
+            logger.info("Image database cleared successfully.")
+        except mysql.connector.Error as e:
+            logger.error(f"Error clearing image database: {e}")
+            raise RuntimeError(f"Error clearing image database: {e}")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+                
+        

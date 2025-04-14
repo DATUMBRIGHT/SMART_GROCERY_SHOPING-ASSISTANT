@@ -49,7 +49,29 @@ class StockProcessorAgent:
         self.db_config = db_config
         # Create the table schema on initialization
         self.create_db_schema()
+        self.create_image_db()
         logger.info("Database schema initialized.")
+
+
+    #create schema for images db
+    def create_image_db(self):
+        """Create the database schema for image data if it doesn't exist."""
+        try:
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS stockimages (
+                    id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                    image_path TEXT
+                )
+            ''')
+            conn.commit()
+            cursor.close()
+            conn.close()
+            logger.info("Database schema created successfully.")
+        except mysql.connector.Error as e:
+            logger.error(f"Error creating database schema: {e}")
+            raise RuntimeError(f"Error creating database schema: {e}")
 
     def create_db_schema(self):
         """Create the database schema if it doesn't exist."""
@@ -187,7 +209,9 @@ class StockProcessorAgent:
         except mysql.connector.Error as e:
             logger.error(f"Database error: {e}")
             raise RuntimeError(f"Database error: {e}")
+    
 
+    #fetch all stock item form db 
     def fetch_all_items(self):
         """Fetch all items from the stock database."""
         try:
@@ -211,45 +235,37 @@ class StockProcessorAgent:
         except mysql.connector.Error as e:
             logger.error(f"Error fetching items: {e}")
             raise RuntimeError(f"Error fetching items: {e}")
+    
 
-    def update_item(self, item_id, **kwargs):
-        """Update a stock item with new values."""
-        if not kwargs:
-            logger.warning("No update data provided.")
-            return
-
+    #save image to db
+    def save_image(self, filename):
+        """Save image path to the database."""
+        if not filename or not isinstance(filename, str):
+            logger.error("Image file name must be a non-empty string")
+            raise ValueError("Image file name must be a non-empty string")
         try:
-            # Build the update SQL statement dynamically
-            set_parts = []
-            values = []
-
-            for key, value in kwargs.items():
-                if key in ["name", "quantity", "weight", "category", "shelf_life"]:
-                    set_parts.append(f"{key} = %s")
-                    values.append(value)
-
-            if not set_parts:
-                logger.warning("No valid fields to update.")
-                return
-
-            values.append(item_id)  # Add the ID as the last parameter
-
             conn = mysql.connector.connect(**self.db_config)
             cursor = conn.cursor()
-            sql = f"UPDATE stock SET {', '.join(set_parts)} WHERE id = %s"
-            cursor.execute(sql, values)
-
-            if cursor.rowcount == 0:
-                logger.warning(f"No item found with ID {item_id}.")
-            else:
-                logger.info(f"Updated item ID {item_id}.")
+            cursor.execute("INSERT INTO stockimages (image_path) VALUES (%s)", (filename,))
             conn.commit()
-            cursor.close()
-            conn.close()
-
+            logger.info(f"Saved image path to database: {filename}")
         except mysql.connector.Error as e:
-            logger.error(f"Error updating item: {e}")
-            raise RuntimeError(f"Error updating item: {e}")
+            logger.error(f"Error saving image: {e}")
+            raise RuntimeError(f"Error saving image: {e}")
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+        
+    def get_latest_filename(self):
+        # Query database for most recent filename
+        conn = mysql.connector.connect(**self.db_config)
+        cursor = conn.cursor()
+        cursor.execute("SELECT image_path FROM stockimages ORDER BY id DESC LIMIT 1")
+        result = cursor.fetchone()
+        cursor.close()
+        return result[0] if result else None
 
     def delete_stocks(self):
         """Delete an item from the stock database."""
@@ -267,3 +283,14 @@ class StockProcessorAgent:
         except mysql.connector.Error as e:
             logger.error(f"Error deleting item: {e}")
             raise RuntimeError(f"Error deleting item: {e}")
+        
+
+    def clear_image_db(self):
+            conn = mysql.connector.connect(**self.db_config)
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM stockimages")
+            conn.commit()
+            cursor.close()
+            conn.close()
+            logger.info("Image database cleared successfully.")
+        

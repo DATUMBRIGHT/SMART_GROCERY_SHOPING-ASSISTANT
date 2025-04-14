@@ -56,6 +56,7 @@ app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")  # Required for flash messages and CSRF
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_URL, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH  # Limit file size
+app.permanent_session_lifetime = 3600  # Session lifetime in seconds
 
 # Ensure upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
@@ -94,121 +95,152 @@ class DeleteChatForm(FlaskForm):
 #home page
 @app.route('/')
 def index():
+    filename = receipt_agent.get_latest_filename()
     receipt_items = receipt_agent.fetch_all_items()
     logger.info(f"Fetched {len(receipt_items)} receipt items")
     form = ReceiptUploadForm()
-    return render_template('receipt.html', receipt_items=receipt_items, form=form)
+    return render_template('receipt.html', receipt_items=receipt_items, form=form,filename = filename)
 
-#stock page
-@app.route('/stock')    
-def stock():
-    stock_items = stock_agent.fetch_all_items()
-    stock_form = StockUploadForm()
-    dsf = DeleteStockForm()
-    return render_template('stock.html', stock_items=stock_items, stock_form=stock_form,dsf = dsf)
-
-
-#upload receipt page
-@app.route('/upload/receipt', methods=['POST'])
+@app.route('/upload/receipt', methods=['GET', 'POST'])
 def upload_receipt():
     form = ReceiptUploadForm()
-    if not form.validate_on_submit():
-        flash('Invalid form submission')
-        receipt_items = receipt_agent.fetch_all_items()
-        return render_template('receipt.html', form=form, receipt_items=receipt_items)
-    
-    file = form.receipt_image.data
-    filename = secure_filename(file.filename)
-    file_ext = os.path.splitext(filename)[1].lower()  # e.g., '.jpg'
-    if file_ext not in ALLOWED_EXTENSIONS:
-        flash(f"Invalid file type. Allowed types: {', '.join(ext.lstrip('.') for ext in ALLOWED_EXTENSIONS)}")
-        logger.warning(f"Invalid file type: {filename}")
-        receipt_items = receipt_agent.fetch_all_items()
-        return render_template('receipt.html', form=form, receipt_items=receipt_items)
-    
-    # Generate unique filename
-    unique_filename = f"{uuid.uuid4().hex}{file_ext}"
-    session['receipt_filename'] = unique_filename
-    temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
-    file.save(temp_path)
-    
-    try:
-        # Process receipt but don't save to DB
-        receipt_items = receipt_agent.process_receipt(temp_path)
-        session['receipt_items'] = receipt_items
-        receipt_agent.save_data(receipt_items)
-        logger.info(f"Processed {len(receipt_items)} receipt items")
-        flash(f"Processed {len(receipt_items)} receipt items")
-       
-        
-        # Handle GET request
-        filename = session.get('receipt_filename')
-        receipt_items = session.get('receipt_items', receipt_agent.fetch_all_items())
-        return render_template('receipt.html', form=form, filename=filename,receipt_items=receipt_items)
-        
-        
-    except Exception as e:
-        flash(f"Error processing receipt: {str(e)}")
-        logger.error(f"Error processing receipt: {str(e)}")
-        receipt_items = None
-        # Delete image only on error
-        if os.path.exists(temp_path):
-            os.remove(temp_path)
-        
-        return render_template('receipt.html', form=form, receipt_items=receipt_items)
-    
-    
+    filename = receipt_agent.get_latest_filename()  # Get from DB
+    receipt_items = session.get('receipt_items', receipt_agent.fetch_all_items())
 
+    if request.method == 'POST':
+        if not form.validate_on_submit():
+            flash('Invalid form submission')
+            return render_template('receipt.html', filename=filename, receipt_items=receipt_items, form=form)
+
+        file = form.receipt_image.data
+        filename = secure_filename(file.filename)
+        file_ext = os.path.splitext(filename)[1].lower()
+        if file_ext not in ALLOWED_EXTENSIONS:
+            flash(f"Invalid file type. Allowed types: {', '.join(ext.lstrip('.') for ext in ALLOWED_EXTENSIONS)}")
+            logger.warning(f"Invalid file type: {filename}")
+            return render_template('receipt.html', form=form, receipt_items=receipt_items, filename=filename)
+
+        # Generate unique filename
+        unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        file.save(temp_path)
+        logger.debug(f"Saved file: {temp_path}, exists: {os.path.exists(temp_path)}")
+
+        try:
+            receipt_agent.save_image(unique_filename)  # Save to DB
+            receipt_items = receipt_agent.process_receipt(temp_path)
+            session['receipt_items'] = receipt_items
+            receipt_agent.save_data(receipt_items)
+            logger.info(f"Processed {len(receipt_items)} receipt items")
+            flash(f"Processed {len(receipt_items)} receipt items")
+            filename = unique_filename  # Update filename for render
+        except Exception as e:
+            flash(f"Error processing receipt: {str(e)}")
+            logger.error(f"Error processing receipt: {str(e)}")
+            receipt_items = None
+            return render_template('receipt.html', form=form, filename=unique_filename, receipt_items=receipt_items)
+
+    return render_template('receipt.html', form=form, filename=filename, receipt_items=receipt_items)
+
+#delete receipt
+@app.route('/delete/receipt', methods=['POST'])
+def delete_receipt():
+    receipt_agent.delete_all_items()
+    receipt_agent.clear_image_db()
+    session.pop('receipt_items', None)
+    flash('All receipt items deleted successfully')
+    return redirect(url_for('index'))
+
+
+#general route for image serving
 @app.route('/uploads/<filename>')
 def serve_image(filename):
+    logger.info(f"Serving image: {filename}")
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
-    
-#upload stock page
-@app.route('/upload/stock', methods=['POST'])
-def upload_stock():
+
+   
+@app.route('/stock',)
+def stock():
+    stock_items = stock_agent.fetch_all_items()
     form = StockUploadForm()
     dsf = DeleteStockForm()
+    filename = stock_agent.get_latest_filename()  # Add for image display
+    logger.debug(f"Stock: Rendering stock.html with filename={filename}")
+    return render_template('stock.html', stock_items=stock_items, form=form, dsf=dsf, filename=filename)
 
-    #check if form is not submitted render oroginal page
-    if not form.validate_on_submit():
-        flash('Invalid form submission. Please ensure you’ve selected a valid file.', 'danger')
-        logger.warning("Invalid form submission")
-        return redirect(url_for('stock'))
+@app.route('/upload/stock', methods=['GET', 'POST'])
+def upload_stock():
+    form = StockUploadForm()
+    dsf = DeleteStockForm()  # Add for consistency
+    filename = stock_agent.get_latest_filename()
+    stock_items = stock_agent.fetch_all_items()  # Prefer DB over session
 
-    file = form.stock_image.data #get data from form 
-    
-    #check if form has no data stock image file
-    if not file:
-        flash('No file selected', 'danger')
-        logger.error("No file selected")
-        return redirect(url_for('stock'))
-    
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            file = form.stock_image.data
+            filename = secure_filename(file.filename)
+            file_ext = os.path.splitext(filename)[1].lower()
+            if file_ext not in ALLOWED_EXTENSIONS:
+                flash(f"Invalid file type. Allowed types: {', '.join(ext.lstrip('.') for ext in ALLOWED_EXTENSIONS)}")
+                logger.warning(f"Invalid file type: {filename}")
+                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=filename)
 
-    #get secure file name
-    filename = secure_filename(file.filename)
-    if not filename.lower().endswith(tuple(ALLOWED_EXTENSIONS)):
-        flash(f"Invalid file type. Allowed types: {', '.join(ALLOWED_EXTENSIONS)}", 'danger')
-        return redirect(url_for('stock'))
+            # Generate unique filename
+            unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+            temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            file.save(temp_path)
+            logger.debug(f"Saved file: {temp_path}, exists: {os.path.exists(temp_path)}")
+
+            try:
+                stock_agent.save_image(unique_filename)  # Single call
+                stock_items = stock_agent.process_stock_image(temp_path)
+                stock_agent.save_to_db(stock_items)
+                logger.info(f"Processed {len(stock_items)} stock items")
+                flash(f"Processed {len(stock_items)} stock items")
+                filename = stock_agent.get_latest_filename()  # Update
+            except Exception as e:
+                flash(f"Error processing stock: {str(e)}")
+                logger.error(f"Error processing stock: {str(e)}")
+                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=unique_filename)
+
+        elif dsf.validate_on_submit():
+            try:
+                stock_agent.delete_stocks()
+                stock_agent.clear_image_db()  # Optional: clear images
+                flash("All stock items deleted successfully")
+            except Exception as e:
+                flash(f"Error deleting stock: {str(e)}")
+                logger.error(f"Error deleting stock: {str(e)}")
+            return redirect(url_for('stock'))
+
+        else:
+            flash('Invalid form submission')
+
+    logger.debug(f"GET: Rendering stock.html with filename={filename}")
+    return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=filename)
+
+#delete stock
+@app.route('/delete_stock', methods=['POST'])
+def delete_stock():
     
-    #generate unique filename
-    filename = f"{uuid.uuid4().hex}{os.path.splitext(filename)[1].lower()}"
-    
-    temp_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-    try:
-        file.save(temp_path) #save image
-        logger.info(f"Saved image to {temp_path}")
-        stock_items = stock_agent.process_stock_image(temp_path)
-        stock_agent.save_to_db(stock_items)
-        flash(f"Processed and saved {len(stock_items)} stock items", 'success')
-    except ValueError as e:
-        logger.error(f"ValueError processing stock: {str(e)}")
-        flash(f"Error processing stock: Make sure you have a valid groceries picture", 'danger')
-    except Exception as e:
-        logger.error(f"Unexpected error processing stock: {str(e)}")
-        flash(f"Unexpected error: {str(e)}", 'danger')
-    # Handle GET request
-    
-    return render_template('stock.html', stock_items=stock_items, stock_form=form,filename = filename,dsf = dsf)
+        dsf = DeleteStockForm()
+        try:
+            if dsf.validate_on_submit():
+                    # Perform stock deletion logic
+                    stock_agent.delete_stocks()
+                    stock_agent.clear_image_db()
+                    flash('All stock items deleted successfully!', 'success')
+            else:
+                    flash('Invalid form submission.', 'danger')
+                    logger.warning("Invalid form submission detected.")
+        except Exception as e:
+            logger.error(f"Error deleting stock items: {str(e)}")
+            flash('An error occurred while deleting stock items. Please try again.', 'danger')
+        
+        # Redirect back to the stock management page
+        return redirect(url_for('stock',dsf = dsf))
 
 #chat page
 @app.route('/chat', methods=['GET', 'POST'])
@@ -299,38 +331,11 @@ def clear_chat():
         return redirect(url_for('chat')), 500
 
 
-#delete receipts
-@app.route('/delete_receipts', methods=['POST'])
-def delete_receipts():
-    try:
-        receipt_agent.delete_all_items()
-        flash('All receipts deleted successfully')
-    except Exception as e:
-        flash(f"Error deleting receipts: {str(e)}")
-        logger.error(f"Error deleting receipts: {str(e)}")
-    return redirect(url_for('index'))
 
 
-#delete stock
-@app.route('/delete_stock', methods=['POST'])
-def delete_stock():
-    
-        dsf = DeleteStockForm()
-        try:
-            if dsf.validate_on_submit():
-                    # Perform stock deletion logic
-                    stock_agent.delete_stocks()
-                    flash('All stock items deleted successfully!', 'success')
-            else:
-                    flash('Invalid form submission.', 'danger')
-                    logger.warning("Invalid form submission detected.")
-        except Exception as e:
-            logger.error(f"Error deleting stock items: {str(e)}")
-            flash('An error occurred while deleting stock items. Please try again.', 'danger')
-        
-        # Redirect back to the stock management page
-        return redirect(url_for('stock'))
+
+
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5002)
+    app.run(debug=True,port=5001)
