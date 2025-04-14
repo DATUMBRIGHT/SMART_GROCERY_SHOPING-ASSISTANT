@@ -10,3 +10,7 @@ numpy
 mysql-connector-python 
 pyyaml
 flask-wtf 
+flask-session
+markdown
+arrow 
+bleach
