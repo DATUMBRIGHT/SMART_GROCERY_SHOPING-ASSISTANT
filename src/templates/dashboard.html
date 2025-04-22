@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Grocery Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+  <style>
+    .dashboard-container {
+      background-color: #f0f4f8;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .welcome-blockquote {
+      background: linear-gradient(to right, #93c5fd, #60a5fa);
+      padding: 2rem;
+      border-radius: 1rem;
+      background-image: url('/static/background.jpg');
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    .insight-card {
+      background: linear-gradient(to bottom, #dbeafe, #ffffff);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .insight-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    .section-header {
+      color: #1e40af;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      font-weight: 700;
+    }
+    .subsection-header {
+      color: #1e40af;
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .table-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .table-header {
+      background: linear-gradient(to right, #1e40af, #3b82f6);
+      color: white;
+    }
+    .table-cell {
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+    }
+    .table-row:nth-child(even) {
+      background-color: #f9fafb;
+    }
+    .action-button {
+      background: linear-gradient(to right, #1e40af, #3b82f6);
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: background 0.3s;
+    }
+    .action-button:hover {
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+    }
+    .no-chart-data {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #6b7280;
+      font-size: 1.25rem;
+      padding: 2rem;
+    }
+    .no-chart-data i {
+      margin-bottom: 1rem;
+      color: #1e40af;
+      background: linear-gradient(to right, #1e40af, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(to right, #10b981, #059669);
+    }
+    .nav-link {
+      transition: color 0.3s, transform 0.3s;
+    }
+    .nav-link:hover {
+      color: #fefcbf;
+      transform: scale(1.1);
+    }
+    .chart-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      height: 200px;
+      margin: 0 auto;
+      padding: 1rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: white;
+    }
+    .clear-button {
+      background: linear-gradient(to right, #dc2626, #f87171);
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      transition: background 0.3s;
+    }
+    .clear-button:hover {
+      background: linear-gradient(to right, #f87171, #fca5a5);
+    }
+    .chat-widget {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      width: 300px;
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    }
+    .chat-header {
+      background: linear-gradient(to right, #1e40af, #3b82f6);
+      color: white;
+      padding: 0.75rem;
+      font-weight: 600;
+    }
+    .chat-body {
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .chat-input {
+      border-top: 1px solid #e5e7eb;
+      padding: 0.5rem;
+      display: flex;
+    }
+    .chat-input input {
+      flex-grow: 1;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      margin-right: 0.5rem;
+    }
+    .chat-message {
+      margin-bottom: 0.5rem;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+    .chat-message.user {
+      background: #e0f2fe;
+      margin-left: 1rem;
+    }
+    .chat-message.bot {
+      background: #f3f4f6;
+      margin-right: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar shadow-lg p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="{{ url_for('index') }}" class="text-2xl font-bold text-white uppercase tracking-wide">
+        <i class="fas fa-shopping-basket mr-2"></i>Grocery Assistant
+      </a>
+      <div class="space-x-6">
+        <a href="{{ url_for('dashboard') }}" class="nav-link text-white font-semibold">Dashboard</a>
+        <a href="{{ url_for('index') }}" class="nav-link text-white font-semibold">Receipts</a>
+        <a href="{{ url_for('stock') }}" class="nav-link text-white font-semibold">Stock</a>
+        <a href="{{ url_for('chat') }}" class="nav-link text-white font-semibold">Chat</a>
+        <a href="{{ url_for('logout') }}" class="nav-link text-white font-semibold" onclick="return confirm('Are you sure you want to quit?')">Logout</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="dashboard-container max-w-7xl mx-auto">
+    <blockquote class="welcome-blockquote mb-8">
+      <h2 class="welcome-title text-2xl font-bold">Welcome, {{ session.email | default('User') }}!</h2>
+      <p class="welcome-text text-lg">
+        Track your receipts, analyze spending, and manage your grocery inventory smarter.
+      </p>
+    </blockquote>
+
+    <div class="insight-card mb-8">
+      <h3 class="subsection-header flex items-center">
+        <i class="fas fa-user-circle mr-2 text-green-500"></i>Your Profile
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <p><i class="fas fa-leaf mr-2 text-green-500"></i>Vegetarian: {{ session.vegetarian | default('No') }}</p>
+        <p><i class="fas fa-allergies mr-2 text-red-500"></i>Allergies: {{ session.allergies | default('None') }}</p>
+        <p><i class="fas fa-heartbeat mr-2 text-blue-500"></i>Gluten-Free: {{ session.gluten_free | default('No') }}</p>
+        <p><i class="fas fa-carrot mr-2 text-orange-500"></i>Veg. Items: {{ vegetarian_count }}</p>
+      </div>
+    </div>
+
+    <h1 class="section-header flex items-center">
+      <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>Your Grocery Insights
+    </h1>
+    <div class="insights-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="insight-card">
+        <h3 class="text-lg font-semibold flex items-center">
+          <i class="fas fa-dollar-sign mr-2 text-green-500"></i>Spending Overview
+        </h3>
+        <p>Total: ${{ total_spent | round(2) }}</p>
+        <p>Avg. Receipt: ${{ avg_receipt_value | round(2) }}</p>
+        <p>This Month: ${{ monthly_spending[-1].total | round(2) if monthly_spending else 0 }}</p>
+      </div>
+      <div class="insight-card">
+        <h3 class="text-lg font-semibold flex items-center">
+          <i class="fas fa-receipt mr-2 text-blue-500"></i>Receipt Summary
+        </h3>
+        <p>Total Receipts: {{ total_receipts }}</p>
+        <p>Avg. Items/Receipt: {{ avg_items_per_receipt }}</p>
+        <p>Recent: {{ recent_receipt[3].strftime('%Y-%m-%d') if recent_receipt else 'None' }}</p>
+      </div>
+      <div class="insight-card">
+        <h3 class="text-lg font-semibold flex items-center">
+          <i class="fas fa-boxes mr-2 text-purple-500"></i>Inventory Insights
+        </h3>
+        <p>Total Items: {{ total_items }}</p>
+        <p>Expiring Soon: {{ expiring_soon | length }}</p>
+        <p>Low Stock: {{ low_stock | length }}</p>
+      </div>
+      <div class="insight-card">
+        <h3 class="text-lg font-semibold flex items-center">
+          <i class="fas fa-chart-pie mr-2 text-orange-500"></i>Purchase Patterns
+        </h3>
+        <p>Top Category: {{ top_category }}</p>
+        <p>Category Diversity: {{ category_diversity }}</p>
+        <p>Most Purchased: {{ most_purchased }}</p>
+      </div>
+    </div>
+
+    <h1 class="section-header flex items-center">
+      <i class="fas fa-chart-line mr-2 text-blue-500"></i>Analytics
+    </h1>
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8">
+      <h2 class="subsection-header">Spending and Receipt Trends</h2>
+      <div class="flex space-x-4 mb-4">
+        <select id="time-period" hx-get="/dashboard/analytics-data" hx-target="#chart-data" hx-swap="innerHTML" class="border rounded p-2">
+          <option value="all">All Time</option>
+          <option value="30_days">Last 30 Days</option>
+          <option value="this_year">This Year</option>
+        </select>
+        <select id="category-filter" hx-get="/dashboard/analytics-data" hx-target="#chart-data" hx-swap="innerHTML" class="border rounded p-2">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+            <option value="{{ cat }}">{{ cat }}</option>
+          {% endfor %}
+        </select>
+        <a href="/dashboard/export" class="action-button text-white font-semibold">
+          <i class="fas fa-download mr-2"></i>Export CSV
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="chart-container">
+          <canvas id="categoryChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="monthlyChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <canvas id="receiptsChart"></canvas>
+        </div>
+      </div>
+      <script id="chart-data" type="application/json">
+        {{ {'categories': categories, 'monthly_spending': monthly_spending, 'receipts_by_month': receipts_by_month} | tojson | safe }}
+      </script>
+    </div>
+
+    <h1 class="section-header flex items-center">
+      <i class="fas fa-receipt mr-2 text-gray-500"></i>Receipt History
+    </h1>
+    <div class="mb-6 flex space-x-4">
+      <button class="action-button text-white font-semibold" hx-get="/dashboard/receipts-table" hx-target="#receipts-table" hx-swap="outerHTML">
+        <i class="fas fa-table mr-2"></i>Toggle Receipts
+      </button>
+      <form method="POST" action="{{ url_for('reset_receipts') }}" onsubmit="return confirm('Are you sure you want to delete all receipts? This action cannot be undone.');" class="inline-flex">
+        {{ form.hidden_tag() }}
+        <button type="submit" class="clear-button text-white font-semibold">
+          <i class="fas fa-trash mr-2"></i>Reset Receipts
+        </button>
+      </form>
+    </div>
+    <div id="receipts-table" class="table-container hidden">
+      <p>Loading receipts...</p>
+    </div>
+
+    <div class="table-container mt-8">
+      <h2 class="subsection-header">All Receipt Items</h2>
+      {% if all_receipt_items %}
+        <table class="table w-full">
+          <thead>
+            <tr class="table-header">
+              <th class="table-cell"><i class="fas fa-id-badge mr-1"></i>ID</th>
+              <th class="table-cell"><i class="fas fa-tag mr-1"></i>Name</th>
+              <th class="table-cell"><i class="fas fa-cubes mr-1"></i>Quantity</th>
+              <th class="table-cell"><i class="fas fa-weight mr-1"></i>Weight</th>
+              <th class="table-cell"><i class="fas fa-folder mr-1"></i>Category</th>
+              <th class="table-cell"><i class="fas fa-dollar-sign mr-1"></i>Price</th>
+              <th class="table-cell"><i class="fas fa-calendar-alt mr-1"></i>Purchase Date</th>
+              <th class="table-cell"><i class="fas fa-clock mr-1"></i>Expiration Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in all_receipt_items %}
+              <tr class="table-row">
+                <td class="table-cell">{{ item.id }}</td>
+                <td class="table-cell">{{ item.name }}</td>
+                <td class="table-cell">{{ item.quantity }}</td>
+                <td class="table-cell">{{ item.weight }}</td>
+                <td class="table-cell">{{ item.category }}</td>
+                <td class="table-cell">{{ item.price | round(2) }}</td>
+                <td class="table-cell">{{ item.purchase_date }}</td>
+                <td class="table-cell">{{ item.expiration_date }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="no-items text-center text-gray-500 py-4">
+          <i class="fas fa-exclamation-circle mr-2"></i>No receipt items found. Upload a receipt to get started!
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="chat-widget">
+      <div class="chat-header">Receipt Assistant</div>
+      <div class="chat-body" id="chat-body">
+        <div class="text-center text-gray-500 text-sm">Ask about your receipts...</div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="chat-input" placeholder="e.g., Show April receipts">
+        <button class="action-button text-white" hx-post="/dashboard/chat" hx-target="#chat-body" hx-swap="innerHTML">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+      const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+      const receiptsCtx = document.getElementById('receiptsChart').getContext('2d');
+
+      let categoryChartInstance, monthlyChartInstance, receiptsChartInstance;
+
+      const renderCategoryChart = (data, ctx) => {
+        if (categoryChartInstance) categoryChartInstance.destroy();
+        if (data && Object.keys(data).length && ctx) {
+          categoryChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: Object.keys(data), datasets: [{ label: 'Spending by Category', data: Object.values(data), backgroundColor: 'rgba(59, 130, 246, 0.8)', borderColor: 'rgba(59, 130, 246, 1)', borderWidth: 1, barPercentage: 0.7, categoryPercentage: 0.8 }] },
+            options: { responsive: true, maintainAspectRatio: false, animation: { duration: 1000, easing: 'easeOutQuart' }, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1e40af', titleFont: { size: 14, weight: 'bold' }, bodyFont: { size: 12 } } }, scales: { y: { beginAtZero: true, grid: { display: false }, ticks: { color: '#6b7280', font: { size: 10 }, callback: (value) => '$' + value } }, x: { grid: { display: false }, ticks: { color: '#6b7280', font: { size: 9 }, autoSkip: true, maxTicksLimit: 6, maxRotation: 0, padding: 8 } } } }
+          });
+        } else {
+          document.getElementById('categoryChart').parentElement.innerHTML = '<div class="no-chart-data"><i class="fas fa-chart-bar fa-2x mb-4"></i><p>No spending data available</p></div>';
+        }
+      };
+
+      const renderMonthlyChart = (data, ctx) => {
+        if (monthlyChartInstance) monthlyChartInstance.destroy();
+        if (data && data.length && ctx) {
+          monthlyChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: { labels: data.map(d => d.month), datasets: [{ label: 'Monthly Spending', data: data.map(d => d.total), borderColor: 'rgba(16, 185, 129, 1)', backgroundColor: 'rgba(16, 185, 129, 0.2)', fill: true }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: (value) => '$' + value } }, x: { ticks: { autoSkip: true, maxTicksLimit: 6 } } } }
+          });
+        } else {
+          document.getElementById('monthlyChart').parentElement.innerHTML = '<div class="no-chart-data"><i class="fas fa-chart-line fa-2x mb-4"></i><p>No monthly spending data available</p></div>';
+        }
+      };
+
+      const renderReceiptsChart = (data, ctx) => {
+        if (receiptsChartInstance) receiptsChartInstance.destroy();
+        if (data && data.length && ctx) {
+          receiptsChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: { labels: data.map(d => d.month), datasets: [{ label: 'Receipts by Month', data: data.map(d => d.count), backgroundColor: 'rgba(96, 165, 250, 0.8)', borderColor: 'rgba(96, 165, 250, 1)', borderWidth: 1 }] },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } }, x: { ticks: { autoSkip: true, maxTicksLimit: 6 } } } }
+          });
+        } else {
+          document.getElementById('receiptsChart').parentElement.innerHTML = '<div class="no-chart-data"><i class="fas fa-receipt fa-2x mb-4"></i><p>No receipt data available</p></div>';
+        }
+      };
+
+      const updateAllCharts = (data) => {
+        renderCategoryChart(data.categories, categoryCtx);
+        renderMonthlyChart(data.monthly_spending, monthlyCtx);
+        renderReceiptsChart(data.receipts_by_month, receiptsCtx);
+      };
+
+      // Initial data fetch and rendering
+      const fetchInitialData = () => {
+        fetch('/dashboard/analytics-data?time_period=all&category=')
+          .then(response => response.json())
+          .then(data => {
+            updateAllCharts(data);
+            // Store initial data for potential comparisons or resets
+            window.initialChartData = data;
+          })
+          .catch(error => console.error('Error fetching initial chart data:', error));
+      };
+
+      fetchInitialData();
+
+      // Update charts on filter change
+      document.getElementById('time-period').addEventListener('change', function() {
+        const timePeriod = this.value;
+        const categoryFilter = document.getElementById('category-filter').value;
+        fetch(`/dashboard/analytics-data?time_period=${timePeriod}&category=${categoryFilter}`)
+          .then(response => response.json())
+          .then(data => updateAllCharts(data))
+          .catch(error => console.error('Error fetching filtered chart data:', error));
+      });
+
+      document.getElementById('category-filter').addEventListener('change', function() {
+        const category = this.value;
+        const timePeriod = document.getElementById('time-period').value;
+        fetch(`/dashboard/analytics-data?time_period=${timePeriod}&category=${category}`)
+          .then(response => response.json())
+          .then(data => updateAllCharts(data))
+          .catch(error => console.error('Error fetching filtered chart data:', error));
+      });
+
+      // Handle chat input (remains the same)
+      const chatInput = document.getElementById('chat-input');
+      const chatBody = document.getElementById('chat-body');
+      chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && chatInput.value.trim()) {
+          const query = chatInput.value;
+          htmx.ajax('POST', '/dashboard/chat', {
+            target: '#chat-body',
+            swap: 'innerHTML',
+            values: { query: query }
+          }).then(() => {
+            chatInput.value = '';
+            chatBody.scrollTop = chatBody.scrollHeight;
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartGrocery - Sign Up</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" onload="console.log('Tailwind CSS loaded')" onerror="console.error('Failed to load Tailwind CSS')">
+  <link href="/static/css/landing.css" rel="stylesheet" onload="console.log('landing.css loaded')" onerror="console.error('Failed to load landing.css')">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" onload="console.log('Google Fonts loaded')" onerror="console.error('Failed to load Google Fonts')">
+  <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+  <style>
+    .font-poppins {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+<body class="font-poppins">
+  <nav class="bg-gradient-to-r from-green-400 to-green-600 shadow-lg p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="{{ url_for('login_page') }}" class="text-2xl font-bold text-white uppercase tracking-wide">
+        SmartGrocery
+      </a>
+      <div class="space-x-6">
+        <a href="{{ url_for('login_page') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors">Home</a>
+        <a href="{{ url_for('login_page') }}#features" class="text-white font-semibold hover:text-yellow-300 transition-colors">Features</a>
+        <a href="{{ url_for('signup') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors">Sign Up</a>
+        <a href="{{ url_for('login_page') }}#login-form" class="text-white font-semibold hover:text-yellow-300 transition-colors">Login</a>
+      </div>
+    </div>
+  </nav>
+
+  <section id="signup" class="py-16 bg-green-200">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="mb-4">
+            {% for category, message in messages %}
+              <div class="text-{{ 'green-500' if category == 'success' else 'red-500' }} font-semibold">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      <h2 class="text-2xl font-semibold text-green-700 text-center mb-6">Sign Up for SmartGrocery</h2>
+      <form hx-post="{{ url_for('signup') }}" hx-target="#signup-response" hx-swap="outerHTML" method="POST" class="space-y-4">
+        {{ form.hidden_tag() }}
+        <div>
+          <label for="{{ form.username.id }}" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+          {{ form.username(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Your Username", required="required") }}
+          {% if form.username.errors %}
+            <ul class="errors">
+              {% for error in form.username.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.email.id }}" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
+          {{ form.email(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Your Email", required="required") }}
+          {% if form.email.errors %}
+            <ul class="errors">
+              {% for error in form.email.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.password.id }}" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+          {{ form.password(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Your Password", required="required") }}
+          {% if form.password.errors %}
+            <ul class="errors">
+              {% for error in form.password.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.confirm_password.id }}" class="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+          {{ form.confirm_password(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Confirm Password", required="required") }}
+          {% if form.confirm_password.errors %}
+            <ul class="errors">
+              {% for error in form.confirm_password.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.age.id }}" class="block text-gray-700 text-sm font-bold mb-2">Age (Optional)</label>
+          {{ form.age(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Your Age") }}
+          {% if form.age.errors %}
+            <ul class="errors">
+              {% for error in form.age.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.first_name.id }}" class="block text-gray-700 text-sm font-bold mb-2">First Name (Optional)</label>
+          {{ form.first_name(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Your First Name") }}
+          {% if form.first_name.errors %}
+            <ul class="errors">
+              {% for error in form.first_name.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.last_name.id }}" class="block text-gray-700 text-sm font-bold mb-2">Last Name (Optional)</label>
+          {{ form.last_name(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="Your Last Name") }}
+          {% if form.last_name.errors %}
+            <ul class="errors">
+              {% for error in form.last_name.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.vegetarian.id }}" class="block text-gray-700 text-sm font-bold mb-2">Vegetarian?</label>
+          {{ form.vegetarian(class="form-checkbox h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+        </div>
+        <div>
+          <label for="{{ form.vegan.id }}" class="block text-gray-700 text-sm font-bold mb-2">Vegan?</label>
+          {{ form.vegan(class="form-checkbox h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+        </div>
+        <div>
+          <label for="{{ form.gluten_free.id }}" class="block text-gray-700 text-sm font-bold mb-2">Gluten Free?</label>
+          {{ form.gluten_free(class="form-checkbox h-5 w-5 text-green-600 focus:ring-green-500 border-gray-300 rounded") }}
+        </div>
+        <div>
+          <label for="{{ form.allergies.id }}" class="block text-gray-700 text-sm font-bold mb-2">Allergies (Optional)</label>
+          {{ form.allergies(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="List your allergies") }}
+          {% if form.allergies.errors %}
+            <ul class="errors">
+              {% for error in form.allergies.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div>
+          <label for="{{ form.known_diseases.id }}" class="block text-gray-700 text-sm font-bold mb-2">Known Diseases (Optional)</label>
+          {{ form.known_diseases(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="List any known diseases") }}
+          {% if form.known_diseases.errors %}
+            <ul class="errors">
+              {% for error in form.known_diseases.errors %}
+                <li class="text-red-500 text-xs italic">{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline">
+          Create Account
+        </button>
+        <p class="text-center text-gray-600 text-xs">
+          Already have an account? <a href="{{ url_for('login_page') }}#login-form" class="text-green-500 hover:underline">Log in</a>
+        </p>
+      </form>
+      <div id="signup-response" class="mt-4"></div>
+    </div>
+  </section>
+
+  <footer class="bg-gray-100 py-8 text-center text-gray-600 text-sm">
+    <p>© <span id="year"></span> SmartGrocery. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

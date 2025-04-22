@@ -4,6 +4,15 @@ database:
   user: root
   password: yourpassword
   name: grocery_db
+  receipts_table: receipts
+  
+  tables:
+        stock: stock
+        users: users
+        receiptsimages: receiptimages
+        stockimages: stockimages
+        receipts: receipts
+        
   
 gemini:
   model: gemini-1.5-flash

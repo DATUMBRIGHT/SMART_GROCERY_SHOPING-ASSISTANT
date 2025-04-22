@@ -130,10 +130,6 @@ class SmartGroceryAnalyzer:
         return self.generate_response(question, context)
 
     def run_chatbot(self):
-        """Run an interactive chatbot session."""
-        print("🍎 Smart Grocery Assistant: Ready to help manage your groceries and reduce waste!")
-        print("Ask me about expiration dates, meal suggestions, or shopping list recommendations.")
-        print("Type 'exit' to end the session.\n")
         
         while True:
             try:

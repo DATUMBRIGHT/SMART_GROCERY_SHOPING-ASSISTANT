@@ -1,0 +1,26 @@
+<tr id="items-{{ receipt_id }}">
+    <td colspan="5" class="table-cell">
+      <table class="table w-full">
+        <thead>
+          <tr class="table-header">
+            <th class="table-cell">Name</th>
+            <th class="table-cell">Quantity</th>
+            <th class="table-cell">Weight</th>
+            <th class="table-cell">Category</th>
+            <th class="table-cell">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in items %}
+            <tr class="table-row">
+              <td class="table-cell">{{ item.name }}</td>
+              <td class="table-cell">{{ item.quantity }}</td>
+              <td class="table-cell">{{ item.weight }}</td>
+              <td class="table-cell">{{ item.category }}</td>
+              <td class="table-cell">${{ item.price | round(2) }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </td>
+  </tr>
