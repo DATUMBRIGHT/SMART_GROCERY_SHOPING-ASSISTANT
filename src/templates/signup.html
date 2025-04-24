@@ -144,11 +144,11 @@
           {% endif %}
         </div>
         <div>
-          <label for="{{ form.known_diseases.id }}" class="block text-gray-700 text-sm font-bold mb-2">Known Diseases (Optional)</label>
-          {{ form.known_diseases(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="List any known diseases") }}
-          {% if form.known_diseases.errors %}
+          <label for="{{ form.extra_info.id }}" class="block text-gray-700 text-sm font-bold mb-2">Known Diseases (Optional)</label>
+          {{ form.extra_info(class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", placeholder="List any extra info such as known diseases or  blood type") }}
+          {% if form.extra_info.errors %}
             <ul class="errors">
-              {% for error in form.known_diseases.errors %}
+              {% for error in form.extra_info.errors %}
                 <li class="text-red-500 text-xs italic">{{ error }}</li>
               {% endfor %}
             </ul>

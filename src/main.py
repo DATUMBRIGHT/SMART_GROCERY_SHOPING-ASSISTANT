@@ -55,7 +55,7 @@ except KeyError as e:
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
-app.config['UPLOAD_FOLDER'] = os.path.join(BASE_URL, 'Uploads')
+app.config['UPLOAD_FOLDER'] = os.path.join(BASE_URL, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 app.permanent_session_lifetime = 3600
 
@@ -117,7 +117,7 @@ class SignupForm(FlaskForm):
     vegan = BooleanField('Vegan')
     gluten_free = BooleanField('Gluten-Free')
     allergies = StringField('Allergies (e.g., peanuts, dairy)', validators=[Optional(), Length(max=200)])
-    known_diseases = StringField('Known Diseases', validators=[Optional(), Length(max=200)])
+    extra_info = StringField('Extra Information', validators=[Optional(), Length(max=200)])
     submit = SubmitField('Sign Up')
 
 
@@ -141,7 +141,7 @@ def signup():
         vegan = form.vegan.data
         gluten_free = form.gluten_free.data
         allergies = form.allergies.data
-        known_diseases = form.known_diseases.data
+        extra_info = form.extra_info.data
 
         if db_manager.check_if_email_already_exists(email):
             logger.info(f"Email '{email}' already exists")
@@ -150,7 +150,7 @@ def signup():
             flash('Email already exists. Please use a different email or login.', 'danger')
             return render_template('signup.html', form=form)
         try:
-            db_manager.create_user(username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies, known_diseases)
+            db_manager.create_user(username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies, extra_info)
             logger.info(f"User '{username}' created successfully")
             if request.headers.get('HX-Request'):
                 response = make_response('<div class="text-green-500 font-semibold">Signup successful! Redirecting to login...</div>')
@@ -368,6 +368,7 @@ def upload_receipt():
     receipt_id = session.get('last_receipt_id')
     # Fetch filename and receipt items, with fallbacks
     display_filename = receipt_agent.get_latest_filename(user_id, receipt_id) if receipt_id else None
+    print(display_filename)
     receipt_items = session.get('receipt_items') or receipt_agent.fetch_receipt_items_by_id(receipt_id, user_id) or []
 
     if request.method == 'POST':
@@ -376,12 +377,15 @@ def upload_receipt():
             return render_template('receipt.html', filename=display_filename, receipt_items=receipt_items, form=form,delete_form = drf)
 
         file = form.receipt_image.data
+        print(f"file : {file}")
         if not file:
             flash('No file uploaded.', 'danger')
             return render_template('receipt.html', filename=display_filename, receipt_items=receipt_items,form=form,delete_form = drf)
 
         original_filename = secure_filename(file.filename)
+        print(f"original_filename : {original_filename}")
         file_ext = os.path.splitext(original_filename)[1].lower()
+        print(f"file_ext : {file_ext}")
         if file_ext not in ALLOWED_EXTENSIONS:
             flash(f"Invalid file type. Allowed types: {', '.join(ext.lstrip('.') for ext in ALLOWED_EXTENSIONS)}", 'danger')
             logger.warning(f"Invalid file type: {original_filename}")
@@ -389,7 +393,9 @@ def upload_receipt():
 
         # Generate unique filename and save file
         unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+        print(f"unique_filename : {unique_filename}")
         temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        print(f"temp_path : {temp_path} ")
         os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
         file.save(temp_path)
         logger.debug(f"Saved file: {temp_path}, exists: {os.path.exists(temp_path)}")
@@ -398,20 +404,20 @@ def upload_receipt():
             # Process receipt and save data
             receipt_items = receipt_agent.process_receipt(temp_path)
             receipt_id = receipt_agent.save_data(receipt_items, user_id)
-            receipt_agent.save_image(temp_path, user_id, receipt_id)
+            receipt_agent.save_image(unique_filename, user_id, receipt_id)
             
             # Update session
             session['last_receipt_id'] = receipt_id
-            session['last_receipt_file'] = temp_path
+            session['last_receipt_file'] = unique_filename 
             session['receipt_items'] = receipt_items
             
             
             logger.info(f"Processed {len(receipt_items)} receipt items")
             flash(f"Processed {len(receipt_items)} receipt items successfully.", 'success')
-            return render_template('receipt.html', filename=temp_path, receipt_items=receipt_items,form=form,delete_form = drf)
+            return render_template('receipt.html', filename=unique_filename or receipt_agent.get_latest_filename(user_id, receipt_id), receipt_items=receipt_items,form=form,delete_form = drf)
 
-        except (ValueError, IOError) as e:
-            flash(f"Error processing receipt: {str(e)}", 'danger')
+        except (ValueError, IOError,Exception) as e:
+            flash(f"Error processing receipt. Check if receipt is not empty or valid groceries. Please try again!", 'danger')
             logger.error(f"Error processing receipt: {str(e)}")
             if os.path.exists(temp_path):
                 os.remove(temp_path)  # Clean up temporary file
@@ -700,7 +706,7 @@ def index():
     
     try:
         # Fetch the latest receipt ID if not in session
-        receipt_id = session.get('last_receipt_id')
+        receipt_id = session.get('last_receipt_id') 
         if not receipt_id:
             conn = db_pool.get_connection()
             cursor = conn.cursor()
@@ -720,7 +726,7 @@ def index():
         receipt_items = receipt_agent.fetch_receipt_items_by_id(receipt_id, user_id) if receipt_id else []
         
         # Fetch filename for the receipt image
-        filename = session.get('last_receipt_file')
+        filename = session.get('last_receipt_file') or  receipt_agent.get_latest_filename(user_id,receipt_id)
         
         # Fetch user data for consistency with dashboard
         user = db_manager.fetch_user_id(user_id)
@@ -737,7 +743,7 @@ def index():
     except mysql.connector.Error as e:
         logger.error(f"Error fetching receipt data: {e}")
         flash('Error loading receipt data.', 'danger')
-        return redirect(url_for('dashboard'))
+        return redirect(url_for('index'))
 
 # Chatbot for receipt queries
 @app.route('/dashboard/chat', methods=['POST'])
@@ -798,76 +804,89 @@ def logout():
     return redirect(url_for('login_page'))
 
 
-
 @app.route('/stock',)
 def stock():
     user_id = session.get('user_id')
     if 'user_id' not in session:
         flash('Please log in to access the stock page.', 'danger')
         return redirect(url_for('login_page'))
-    
-    stock_items = stock_agent.fetch_all_stockitems(user_id)
+    stock_id = session.get('last_stock_id') 
+    print(f"Stock ID: {stock_id}")
+    stock_items = stock_agent.fetch_stock(user_id,stock_id)
     form = StockUploadForm()
     dsf = DeleteStockForm()
     filename = stock_agent.get_latest_filename(user_id)  # Add for image display
+    print(f"Filename: {filename}")
     logger.debug(f"Stock: Rendering stock.html with filename={filename}")
     return render_template('stock.html', stock_items=stock_items, form=form, dsf=dsf, filename=filename)
 
 @app.route('/upload/stock', methods=['GET', 'POST'])
 def upload_stock():
     user_id = session.get('user_id')
+    logger.debug(f"Stock: Received request for upload_stock, user_id={user_id}")
+    stock_id = session.get('last_stock_id')
+    print(f"Stock ID: {stock_id}")
+
     if 'user_id' not in session:
         flash('Please log in to access the stock page.', 'danger')
         return redirect(url_for('login_page'))
     form = StockUploadForm()
     dsf = DeleteStockForm()  # Add for consistency
-    filename = stock_agent.get_latest_filename(user_id)
-    stock_items = stock_agent.fetch_all_stockitems(user_id)  # Prefer DB over session
+    latest_filename = stock_agent.get_latest_filename(user_id) or session.get('lastest_stock_file')
+    print(f"Latest Filename: {latest_filename}")
+    stock_items = stock_agent.fetch_stock(user_id,stock_id)  # Prefer DB over session
 
     if request.method == 'POST':
         if form.validate_on_submit():
             file = form.stock_image.data
+            print(f"File: {file}")
             filename = secure_filename(file.filename)
+            print(f"Filename: {filename}")
             file_ext = os.path.splitext(filename)[1].lower()
             if file_ext not in ALLOWED_EXTENSIONS:
                 flash(f"Invalid file type. Allowed types: {', '.join(ext.lstrip('.') for ext in ALLOWED_EXTENSIONS)}")
                 logger.warning(f"Invalid file type: {filename}")
-                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=filename)
+                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=latest_filename)
 
             # Generate unique filename
             unique_filename = f"{uuid.uuid4().hex}{file_ext}"
+            print(f"unique_filename : {unique_filename}")
             temp_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+            print(f"temp_path : {temp_path}")
             os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
             file.save(temp_path)
+            
+            
             logger.debug(f"Saved file: {temp_path}, exists: {os.path.exists(temp_path)}")
 
             try:
                  
-                stock_items = stock_agent.process_stock_image(temp_path)
-                stock_agent.save_to_db(stock_items,user_id,temp_path)
+                stock_items = stock_agent.process_stock_image(temp_path) # process with long path
+                logger.info(f"processed {unique_filename} stock successfully")
+                stock_id = stock_agent.save_to_db(stock_items,user_id,unique_filename) #save to db with unique_filenmame
+                
+                session['last_stock_id'] = stock_id
+                session['lastest_stock_file'] = unique_filename #save unique file name to session
+                print(f"session_latest_stocK: {session['latest_stock_file']}")
                 logger.info(f"Processed {len(stock_items)} stock items")
-                flash(f"Processed {len(stock_items)} stock items")
-                filename = stock_agent.get_latest_filename(user_id)  # Update
+                flash(f"Processed stock items")
+                filename = session['lastest_stock_file'] or stock_agent.get_latest_filename(user_id)   # Update
+                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=filename )
             except Exception as e:
                 flash(f"Error processing stock: {str(e)}")
                 logger.error(f"Error processing stock: {str(e)}")
-                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=filename)
-
-        elif dsf.validate_on_submit():
-            try:
-                stock_agent.delete_all_stock(user_id)
                 
-                flash("All stock items deleted successfully")
-            except Exception as e:
-                flash(f"Error deleting stock: {str(e)}")
-                logger.error(f"Error deleting stock: {str(e)}")
-            return redirect(url_for('stock'))
+                
+                return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=unique_filename or session['lastest_stock_file'] )
+
+       
 
         else:
             flash('Invalid form submission')
-
+    
+    filename = session['lastest_stock_file'] or stock_agent.get_latest_filename(user_id)
     logger.debug(f"GET: Rendering stock.html with filename={filename}")
-    return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=filename)
+    return render_template('stock.html', form=form, dsf=dsf, stock_items=stock_items, filename=unique_filename)
 
 #delete stock
 @app.route('/delete_stock', methods=['POST'])
@@ -987,6 +1006,9 @@ def clear_chat():
         if request.headers.get('HX-Request'):
             return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>', 500
         return redirect(url_for('chat')), 500
+
+
+
 
 
 

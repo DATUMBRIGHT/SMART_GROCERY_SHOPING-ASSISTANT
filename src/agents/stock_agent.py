@@ -217,7 +217,7 @@ class StockProcessorAgent:
             cursor.execute(f"INSERT INTO {STOCK_IMAGES_TABLE} (image_path, user_id) VALUES (%s, %s)", (image_path, user_id))
             logger.info(f"Saved image path {image_path} for user_id {user_id}.")
 
-            stock_id = cursor.lastrowid() #get row id from stockimages table 
+            stock_id = cursor.lastrowid #get row id from stockimages table 
 
             #stock_id not declared but set as null.
             cursor.execute("INSERT INTO all_stock (total_items, user_id,stock_id) VALUES (%s, %s,%s)", (len(data), user_id,stock_id))
@@ -382,22 +382,28 @@ class StockProcessorAgent:
             if conn:
                 conn.close()
 
-    def clear_last_stock(self, user_id):
-        """Delete the latest stock item and clean up related records if necessary."""
+    def get_latest_stock_by_user(self, user_id):
+        """Fetch the latest stock item for the given user_id."""
+        conn, cursor = None, None
         try:
             conn = mysql.connector.connect(**self.db_config)
-            cursor = conn.cursor()
-            cursor.execute(f"SELECT MAX(id) FROM {STOCK_TABLE} WHERE user_id = %s", (user_id,))
-            result = cursor.fetchone()
-            if result and result[0]:
-                item_id = result[0]
-                self.delete_stock(user_id, item_id)
-            else:
-                logger.info(f"No stock items found for user_id {user_id}.")
+            cursor = conn.cursor(dictionary=True)  # Use dictionary cursor for column name access
+            cursor.execute(
+                f"""
+                SELECT * FROM {STOCK_TABLE}
+                WHERE user_id = %s AND stock_id = (
+                    SELECT MAX(stock_id) FROM {STOCK_TABLE} WHERE user_id = %s
+                )
+                """,
+                (user_id, user_id)
+            )
+            return cursor.fetchall()  # Fetch a single row (latest stock item)
         except mysql.connector.Error as e:
-            logger.error(f"Error clearing last stock item for user_id {user_id}: {e}")
-            raise RuntimeError(f"Error clearing last stock item: {e}")
+            error_message = f"Error fetching latest stock item for user_id {user_id}: {e}"
+            logger.error(error_message)
+            raise RuntimeError(error_message)
         finally:
+            # Close resources in one place
             if cursor:
                 cursor.close()
             if conn:

@@ -48,7 +48,7 @@ class DBManager:
                 vegan BOOLEAN DEFAULT FALSE,
                 gluten_free BOOLEAN DEFAULT FALSE,
                 allergies TEXT,
-                known_diseases TEXT,
+                extra_info TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             )
@@ -61,7 +61,7 @@ class DBManager:
         finally:
             conn.close()
 
-    def create_user(self, username, password, email, age=None, first_name=None, last_name=None, vegetarian=False, vegan=False, gluten_free=False, allergies=None,known_diseases = None):
+    def create_user(self, username, password, email, age=None, first_name=None, last_name=None, vegetarian=False, vegan=False, gluten_free=False, allergies=None,extra_info = None):
 
         password = generate_password_hash(password)
         if self.check_if_email_already_exists(email):
@@ -71,10 +71,10 @@ class DBManager:
         cursor = conn.cursor()
         try:
             sql_insert = f"""
-                INSERT INTO {USERS_TABLE} (username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies,known_diseases)
+                INSERT INTO {USERS_TABLE} (username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies,extra_info)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s,%s)
             """
-            values = (username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies,known_diseases)
+            values = (username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies,extra_info)
             cursor.execute(sql_insert, values)
             conn.commit()
             user_id = cursor.lastrowid
@@ -168,3 +168,36 @@ class DBManager:
                 raise RuntimeError(f"Error fetching user: {err}")
             finally:
                 conn.close()
+    
+    def fetch_user_relevant_info(self, user_id):
+        """Fetch a user's details based on their userid."""
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+        if user_id is None:
+            logger.info(f"User ID is None. Cannot fetch user.")
+            return None
+        try:
+            query = f"SELECT age, first_name, last_name, vegetarian, vegan, gluten_free, allergies,extra_info FROM {USERS_TABLE} WHERE id = %s"
+            cursor.execute(query, (user_id, ))
+            row = cursor.fetchone()
+            result = [
+                {"age": row[0],
+                "first_name": row[1],
+                    "last_name": row[2],
+                    "vegetarian": row[3],
+                    "vegan": row[4],
+                    "gluten_free": row[5],
+                    "allergies": row[6],
+                    "extra_info": row[7]}
+             ] 
+            return result if row else None
+        except mysql.connector.Error as err:
+            logger.error(f"Error fetching user details for user_id '{user_id}': {err}")
+            raise RuntimeError(f"Error fetching user details: {err}")
+    
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+            
