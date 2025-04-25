@@ -5,15 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartGrocery - Simplify Your Grocery Shopping</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" onload="console.log('Tailwind CSS loaded')" onerror="console.error('Failed to load Tailwind CSS')">
-  <link href="/static/css/landing.css" rel="stylesheet" onload="console.log('landing.css loaded')" onerror="console.error('Failed to load landing.css')">
+  <link href="{{ url_for('static', filename='css/landing.css') }}" rel="stylesheet" onload="console.log('landing.css loaded')" onerror="console.error('Failed to load landing.css')">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" onload="console.log('Google Fonts loaded')" onerror="console.error('Failed to load Google Fonts')">
   <script src="https://unpkg.com/htmx.org@1.9.6"></script>
   <style>
     .font-poppins {
       font-family: 'Poppins', sans-serif;
     }
-
-  
   </style>
 </head>
 <body class="font-poppins">
@@ -52,7 +50,7 @@
           </div>
         </div>
         <div class="lg:w-1/2 mt-10 lg:mt-0">
-          <img src="/static/login_image.jpg" alt="SmartGrocery App Interface" class="rounded-lg shadow-lg">
+          <img src="{{ url_for('static', filename='login_image.jpg') }}" alt="SmartGrocery mobile app interface showing grocery list" class="rounded-lg shadow-lg" onerror="this.src='https://via.placeholder.com/600x400';">
         </div>
       </div>
     </div>
@@ -64,7 +62,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
           <div class="flex items-center mb-4">
-            <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Smart Receipt Scanning Icon">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
             </svg>
             <h3 class="text-xl font-semibold text-gray-800">Smart Receipt Scanning</h3>
@@ -75,7 +73,7 @@
         </div>
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
           <div class="flex items-center mb-4">
-            <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Pantry Stock Management Icon">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
             </svg>
             <h3 class="text-xl font-semibold text-gray-800">Pantry Stock Management</h3>
@@ -86,7 +84,7 @@
         </div>
         <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300">
           <div class="flex items-center mb-4">
-            <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-8 h-8 text-green-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-label="Integrated Chat Icon">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
             </svg>
             <h3 class="text-xl font-semibold text-gray-800">Integrated Chat</h3>
@@ -103,7 +101,7 @@
     <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-8">
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-          <div class="mb-4">
+          <div class="mb-4" id="flash-messages">
             {% for category, message in messages %}
               <div class="text-{{ 'green-500' if category == 'success' else 'red-500' }} font-semibold">{{ message }}</div>
             {% endfor %}
@@ -114,6 +112,7 @@
       <form hx-post="{{ url_for('login') }}"
             hx-target="#login-response"
             hx-swap="outerHTML"
+            hx-on::error="this.querySelector('#login-response').innerHTML = '<div class=&quot;text-red-500 font-semibold&quot;>Network error. Please try again.</div>'"
             class="space-y-4">
         {{ login_form.hidden_tag() }}
         <div>
@@ -140,8 +139,10 @@
   </footer>
 
   <script>
+    // Set current year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Smooth scrolling for anchor links
     document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -153,6 +154,12 @@
         }
       });
     });
+
+    // Auto-dismiss flash messages after 5 seconds
+    setTimeout(() => {
+      const flashMessages = document.getElementById('flash-messages');
+      if (flashMessages) flashMessages.remove();
+    }, 5000);
   </script>
 </body>
 </html>

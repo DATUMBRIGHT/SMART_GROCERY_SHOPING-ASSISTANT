@@ -35,6 +35,7 @@
                   View Items
                 </button>
                 <form action="/dashboard/delete-receipt/{{ receipt.id }}" method="POST" class="inline">
+                   
                   <button type="submit" class="text-red-500 hover:underline" onclick="return confirm('Delete this receipt?')">
                     Delete
                   </button>
@@ -51,3 +52,11 @@
       </p>
     {% endif %}
   </div>
+  <script>
+
+document.addEventListener('htmx:configRequest', (event) => {
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+    event.detail.headers['X-CSRFToken'] = csrfToken;
+});
+  </script>
+  

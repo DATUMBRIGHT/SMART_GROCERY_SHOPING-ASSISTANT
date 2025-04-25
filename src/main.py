@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, redirect, flash, request, jso
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, NumberRange, Optional, Email, Length, EqualTo
+from wtforms import validators
 from flask import session
 import mysql.connector
 import os
@@ -58,7 +59,9 @@ app.secret_key = os.getenv("APP_SECRET_KEY")
 app.config['UPLOAD_FOLDER'] = os.path.join(BASE_URL, 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 app.permanent_session_lifetime = 3600
-
+app.config['SESSION_COOKIE_SECURE'] = True  # Only send over HTTPS
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 # Ensure upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -71,8 +74,9 @@ db_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=5, **DB_CONF
 # Initialize agents and analyzer
 stock_agent = StockProcessorAgent(api_key=GEMINI_API_KEY)
 receipt_agent = ReceiptProcessorAgent(api_key=GEMINI_API_KEY)
-analyzer = SmartGroceryAnalyzer(stock_agent=stock_agent, receipt_agent=receipt_agent)
 db_manager = DBManager()
+analyzer = SmartGroceryAnalyzer(stock_agent=stock_agent, receipt_agent=receipt_agent,db_manager = db_manager)
+
 
 # Form for receipt upload
 class ReceiptUploadForm(FlaskForm):
@@ -103,22 +107,27 @@ class LoginForm(FlaskForm):
 
 
 class SignupForm(FlaskForm):
-    username = StringField('Username', validators=[Length(min=4, max=25)])
-    email = StringField('Email Address', validators=[Length(min=6, max=35), Email()])
-    password = PasswordField('New Password', validators=[
-        Length(min=8),
-        EqualTo('confirm_password', message='Passwords must match')
+    username = StringField('Username', [
+        validators.DataRequired(),
+        validators.Length(min=4, max=25)
     ])
-    confirm_password = PasswordField('Repeat Password')
-    age = IntegerField('Age', validators=[Optional(), NumberRange(min=13, max=150, message='Please enter a valid age')])
-    first_name = StringField('First Name', validators=[Optional(), Length(max=30)])
-    last_name = StringField('Last Name', validators=[Optional(), Length(max=30)])
+    email = StringField('Email', [
+        validators.DataRequired(),
+        validators.Email(),
+        validators.Length(max=50)
+    ])
+    password = PasswordField('Password', [
+        validators.DataRequired(),
+        validators.Length(min=8),
+        validators.EqualTo('confirm_password', message='Passwords must match')
+    ])
+    confirm_password = PasswordField('Confirm Password')
     vegetarian = BooleanField('Vegetarian')
     vegan = BooleanField('Vegan')
-    gluten_free = BooleanField('Gluten-Free')
-    allergies = StringField('Allergies (e.g., peanuts, dairy)', validators=[Optional(), Length(max=200)])
-    extra_info = StringField('Extra Information', validators=[Optional(), Length(max=200)])
-    submit = SubmitField('Sign Up')
+    gluten_free = BooleanField('Gluten Free')
+    allergies = StringField('Allergies')
+    extra_info = StringField('Health Information')
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -127,44 +136,98 @@ def login_page():
     
     return render_template('login.html', login_form=login_form)
 
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
-    form = SignupForm()
-    if form.validate_on_submit():
-        username = form.username.data
-        age = form.age.data
-        email = form.email.data
-        password = form.password.data
-        first_name = form.first_name.data
-        last_name = form.last_name.data
-        vegetarian = form.vegetarian.data
-        vegan = form.vegan.data
-        gluten_free = form.gluten_free.data
-        allergies = form.allergies.data
-        extra_info = form.extra_info.data
-
-        if db_manager.check_if_email_already_exists(email):
-            logger.info(f"Email '{email}' already exists")
-            if request.headers.get('HX-Request'):
-                return '<div class="text-red-500 font-semibold">Email already exists. Please use a different email.</div>', 400
-            flash('Email already exists. Please use a different email or login.', 'danger')
-            return render_template('signup.html', form=form)
+    form = SignupForm(request.form)
+    
+    if request.method == 'POST' and form.validate_on_submit():
         try:
-            db_manager.create_user(username, password, email, age, first_name, last_name, vegetarian, vegan, gluten_free, allergies, extra_info)
-            logger.info(f"User '{username}' created successfully")
+            # Check existing email
+            if db_manager.check_if_email_already_exists(form.email.data):
+                form.email.errors.append('This email is already registered')
+                if request.headers.get('HX-Request'):
+                    return render_template('auth/partials/signup_form.html', 
+                                        form=form), 400
+                return render_template('auth/signup.html', form=form)
+
+            # Check existing username
+            if db_manager.check_if_username_already_exists(form.username.data):
+                form.username.errors.append('Username is already taken')
+                if request.headers.get('HX-Request'):
+                    return render_template('auth/partials/signup_form.html', 
+                                        form=form), 400
+                return render_template('auth/signup.html', form=form)
+
+            # Create user
+            user_id = db_manager.create_user(
+                username=form.username.data,
+                email=form.email.data,
+                password=form.password.data,
+                vegetarian=form.vegetarian.data,
+                vegan=form.vegan.data,
+                gluten_free=form.gluten_free.data,
+                allergies=form.allergies.data,
+                extra_info=form.extra_info.data
+            )
+
+            # Set session
+            session['user_id'] = user_id
+            session['username'] = form.username.data
+            session['email'] = form.email.data
+
+            # HTMX response
             if request.headers.get('HX-Request'):
-                response = make_response('<div class="text-green-500 font-semibold">Signup successful! Redirecting to login...</div>')
-                response.headers['HX-Redirect'] = url_for('login_page')
+                response = make_response()
+                response.headers['HX-Redirect'] = url_for('dashboard')
                 return response
-            flash('Signup successful! Please log in.', 'success')
-            return redirect(url_for('login_page'))
+
+            flash('Account created successfully!', 'success')
+            return redirect(url_for('dashboard'))
+
         except Exception as e:
-            logger.error(f"Error during signup: {e}")
+            app.logger.error(f"Signup error: {str(e)}")
+            error = "An error occurred during signup. Please try again."
             if request.headers.get('HX-Request'):
-                return '<div class="text-red-500 font-semibold">An error occurred during signup. Please try again.</div>', 500
-            flash('An error occurred during signup. Please try again.', 'danger')
-            return render_template('signup.html', form=form)
-    return render_template('signup.html', form=form)
+                return render_template('auth/partials/signup_form.html', form=form, form_error=error), 500
+            flash(error, 'danger')
+            return redirect(url_for('signup'))
+
+    # Handle validation errors
+    if form.errors:
+        if request.headers.get('HX-Request'):
+            return render_template('auth/partials/signup_form.html', form=form), 400
+        flash('Please correct the form errors', 'danger')
+
+    return render_template('auth/signup.html', form=form)
+
+@app.route('/check-username', methods=['POST'])
+def check_username():
+    username = request.form.get('username')
+    exists = db_manager.check_if_username_already_exists(username)
+    return 'Username already taken' if exists else ''
+
+@app.route('/check-email', methods=['POST'])
+def check_email():
+    email = request.form.get('email')
+    if not email:
+        return ""
+        
+    # Validate email format first
+    form = SignupForm(email=email)
+    form.validate()
+    if form.email.errors:
+        return render_template('auth/partials/email_errors.html', 
+                            errors=form.email.errors)
+    
+    # Check database
+    exists = db_manager.check_if_email_already_exists(email)
+    if exists:
+        return render_template('auth/partials/email_errors.html',
+                            errors=['Email already registered'])
+    
+    return ""
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -173,39 +236,50 @@ def login():
     if form.validate_on_submit():
         email = form.email.data
         password = form.password.data
-        user_id = db_manager.auth_user(email, password)
-
-        if user_id:
-            session['user_id'] = user_id
-            user_details = db_manager.fetch_user_by_email(email)
-            session['email'] = user_details['email']
-            session['first_name'] = user_details['first_name']
-            session['last_name'] = user_details['first_name']
-            session['age'] = user_details['age']
-            session['gluten'] = user_details['gluten_free']
-            session['vegan'] = user_details['vegan']
-            session['known_diseasses'] = user_details['known_diseases']
-            session['username'] = user_details['username']
-            session['allergies'] = user_details['allergies']
-            
-            logger.info(f"User '{email}' logged in successfully")
+        try:
+            user_id = db_manager.auth_user(email, password)
+            if user_id:
+                user_details = db_manager.fetch_user_by_email(email)
+                session['user_id'] = user_id
+                session['email'] = user_details['email']
+                session['first_name'] = user_details['first_name']
+                session['last_name'] = user_details['last_name']  # Fixed typo
+                session['age'] = user_details['age']
+                session['gluten'] = user_details['gluten_free']
+                session['vegan'] = user_details['vegan']
+                session['extra_info'] = user_details['extra_info']
+                session['username'] = user_details['username']
+                session['allergies'] = user_details['allergies']
+                
+                logger.info("User logged in successfully")
+                if request.headers.get('HX-Request'):
+                    response = make_response('<div class="text-green-500 font-semibold">Login successful! Redirecting...</div>')
+                    response.headers['HX-Redirect'] = url_for('dashboard')
+                    return response
+                flash('Login successful!', 'success')
+                return redirect(url_for('dashboard'))
+            else:
+                logger.info("Login failed due to invalid credentials")
+                if request.headers.get('HX-Request'):
+                    return '<div class="text-red-500 font-semibold">Invalid email or password. Please try again.</div>', 401
+                flash('Invalid email or password. Please try again.', 'danger')
+                return render_template('login.html', login_form=form)
+        except Exception as e:
+            logger.error(f"Login error: {str(e)}")
             if request.headers.get('HX-Request'):
-                response = make_response('<div class="text-green-500 font-semibold">Login successful! Redirecting...</div>')
-                response.headers['HX-Redirect'] = url_for('dashboard')
-                return response
-            flash('Login successful!', 'success')
-            return redirect(url_for('dashboard'))
-        else:
-            logger.info(f"Login failed for email: {email}")
-            if request.headers.get('HX-Request'):
-                return '<div class="text-red-500 font-semibold">Invalid email or password. Please try again.</div>', 401
-            flash('Invalid email or password. Please try again.', 'danger')
+                return '<div class="text-red-500 font-semibold">An error occurred. Please try again later.</div>', 500
+            flash('An error occurred. Please try again later.', 'danger')
             return render_template('login.html', login_form=form)
-    logger.info("Invalid form submission")
-    if request.headers.get('HX-Request'):
-        return '<div class="text-red-500 font-semibold">Invalid form submission. Please try again.</div>', 400
-    flash('Invalid form submission. Please try again.', 'danger')
-    return render_template('login.html', login_form=form)
+    else:
+        # Handle form validation errors
+        errors = form.errors
+        if errors:
+            logger.info("Invalid form submission")
+            if request.headers.get('HX-Request'):
+                error_msg = '<div class="text-red-500 font-semibold">' + '<br>'.join([f"{field}: {error[0]}" for field, error in errors.items()]) + '</div>'
+                return error_msg, 400
+            flash('Invalid form submission. Please check your inputs.', 'danger')
+        return render_template('login.html', login_form=form)
 
 
 @app.route('/dashboard')
@@ -486,6 +560,7 @@ def receipt_items(receipt_id):
 # Delete specific receipt
 @app.route('/dashboard/delete-receipt/<int:receipt_id>', methods=['POST'])
 def delete_receipt(receipt_id):
+    form = DeleteReceiptForm()
     if 'user_id' not in session:
         flash('Please log in.', 'danger')
         return redirect(url_for('login_page'))
@@ -499,7 +574,7 @@ def delete_receipt(receipt_id):
     except Exception as e:
         logger.error(f"Error deleting receipt: {e}")
         flash('Error deleting receipt.', 'danger')
-    return redirect(url_for('dashboard'))
+    return render_template('dashboard.html', form=form)
 
 
 @app.route('/receipt/delete-receipt', methods=['POST'])
@@ -933,7 +1008,8 @@ def chat():
     if chat_form.validate_on_submit():
         query = chat_form.query.data
         try:
-            raw_response = analyzer.query(query)
+            stock_id = session.get('last_stock_id') or stock_agent.get_latest_stock_by_user(user_id)
+            raw_response = analyzer.query(query,user_id,stock_id)
             html_response = markdown(raw_response, extensions=['extra'])
             styled_response = f'''
             <div class="prose prose-sm max-w-none">

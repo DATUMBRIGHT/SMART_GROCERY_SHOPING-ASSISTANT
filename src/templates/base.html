@@ -14,6 +14,30 @@
   <script defer src="{{ url_for('static', filename='js/scripts.js') }}" onload="console.log('scripts.js loaded')" onerror="console.error('Failed to load scripts.js')"></script>
   <!-- Google Fonts: Poppins -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" onload="console.log('Google Fonts loaded')" onerror="console.error('Failed to load Google Fonts')">
+  <style>
+    .htmx-indicator {
+      opacity: 0;
+      transition: opacity 200ms ease-in;
+    }
+    .htmx-request .htmx-indicator {
+      opacity: 1;
+    }
+    .htmx-request.htmx-indicator {
+      opacity: 1;
+    }
+
+    .input-error {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+  </style>
+
 </head>
 <body>
   

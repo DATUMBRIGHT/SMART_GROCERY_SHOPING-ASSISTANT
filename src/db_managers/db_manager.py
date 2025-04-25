@@ -103,6 +103,23 @@ class DBManager:
             raise RuntimeError(f"Error checking user with email '{email}': {err}")
         finally:
             conn.close()
+    
+    def check_if_username_already_exists(self, username):
+        """ check if username is in db"""
+        conn = mysql.connector.connect(**DB_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+        try:
+            query = f"SELECT * FROM {USERS_TABLE} WHERE username = %s"
+            cursor.execute(query, (username,))
+            result = cursor.fetchone()
+            cursor.close()
+            return bool(result)
+        except mysql.connector.Error as err:
+            logger.error(f"Error checking user with email '{username}': {err}")
+            raise RuntimeError(f"Error checking user with email '{username}': {err}")
+        finally:
+            conn.close()
+
 
     def auth_user(self, email, password):
         conn = mysql.connector.connect(**DB_CONFIG)
