@@ -1083,7 +1083,7 @@ def chat_page():
                 return redirect(url_for('chat_page'))
             
             ai_msg = {
-                'text': ai_response.replace('\n', '<br>'),
+                'text': ai_response,
                 'is_user': False,
                 'timestamp': arrow.now().format('MMM D, HH:mm'),
                 'status': 'delivered'
@@ -1095,7 +1095,6 @@ def chat_page():
             
             if request.headers.get('HX-Request'):
                 logger.debug("Rendering HTMX response")
-                # Render only the new user and AI messages
                 new_messages = [user_msg, ai_msg]
                 return render_template('chat_messages.html', messages=new_messages)
             
@@ -1137,6 +1136,7 @@ def clear_chat():
         logger.error(f"Failed to clear chat history: {e}", exc_info=True)
         flash("Error clearing chat history", "danger")
         return redirect(url_for('chat_page'))
+
 
 @app.errorhandler(Exception)
 def handle_error(error):

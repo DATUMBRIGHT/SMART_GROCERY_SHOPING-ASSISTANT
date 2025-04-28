@@ -14,6 +14,7 @@ from threading import Lock
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
 from typing import List, Dict, Any, Optional, Union
 import markdown
+from bs4 import BeautifulSoup
 
 
 
@@ -198,24 +199,74 @@ class GroceryAnalyzer:
             logger.error(f"Unexpected error in LLM API request: {e}", exc_info=True)
             raise
 
+    
     def _process_llm_response(self, response: Dict) -> str:
         logger.debug(f"Processing LLM response: {response}")
         try:
             if 'choices' in response and response['choices']:
-                return response['choices'][0]['message']['content'].strip()
+                raw_content = response['choices'][0]['message']['content'].strip()
+                # Convert markdown to HTML
+                html = markdown.markdown(raw_content, extensions=['extra'])
+                soup = BeautifulSoup(html, 'html.parser')
+                
+                output_lines = []
+                processed = set()  # Track processed elements to avoid duplicates
+                
+                # Process top-level elements only
+                for elem in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'li', 'p']):
+                    if elem in processed:
+                        continue
+                    processed.add(elem)
+                    text = elem.get_text(strip=True).replace('**', '')  # Remove bold
+                    
+                    if elem.name in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                        # Headings: add emoji, no uppercase
+                        if text.startswith('Option'):
+                            output_lines.append(f"🥧 {text}\n")
+                        elif text.startswith('Smart Tips') or text.startswith('Notes'):
+                            output_lines.append(f"📝 {text}\n")
+                        else:
+                            output_lines.append(f"{text}\n")
+                    elif elem.name == 'li':
+                        # List items: add dash
+                        output_lines.append(f"- {text}")
+                    elif elem.name == 'p':
+                        # Paragraphs: add emoji for closers
+                        if text.startswith('Let me know') or text.startswith('Need more'):
+                            output_lines.append(f"\n😊 {text}")
+                        else:
+                            output_lines.append(f"{text}")
+                
+                return "\n".join(output_lines).strip()
+            
             logger.error(f"Unexpected response format: {response}")
-            return "Error processing AI response"
+            return "😔 Error processing AI response"
         except Exception as e:
             logger.error(f"Failed to process LLM response: {e}", exc_info=True)
-            return "Error processing AI response"
+            return "😔 Error processing AI response"
+            
+            
 
     def _build_prompt(self, query: str, context: List[str]) -> str:
-        prompt = "You are a grocery assistant. Answer the query based on the context provided.\n"
+        prompt = (
+            "You are a smart grocery assistant helping reduce food waste and manage groceries. "
+            f"Answer the query based ONLY on the facts provided {context} and user details. "
+            "Do NOT guess or assume information, especially about expiration dates or shelf life, "
+            "unless explicitly stated in the context. Consider these factors in EVERY response:\n"
+            "1. User allergies (e.g., avoid peanuts, rice)\n"
+            "2. Dietary preferences (e.g., vegetarian, vegan, gluten-free)\n"
+            "3. Health conditions (e.g., diabetes requires low-sugar recipes)\n"
+            "4. Current stock levels, categories, and shelf life from context\n"
+            "5. Recent purchases from receipts\n"
+            "Provide practical, specific advice in a friendly tone with simple markdown formatting. "
+            "Use bullet points, avoid ### headers, and avoid **bold** markers. "
+            "Include emojis for options (🥧), tips (📝), and closers (😊).\n\n"
+        )
         if context:
             prompt += "Context:\n" + "\n".join(context) + "\n\n"
         prompt += f"Query: {query}\nAnswer:"
         return prompt
-
+    
     def generate_response(self, user_id: int, query: str, context: List[str]) -> str:
         logger.debug(f"Generating response for user {user_id}, query: {query}")
         try:

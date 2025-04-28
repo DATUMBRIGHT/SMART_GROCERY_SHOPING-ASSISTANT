@@ -12,6 +12,7 @@ database:
         receiptsimages: receiptimages
         stockimages: stockimages
         receipts: receipts
+        allstock: all_stock
         
   
 gemini:

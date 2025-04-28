@@ -27,6 +27,7 @@ with open(CONFIG_PATH, 'r') as file:
     GEMINI_MODEL = config['gemini']['model']
     STOCK_TABLE = config['database']['tables']['stock']
     STOCK_IMAGES_TABLE = config['database']['tables']['stockimages']
+    ALL_STOCK_TABLE = config['database']['tables']['allstock']
 
 
 # Database configuration
@@ -363,17 +364,29 @@ class StockProcessorAgent:
         try:
             conn = mysql.connector.connect(**self.db_config)
             cursor = conn.cursor()
+            
+            # Delete child table first (all_stock)
+            cursor.execute(f"DELETE FROM {ALL_STOCK_TABLE} WHERE user_id = %s", (user_id,))
+            stock_deleted = cursor.rowcount
+            
+            # Delete stock table (may have foreign key to stockimages)
             cursor.execute(f"DELETE FROM {STOCK_TABLE} WHERE user_id = %s", (user_id,))
             items_deleted = cursor.rowcount
+            
+            # Delete parent table last (stockimages)
             cursor.execute(f"DELETE FROM {STOCK_IMAGES_TABLE} WHERE user_id = %s", (user_id,))
             images_deleted = cursor.rowcount
-            cursor.execute("DELETE FROM all_stock WHERE user_id = %s", (user_id,))
-            stock_deleted = cursor.rowcount
+            
             conn.commit()
-            if stock_deleted == 0:
+            if stock_deleted == 0 and items_deleted == 0 and images_deleted == 0:
                 logger.info(f"No stock records found for user_id {user_id}.")
             else:
-                logger.info(f"Deleted for user_id {user_id}: {items_deleted} stock items, {images_deleted} images, {stock_deleted} stock records.")
+                logger.info(
+                    f"Deleted for user_id {user_id}: {items_deleted} stock items, "
+                    f"{images_deleted} images, {stock_deleted} all_stock records."
+                )
+            return items_deleted + images_deleted + stock_deleted  # Optional: return total deleted
+        
         except mysql.connector.Error as e:
             logger.error(f"Error deleting all stock for user_id {user_id}: {e}")
             if conn:
