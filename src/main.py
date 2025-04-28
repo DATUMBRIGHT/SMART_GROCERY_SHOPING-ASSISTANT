@@ -5,25 +5,33 @@ from wtforms.validators import DataRequired, NumberRange, Optional, Email, Lengt
 from wtforms import validators
 from flask import session
 import mysql.connector
+import json
 import os
 from pathlib import Path
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-import random
 import uuid
 import yaml
 import arrow
+from threading import Lock
 from collections import defaultdict
 from mysql.connector import pooling
 from datetime import datetime, timedelta
 from markdown import markdown
 from agents.grocery_agent import ReceiptProcessorAgent
 from agents.stock_agent import StockProcessorAgent
-from agents.grocery_analyzer import SmartGroceryAnalyzer
+from agents.grocery_analyzer import GroceryAnalyzer
 from loggers.custom_logger import logger
 from db_managers.db_manager import DBManager
+import requests
 import csv
 from io import StringIO
+import aiohttp
+
+import torch
+torch.set_num_threads(1)
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
 
 # Load environment variables
 load_dotenv()
@@ -62,6 +70,7 @@ app.permanent_session_lifetime = 3600
 app.config['SESSION_COOKIE_SECURE'] = True  # Only send over HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+chat_lock = Lock()
 # Ensure upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -75,7 +84,7 @@ db_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=5, **DB_CONF
 stock_agent = StockProcessorAgent(api_key=GEMINI_API_KEY)
 receipt_agent = ReceiptProcessorAgent(api_key=GEMINI_API_KEY)
 db_manager = DBManager()
-analyzer = SmartGroceryAnalyzer(stock_agent=stock_agent, receipt_agent=receipt_agent,db_manager = db_manager)
+analyzer = GroceryAnalyzer(stock_agent=stock_agent, receipt_agent=receipt_agent,db_manager = db_manager)
 
 
 # Form for receipt upload
@@ -988,105 +997,173 @@ def delete_stock():
         return redirect(url_for('stock',dsf = dsf))
 
 
-
-
-#chat page
+#chat_lock = Lock()
 @app.route('/chat', methods=['GET', 'POST'])
-def chat():
-    user_id = session.get('user_id')
-    if 'user_id' not in session:
-        flash('Please log in to access the stock page.', 'danger')
-        return redirect(url_for('login_page'))
-    chat_form = ChatForm()
-    clear_chat_form = DeleteChatForm() 
-    response = None
-    query = None
-
-    if 'chat_history' not in session:
-        session['chat_history'] = []
-
-    if chat_form.validate_on_submit():
-        query = chat_form.query.data
+def chat_page():
+    logger.debug("Entering /chat route")
+    try:
+        if 'user_id' not in session:
+            logger.debug("No user_id, redirecting to login")
+            flash('Please login first', 'danger')
+            return redirect(url_for('login_page'))
+        
+        logger.debug(f"Session data: {session}")
+        form = ChatForm(request.form)
+        chat_history = session.get('chat_history', [])
+        logger.debug(f"Chat history: {len(chat_history)} messages")
+        
+        if request.method == 'GET':
+            logger.debug("Handling GET request")
+            return render_template('chat.html', form=form, messages=chat_history)
+        
+        logger.debug("Handling POST request")
+        if not form.validate():
+            logger.debug(f"Form validation failed: {form.errors}")
+            if request.headers.get('HX-Request'):
+                return render_template('chat_errors.html', errors=form.errors)
+            flash('Invalid message format', 'danger')
+            return redirect(url_for('chat_page'))
+        
+        user_id = session['user_id']
+        query = form.query.data.strip()
+        logger.debug(f"User ID: {user_id}, Query: {query}")
+        
+        if not query or len(query) > 500:
+            logger.debug("Query length validation failed")
+            flash('Message must be 1-500 characters', 'warning')
+            return redirect(url_for('chat_page'))
+        
         try:
-            stock_id = session.get('last_stock_id') or stock_agent.get_latest_stock_by_user(user_id)
-            raw_response = analyzer.query(query,user_id,stock_id)
-            html_response = markdown(raw_response, extensions=['extra'])
-            styled_response = f'''
-            <div class="prose prose-sm max-w-none">
-                {html_response}
-            </div>
-            '''
-            response = styled_response
-            timestamp = arrow.now().format('MMM D, HH:mm')
-
-            session['chat_history'].append({
+            logger.debug("Appending user message")
+            user_msg = {
                 'text': query,
                 'is_user': True,
-                'timestamp': timestamp
-            })
-            session['chat_history'].append({
-                'text': response,
-                'is_user': False,
-                'timestamp': timestamp
-            })
+                'timestamp': arrow.now().format('MMM D, HH:mm'),
+                'status': 'delivered'
+            }
+            chat_history.append(user_msg)
+            if len(str(chat_history)) > 4000:
+                logger.warning("Chat history too large, truncating to 10 messages")
+                chat_history = chat_history[-10:]
+            else:
+                chat_history = chat_history[-20:]
+            session['chat_history'] = chat_history
             session.modified = True
-
-            if request.headers.get('HX-Request'):
-                return f'''
-                <div class="animate-fade-in ml-auto bg-green-500 text-white max-w-[70%] rounded-lg p-3 shadow">
-                    <p class="text-sm">{query}</p>
-                    <span class="text-xs opacity-60 block mt-1">{timestamp}</span>
-                </div>
-                <div class="animate-fade-in mr-auto bg-gray-100 text-gray-800 max-w-[70%] rounded-lg p-3 shadow">
-                    {response}
-                    <span class="text-xs opacity-60 block mt-1">{timestamp}</span>
-                </div>
-                '''
-            flash("Query processed successfully", "success")
-        except ValueError as e:
-            logger.error(f"ValueError processing query: {str(e)}")
-            flash(f"Invalid query: {str(e)}", "danger")
+            logger.debug("User message stored")
         except Exception as e:
-            logger.error(f"Unexpected error processing query: {str(e)}")
-            flash(f"Error processing query: {str(e)}", "danger")
-    elif request.method == 'POST':
-        flash("Please enter a valid query", "danger")
-        logger.warning("Invalid form submission on /chat")
+            logger.error(f"Failed to store user message: {e}", exc_info=True)
+            flash('Error saving your message', 'danger')
+            return redirect(url_for('chat_page'))
+        
+        try:
+            logger.debug(f"Processing AI response for user {user_id}")
+            logger.debug("Fetching knowledge base")
+            try:
+                analyzer.fetch_knowledge_base(user_id)
+            except Exception as e:
+                logger.error(f"Failed to fetch knowledge base: {e}", exc_info=True)
+                flash("Error accessing knowledge base", 'danger')
+                return redirect(url_for('chat_page'))
+            
+            logger.debug("Retrieving context")
+            try:
+                context = analyzer.retrieve_context(user_id, query)
+                logger.debug(f"Context: {context}")
+            except Exception as e:
+                logger.error(f"Failed to retrieve context: {e}", exc_info=True)
+                context = []
+            
+            logger.debug("Generating AI response")
+            try:
+                ai_response = analyzer.generate_response(user_id, query, context)
+                logger.debug(f"AI response: {ai_response}")
+            except Exception as e:
+                logger.error(f"Failed to generate AI response: {e}", exc_info=True)
+                flash("Error generating AI response", 'danger')
+                return redirect(url_for('chat_page'))
+            
+            ai_msg = {
+                'text': ai_response.replace('\n', '<br>'),
+                'is_user': False,
+                'timestamp': arrow.now().format('MMM D, HH:mm'),
+                'status': 'delivered'
+            }
+            chat_history.append(ai_msg)
+            session['chat_history'] = chat_history[-20:]
+            session.modified = True
+            logger.debug("AI message stored")
+            
+            if request.headers.get('HX-Request'):
+                logger.debug("Rendering HTMX response")
+                # Render only the new user and AI messages
+                new_messages = [user_msg, ai_msg]
+                return render_template('chat_messages.html', messages=new_messages)
+            
+            logger.debug("Redirecting to chat page")
+            return redirect(url_for('chat_page'))
+            
+        except Exception as e:
+            logger.error(f"Error in AI processing: {e}", exc_info=True)
+            chat_history[-1]['status'] = 'error'
+            session['chat_history'] = chat_history[-20:]
+            session.modified = True
+            if request.headers.get('HX-Request'):
+                return render_template('chat_errors.html', error=str(e))
+            flash("An error occurred while processing your request", 'danger')
+            return redirect(url_for('chat_page'))
+            
+    except Exception as e:
+        logger.error(f"Critical error in chat_page: {e}", exc_info=True)
+        flash("Server error occurred", 'danger')
+        return redirect(url_for('chat_page'))
 
-    return render_template('chat.html', chat_form=chat_form, clear_chat_form=clear_chat_form, response=response, query=query, messages=session.get('chat_history', []))
-
-#clear chat 
 @app.route('/clear_chat', methods=['POST'])
 def clear_chat():
+    logger.debug("Clearing chat history")
     try:
-        clear_chat_form = DeleteChatForm()
-        logger.debug(f"Clear chat form data: {request.form}, CSRF: {clear_chat_form.csrf_token.data}")
-        if clear_chat_form.validate_on_submit():
-            session['chat_history'] = []  # Clear chat history (your exact line)
+        form = DeleteChatForm(request.form)
+        if form.validate():
+            session['chat_history'] = []
             session.modified = True
-            flash('Chat history cleared successfully', 'success')
-            logger.info("Chat history cleared successfully")
+            logger.debug("Chat history cleared")
             if request.headers.get('HX-Request'):
-                logger.debug("Returning HTMX response for clear chat")
-                return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>'
-            return redirect(url_for('chat'))  # Your redirect
-        else:
-            flash('Failed to clear chat history. Please try again.', 'error')  # Your message
-            logger.warning(f"Form validation failed: {clear_chat_form.errors}")
-            if request.headers.get('HX-Request'):
-                return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>', 400
-            return redirect(url_for('chat')), 400  # Your status
+                return render_template('chat_messages.html', messages=[])
+            flash("Chat history cleared", "success")
+            return redirect(url_for('chat_page'))
+        logger.warning("Invalid clear chat form submission")
+        flash("Error clearing chat history", "danger")
+        return redirect(url_for('chat_page'))
     except Exception as e:
-        flash(f'An error occurred: {str(e)}', 'error')  # Your message
-        logger.error(f"Error clearing chat: {str(e)}")
-        if request.headers.get('HX-Request'):
-            return '<div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4 animate-fade-in"><div class="text-center text-gray-500 text-sm mt-4">Start the conversation by asking a question!</div></div>', 500
-        return redirect(url_for('chat')), 500
+        logger.error(f"Failed to clear chat history: {e}", exc_info=True)
+        flash("Error clearing chat history", "danger")
+        return redirect(url_for('chat_page'))
 
+@app.errorhandler(Exception)
+def handle_error(error):
+    logger.error(f"Unhandled error: {error}", exc_info=True)
+    flash("An unexpected error occurred", 'danger')
+    return redirect(url_for('chat_page')), 500
 
+@app.route('/chat/history')
+def chat_history():
+    """Render chat history."""
+    try:
+        return render_template('chat_messages.html', messages=session.get('chat_history', []))
+    except Exception as e:
+        logger.error(f"Error in chat_history for user {session.get('user_id', 'unknown')}: {e}", exc_info=True)
+        flash("Error loading chat history.", 'danger')
+        return redirect(url_for('chat_page'))
+    
+@app.route('/chat/messages')
+def chat_messages():
+    return render_template('chat_messages.html',
+                         messages=session.get('chat_history', []))
 
-
-
+@app.route('/chat/update')
+def chat_update():
+    return '', 204, {
+        'HX-Trigger': 'chatUpdate'
+    }
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5001)
+    app.run(debug=True,port=5002)

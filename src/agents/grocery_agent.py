@@ -7,6 +7,9 @@ from typing import Optional
 import yaml
 import os
 from dotenv import load_dotenv
+import asyncio
+from mysql.connector import pooling
+import aiomysql
 
 
 from loggers.custom_logger import logger
@@ -65,8 +68,7 @@ class ReceiptProcessorAgent:
         self.create_db_schema()
         self.create_image_db()
         self.create_all_receipts_db()
-       
-    
+        
 
     def verify_users_table(self):
         try:
@@ -456,3 +458,48 @@ class ReceiptProcessorAgent:
         except mysql.connector.Error as e:
             logger.error(f"Error fetching items: {e}")
             raise RuntimeError(f"Error fetching items: {e}")
+        
+
+    async def async_fetch_all_receipts_items(self, user_id):
+    
+        try:
+            pool = await aiomysql.create_pool(
+                host=HOST,
+                port=PORT,
+                user=USER,
+                password=DB_PASSWORD,
+                db=DB_NAME,
+                loop=asyncio.get_event_loop()
+            )
+            
+            async with pool.acquire() as conn:
+                async with conn.cursor() as cursor:
+                    query = f"""SELECT id, name, quantity, weight, category, price, purchase_date, expiration_date
+                                FROM {RECEIPTS_TABLE}
+                                WHERE user_id = %s"""
+                    await cursor.execute(query, (user_id,))
+                    rows = await cursor.fetchall()
+                    result = [
+                        {
+                            "id": row[0],
+                            "name": row[1],
+                            "quantity": row[2],
+                            "weight": row[3],
+                            "category": row[4],
+                            "price": float(row[5]),
+                            "purchase_date": row[6].strftime("%Y-%m-%d") if row[6] else None,
+                            "expiration_date": row[7].strftime("%Y-%m-%d") if row[7] else None
+                        }
+                        for row in rows
+                    ]
+                    logger.debug(f"Fetched {len(result)} receipt items asynchronously for user {user_id}")
+                    return result
+        
+        except aiomysql.Error as e:
+            logger.error(f"Error fetching receipt items asynchronously: {str(e)}", exc_info=True)
+            raise RuntimeError(f"Error fetching receipt items: {str(e)}")
+        
+        finally:
+            if 'pool' in locals():
+                pool.close()
+                await pool.wait_closed()

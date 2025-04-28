@@ -16,7 +16,7 @@ log_file = os.path.join(logging_dir, 'grocery_assistant.log')
 
 # Initialize logger
 logger = logging.getLogger("grocery_agent")
-logger.setLevel(logging.INFO)  # Set logging level
+logger.setLevel(logging.DEBUG)  # Set logging level
 
 # Set up a file handler with a formatter
 handler = logging.FileHandler(log_file)

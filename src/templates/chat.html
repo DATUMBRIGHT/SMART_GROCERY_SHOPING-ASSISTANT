@@ -1,132 +1,136 @@
 {% extends "base.html" %}
-{% block title %}Chat{% endblock %}
+
+{% block title %}Chat Assistant{% endblock %}
+
 {% block content %}
-<div class="flex flex-col h-[calc(100vh-80px)] max-w-4xl mx-auto mt-6 bg-white bg-opacity-95 rounded-xl shadow-lg">
-  <!-- Header -->
-  <header class="p-4 border-b border-gray-200">
-    <h1 class="text-2xl font-semibold text-green-600 flex items-center gap-2">
-      <span>🍎</span> Smart Grocery Assistant
-    </h1>
-    <p class="text-sm text-gray-500 mt-1">
-      Ask about expiration dates, meal suggestions, or shopping lists. Type 'exit' to end.
-    </p>
-  </header>
-
-  <!-- Chat Window -->
-  <div id="chat-window" class="flex-1 overflow-y-auto p-4 space-y-4">
-    {% if messages %}
-      {% for message in messages %}
-        <div class="animate-fade-in {% if message.is_user %}ml-auto bg-green-500 text-white{% else %}mr-auto bg-gray-100 text-gray-800{% endif %} max-w-[70%] rounded-lg p-3 shadow">
-          {% if message.is_user %}
-            <p class="text-sm">{{ message.text | safe }}</p>
-          {% else %}
-            <div class="text-sm">{{ message.text | safe }}</div>
-          {% endif %}
-          <span class="text-xs opacity-60 block mt-1">{{ message.timestamp }}</span>
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Chat Container -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col" style="min-height: 70vh;">
+        <!-- Chat Header -->
+        <div class="bg-green-600 p-6 border-b border-green-700">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Smart Grocery Assistant
+                    </h1>
+                </div>
+                <form hx-post="{{ url_for('clear_chat') }}" hx-target="#chat-messages" hx-swap="innerHTML">
+                    {{ form.hidden_tag() }}
+                    <button type="submit" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors">
+                        Clear History
+                    </button>
+                </form>
+            </div>
         </div>
-      {% endfor %}
-    {% else %}
-      <div class="text-center text-gray-500 text-sm mt-4">
-        Start the conversation by asking a question!
-      </div>
-    {% endif %}
-  </div>
 
-  <!-- Input Form -->
-  <form hx-post="{{ url_for('chat') }}" hx-target="#chat-window" hx-swap="beforeend" class="p-4 border-t border-gray-200 flex items-center gap-2">
-    {{ chat_form.hidden_tag() }}
-    {{ chat_form.query(class="flex-1 p-3 rounded-lg border border-gray-300 bg-gray-50 text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500", placeholder="Ask about groceries or recipes...", autofocus=true) }}
-    <button type="submit" class="p-3 bg-green-500 text-white rounded-lg hover:bg-green-600">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-      </svg>
-    </button>
-  </form>
+        <!-- Chat Messages Area -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="animate-fade-in {% if message.is_user %}ml-auto{% else %}mr-auto{% endif %} max-w-[85%]">
+                        <div class="{% if message.is_user %}bg-green-600 text-white{% else %}bg-white shadow-md{% endif %} rounded-xl p-4">
+                            <div class="prose prose-sm max-w-none">
+                                {{ message.text|safe }}
+                            </div>
+                            <div class="mt-2 text-xs {% if message.is_user %}text-green-100{% else %}text-gray-500{% endif %}">
+                                {{ message.timestamp }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="h-full flex items-center justify-center text-center text-gray-500">
+                    <div class="space-y-2">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <p class="text-sm">How can I help with your groceries today?</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Input Form -->
+        <form class="chat-form" 
+              hx-post="{{ url_for('chat_page') }}" 
+              hx-target="#chat-messages" 
+              hx-swap="beforeend" 
+              class="flex gap-3 p-6 w-full">
+            {{ form.hidden_tag() }}
+            <input type="text" 
+                   name="query"
+                   class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+                   placeholder="Ask about expiration dates, recipes, or shopping lists..."
+                   required>
+            <button type="submit" class="p-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+            </button>
+        </form>
+    </div>
 </div>
 
 <style>
-  /* Animation for chat messages */
-  .animate-fade-in {
-    animation: fadeIn 0.3s ease-in;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Style markdown content (from LLM output) */
-  .prose h3 {
-    font-size: 1.125rem;
-    font-weight: 600;
-    color: #16a34a; /* text-green-600 */
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  .prose p {
-    font-size: 0.875rem;
-    color: #4b5563; /* text-gray-700 */
-    margin-bottom: 0.5rem;
-  }
-  .prose ul {
-    list-style-type: disc;
-    list-style-position: inside;
-    font-size: 0.875rem;
-    color: #4b5563; /* text-gray-700 */
-    margin-bottom: 0.5rem;
-  }
-  .prose li {
-    margin-bottom: 0.25rem;
-  }
-  .prose strong {
-    font-weight: 600;
-    color: #1f2937; /* text-gray-800 */
-  }
-  /* Highlight Pro Tip section */
-  .prose p:has(strong:contains("Pro Tip:")) {
-    margin-top: 1rem;
-    padding: 0.75rem;
-    background-color: #fefce8; /* bg-yellow-50 */
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  }
-  .prose p:has(strong:contains("Pro Tip:")) strong {
-    color: #d97706; /* text-yellow-600 */
-  }
-
-  /* Dark mode support */
-  @media (prefers-color-scheme: dark) {
-    .prose h3 {
-      color: #4ade80; /* dark:text-green-400 */
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
     }
-    .prose p {
-      color: #e5e7eb; /* dark:text-gray-200 */
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
-    .prose ul {
-      color: #e5e7eb; /* dark:text-gray-200 */
+    #chat-messages::-webkit-scrollbar {
+        width: 8px;
     }
-    .prose strong {
-      color: #f3f4f6; /* dark:text-gray-100 */
+    #chat-messages::-webkit-scrollbar-track {
+        background: rgba(0,0,0,0.05);
     }
-    .prose p:has(strong:contains("Pro Tip:")) {
-      background-color: #78350f; /* dark:bg-yellow-900 */
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.1);
+        border-radius: 4px;
     }
-    .prose p:has(strong:contains("Pro Tip:")) strong {
-      color: #facc15; /* dark:text-yellow-400 */
+    .alert-danger {
+        background-color: #fee2e2;
+        border-color: #fecaca;
+        color: #b91c1c;
     }
-  }
+    .alert-warning {
+        background-color: #fef3c7;
+        border-color: #fde68a;
+        color: #b45309;
+    }
+    .alert-success {
+        background-color: #d1fae5;
+        border-color: #a7f3d0;
+        color: #065f46;
+    }
 </style>
 
-<!-- Clear Chat Button -->
-<form method="POST" action="{{ url_for('clear_chat') }}" 
-        hx-post="{{ url_for('clear_chat') }}" 
-        hx-target="#chat-window" 
-        hx-swap="outerHTML"
-        class="p-2 border-t">
-    {{ clear_chat_form.hidden_tag() }}
-    <button type="submit" class="clear-button">
-      Clear Chat
-    </button>
-</div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.querySelector('.chat-form');
+        
+        if (chatForm) {
+            chatForm.addEventListener('submit', (e) => {
+                const input = e.target.querySelector('input[name="query"]');
+                if (input) {
+                    input.value = '';
+                }
+            });
+        } else {
+            console.warn('Chat form not found');
+        }
+
+        htmx.on('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'chat-messages') {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    });
+</script>
 {% endblock %}
+

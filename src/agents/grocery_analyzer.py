@@ -1,155 +1,229 @@
 import numpy as np
-import requests
-from sentence_transformers import SentenceTransformer
 import faiss
 import yaml
 import os
+import arrow
+from sentence_transformers import SentenceTransformer
+from functools import lru_cache
 from dotenv import load_dotenv
 from loggers.custom_logger import logger
+import requests
+from flask import Flask, session, request, render_template, redirect, url_for, flash
+from wtforms import Form, StringField, validators
+from threading import Lock
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from typing import List, Dict, Any, Optional, Union
+import markdown
+
+
+
 # Load environment variables
 load_dotenv()
 
+# Configuration paths
+BASE_URL = os.path.join(os.path.dirname(__file__), '..')
+CONFIG_PATH = os.path.join(BASE_URL, 'constants', 'config.yaml')
 
-BASE_URL = os.path.join(os.path.dirname(__file__),'..')
-print(f'BASE_URL : {BASE_URL}')
-CONFIG_PATH = os.path.join(BASE_URL,'constants','config.yaml')
+# Load DeepSeek API configuration
+try:
+    with open(CONFIG_PATH, 'r') as file:
+        config = yaml.safe_load(file)
+        DEEPSEEK_API_URL = config['deepseek']['api_url']
+        DEEPSEEK_MODEL = config['deepseek']['model']
+        DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
+    if not DEEPSEEK_API_KEY:
+        logger.error("DEEPSEEK_API_KEY not set in environment variables")
+        raise ValueError("DEEPSEEK_API_KEY is required")
+except (FileNotFoundError, yaml.YAMLError) as e:
+    logger.error(f"Failed to load config: {e}")
+    raise
 
-# Load configuration
-with open(CONFIG_PATH, 'r') as file:
-    config = yaml.safe_load(file)
-    DEEPSEEK_API_URL = config['deepseek']['api_url']
-    DEEPSEEK_API_KEY = os.getenv('DEEPSEEK_API_KEY')
+# Flask App Initialization
+app = Flask(__name__)
+app.secret_key = os.getenv('APP_SECRET_KEY')
+chat_lock = Lock()
 
-class SmartGroceryAnalyzer:
-    def __init__(self, stock_agent, receipt_agent,db_manager):
-        self.stock_agent = stock_agent
-        self.receipt_agent = receipt_agent
-        self.db_manager = db_manager
-        self.embedder = SentenceTransformer('all-MiniLM-L6-v2')  # Efficient embedding model
-        self.index = None
-        self.knowledge_base = []
-        self._init_vector_index()
-        logger.info("SmartGroceryAnalyzer initialized successfully")
+# Forms
+class ChatForm(Form):
+    query = StringField('Query', [validators.DataRequired()])
 
-    def _init_vector_index(self):
-        """Initialize the FAISS index with the embedding dimension."""
-        dimension = self.embedder.get_sentence_embedding_dimension()
-        self.index = faiss.IndexFlatL2(dimension)
-        logger.info("FAISS index initialized successfully")
+class DeleteChatForm(Form):
+    pass
 
-    def _update_vector_index(self, embeddings):
-        """Update the FAISS index with new embeddings."""
-        if self.index is None:
-            self._init_vector_index()
-        self.index.add(np.array(embeddings).astype('float32'))
-        logger.info("FAISS index updated successfully")
+# Type aliases
+Embedding = np.ndarray
+KnowledgeItem = str
+StockItem = Dict[str, Union[str, int, float]]
+ReceiptItem = Dict[str, Union[str, int, float]]
+UserInfo = Dict[str, Union[str, int, bool, None]]
 
-    def fetch_knowledge_base(self,user_id,stock_id):
-        """Fetch and combine data from stock and receipt agents."""
-        stock_items = self.stock_agent.fetch_stock(user_id,stock_id)
-        receipt_items = self.receipt_agent.fetch_all_receipts_items(user_id)
-        user_info = self.db_manager.get_user_relevant_info(user_id)
-        logger.info("Fetched stock and receipt items successfully")
-        
-        # Format knowledge base entries
-        self.knowledge_base = [
-            f"Current Fridge stock or groceries: {item['name']}, quantity: {item['quantity']}, weight: {item['weight']}, "
-            f"category: {item['category']}, shelf_life: {item['shelf_life']} days"
-            for item in stock_items
-        ] + [
-            f"ALL receipts items: {item['name']}, quantity: {item['quantity']}, weight: {item['weight']}, "
-            f"category: {item['category']}, purchase_date: {item['purchase_date']}, "
-            f"expiration_date: {item['expiration_date']}"
-            for item in receipt_items
-        ] + user_info
 
-        # Generate embeddings and update index
-        if self.knowledge_base:
-            embeddings = self.embedder.encode(self.knowledge_base, convert_to_tensor=False)
-            self._update_vector_index(embeddings)
-        
-        return self.knowledge_base
+# GroceryAnalyzer
+class GroceryAnalyzer:
+    def __init__(self, stock_agent, receipt_agent, db_manager):
+        try:
+            self.stock_agent = stock_agent
+            self.receipt_agent = receipt_agent
+            self.db_manager = db_manager
+            self.embedder = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
+            self.embedding_dim = self.embedder.get_sentence_embedding_dimension()
+            self.user_caches: Dict[int, Dict[str, Any]] = {}
+            logger.info("GroceryAnalyzer initialized")
+        except Exception as e:
+            logger.error(f"GroceryAnalyzer init failed: {e}", exc_info=True)
+            raise
 
-    def retrieve_context(self, query, max_docs=10):
-        """Retrieve relevant context from the knowledge base using vector search."""
-        if not self.knowledge_base or self.index is None:
+    def _initialize_user_cache(self, user_id: int):
+        if user_id not in self.user_caches:
+            self.user_caches[user_id] = {
+                'index': faiss.IndexFlatL2(self.embedding_dim),
+                'knowledge': []
+            }
+            logger.debug(f"Initialized cache for user {user_id}")
+
+    def _safe_fetch_stock(self, user_id: int) -> List[Dict]:
+        logger.debug(f"Fetching stock for user {user_id}")
+        try:
+            items = self.stock_agent.fetch_all_stockitems(user_id) or []
+            logger.debug(f"Raw stock items: {items}")
+            return [item for item in items if self._validate_stock_item(item)]
+        except Exception as e:
+            logger.error(f"Stock fetch failed: {e}", exc_info=True)
             return []
 
-        # Encode query and search index
-        query_embedding = self.embedder.encode([query], convert_to_tensor=False)
-        distances, indices = self.index.search(np.array(query_embedding).astype('float32'), max_docs)
-        
-        # Return relevant context documents
-        return [self.knowledge_base[i] for i in indices[0] if i >= 0 and i < len(self.knowledge_base)]
-
-    def generate_response(self, query, context):
-        """Generate a response using the DeepSeek API."""
-        headers = {"Content-Type": "application/json", "Authorization": f"Bearer {DEEPSEEK_API_KEY}"}
-        prompt =f"""
-            "You are a smart grocery assistant helping reduce food waste and manage groceries. "
-            "Use this context to answer the question:"
-            f"Context: {(context)}"
-            f"Question: {query}"
-            "Consider these factors in your response:"
-            "1. Expiration dates and remaining shelf life"
-            "2. Current stock levels and recent purchases"
-            "3. Food categories and typical usage patterns"
-            "4. Seasonal availability and storage constraints"
-            "5. The user information expecially age and all relevant user info"
-            "Provide practical, specific advice in a friendly tone."
-        """
-        
-        payload = {
-            "model": "deepseek-chat",
-            "messages": [
-                {"role": "system", "content": "You are a helpful grocery assistant."},
-                {"role": "user", "content": prompt}
-            ],
-            "temperature": 0.7,
-            "stream": False
-        }
-        
+    def _safe_fetch_receipts(self, user_id: int) -> List[Dict]:
+        logger.debug(f"Fetching receipts for user {user_id}")
         try:
-            response = requests.post(DEEPSEEK_API_URL, headers=headers, json=payload)
+            items = self.receipt_agent.fetch_all_receipts_items(user_id) or []
+            logger.debug(f"Raw receipt items: {items}")
+            return items
+        except Exception as e:
+            logger.error(f"Receipt fetch failed: {e}", exc_info=True)
+            return []
+
+    def _safe_fetch_user_info(self, user_id: int) -> List[Dict]:
+        logger.debug(f"Fetching user info for user {user_id}")
+        try:
+            info = self.db_manager.fetch_user_relevant_info(user_id) or []
+            logger.debug(f"Raw user info: {info}")
+            return info
+        except Exception as e:
+            logger.error(f"User info fetch failed: {e}", exc_info=True)
+            return []
+
+    def _validate_stock_item(self, item: Dict) -> bool:
+        required = ['name', 'quantity', 'category']
+        return all(key in item for key in required) and isinstance(item['quantity'], (int, float))
+
+    def _build_knowledge_items(self, stock_items, receipt_items, user_details) -> List[str]:
+        knowledge = []
+        for item in stock_items:
+            knowledge.append(f"Stock: {item['name']}, Quantity: {item['quantity']}, Category: {item['category']}")
+        for item in receipt_items:
+            knowledge.append(f"Receipt: {item['name']}, Purchased: {item['purchase_date']}")
+        for info in user_details:
+            knowledge.append(f"User: {info.get('first_name', 'Unknown')}, Allergies: {info.get('allergies', 'None')}")
+        return knowledge
+
+    def _update_index(self, user_id: int, knowledge: List[str]) -> None:
+        logger.debug(f"Updating FAISS index for user {user_id}")
+        try:
+            logger.debug("Encoding knowledge items")
+            embeddings = self.embedder.encode(knowledge, batch_size=8, show_progress_bar=False)
+            logger.debug(f"Encoded {len(embeddings)} embeddings")
+            embeddings = np.array(embeddings, dtype=np.float32)
+            self.user_caches[user_id]['index'] = faiss.IndexFlatL2(self.embedding_dim)
+            self.user_caches[user_id]['index'].add(embeddings)
+            self.user_caches[user_id]['knowledge'] = knowledge
+            logger.debug(f"Updated FAISS index with {len(knowledge)} items")
+        except Exception as e:
+            logger.error(f"Index update failed for user {user_id}: {e}", exc_info=True)
+            raise
+
+    @lru_cache(maxsize=100)
+    def fetch_knowledge_base(self, user_id: int) -> tuple:
+        logger.debug(f"Building knowledge base for user {user_id}")
+        try:
+            self._initialize_user_cache(user_id)
+            stock_items = self._safe_fetch_stock(user_id)
+            receipt_items = self._safe_fetch_receipts(user_id)
+            user_details = self._safe_fetch_user_info(user_id)
+            knowledge = self._build_knowledge_items(stock_items, receipt_items, user_details)
+            if not knowledge:
+                logger.warning(f"No knowledge items for user {user_id}")
+                return tuple()
+            self._update_index(user_id, knowledge)
+            return tuple(knowledge)
+        except Exception as e:
+            logger.error(f"Failed to build knowledge base: {e}", exc_info=True)
+            raise
+
+    def retrieve_context(self, user_id: int, query: str) -> List[str]:
+        logger.debug(f"Retrieving context for user {user_id}, query: {query}")
+        try:
+            if user_id not in self.user_caches or not self.user_caches[user_id]['knowledge']:
+                logger.debug("No knowledge base for user")
+                return []
+            query_embedding = self.embedder.encode([query], batch_size=1, show_progress_bar=False)[0]
+            query_embedding = np.array([query_embedding], dtype=np.float32)
+            distances, indices = self.user_caches[user_id]['index'].search(query_embedding, k=3)
+            context = [self.user_caches[user_id]['knowledge'][i] for i in indices[0] if i >= 0]
+            logger.debug(f"Context: {context}")
+            return context
+        except Exception as e:
+            logger.error(f"Context retrieval failed: {e}", exc_info=True)
+            return []
+
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=10),
+        retry=retry_if_exception_type((requests.exceptions.RequestException, requests.exceptions.HTTPError))
+    )
+    def _call_llm_api(self, prompt: str) -> Dict:
+        logger.debug(f"Sending LLM request with prompt: {prompt[:50]}...")
+        try:
+            response = requests.post(
+                DEEPSEEK_API_URL,
+                headers={"Authorization": f"Bearer {DEEPSEEK_API_KEY}"},
+                json={"model": DEEPSEEK_MODEL, "messages": [{"role": "user", "content": prompt}]},
+                timeout=30
+            )
             response.raise_for_status()
-            response  = response.json()["choices"][0]["message"]["content"]
-            logger.info("Response generated successfully")
-            return response
+            logger.debug(f"LLM response: {response.json()}")
+            return response.json()
         except requests.exceptions.RequestException as e:
-            logger.error(f"Error generating response: {str(e)}")
-            return f"Sorry, I encountered an error: {str(e)}"
-        
+            logger.error(f"LLM API request failed: {e}, status_code={getattr(e.response, 'status_code', 'N/A')}")
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error in LLM API request: {e}", exc_info=True)
+            raise
 
-    def query(self, question):
-        """Process a user query and return a response."""
-        self.fetch_knowledge_base()  # Refresh data and embeddings
-        if not self.knowledge_base:
-            return "I don't have any grocery data yet. Please add items to your fridge or receipts!"
-            
-        context = self.retrieve_context(question)
-        if not context:
-            return "I couldn't find relevant information. Could you provide more details?"
-            
-        return self.generate_response(question, context)
+    def _process_llm_response(self, response: Dict) -> str:
+        logger.debug(f"Processing LLM response: {response}")
+        try:
+            if 'choices' in response and response['choices']:
+                return response['choices'][0]['message']['content'].strip()
+            logger.error(f"Unexpected response format: {response}")
+            return "Error processing AI response"
+        except Exception as e:
+            logger.error(f"Failed to process LLM response: {e}", exc_info=True)
+            return "Error processing AI response"
 
-    def run_chatbot(self):
-        
-        while True:
-            try:
-                user_input = input("You: ").strip()
-                if user_input.lower() in ['exit', 'quit']:
-                    print("Assistant: Happy cooking! 🧑‍🍳")
-                    break
-                if not user_input:
-                    print("Assistant: Please ask me something!")
-                    continue
-                
-                response = self.query(user_input)
-                print(f"Question: {user_input}")
-                print(f"Assistant: {response}\n")
-            except KeyboardInterrupt:
-                print("\nAssistant: Session ended. Have a great day!")
-                break
-            except Exception as e:
-                print(f"Assistant: Oops, something went wrong: {str(e)}")
-                continue
+    def _build_prompt(self, query: str, context: List[str]) -> str:
+        prompt = "You are a grocery assistant. Answer the query based on the context provided.\n"
+        if context:
+            prompt += "Context:\n" + "\n".join(context) + "\n\n"
+        prompt += f"Query: {query}\nAnswer:"
+        return prompt
+
+    def generate_response(self, user_id: int, query: str, context: List[str]) -> str:
+        logger.debug(f"Generating response for user {user_id}, query: {query}")
+        try:
+            prompt = self._build_prompt(query, context)
+            response = self._call_llm_api(prompt)
+            return self._process_llm_response(response)
+        except Exception as e:
+            logger.error(f"Response generation failed: {e}", exc_info=True)
+            return "Sorry, I couldn't process your request."
+
+

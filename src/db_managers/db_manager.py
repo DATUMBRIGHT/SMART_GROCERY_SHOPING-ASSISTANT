@@ -4,6 +4,8 @@ import mysql.connector
 from werkzeug.security import check_password_hash,generate_password_hash
 from loggers.custom_logger import logger
 from dotenv import load_dotenv
+import aiomysql
+import asyncio
 
 load_dotenv()
 
@@ -194,27 +196,30 @@ class DBManager:
             logger.info(f"User ID is None. Cannot fetch user.")
             return None
         try:
-            query = f"SELECT age, first_name, last_name, vegetarian, vegan, gluten_free, allergies,extra_info FROM {USERS_TABLE} WHERE id = %s"
-            cursor.execute(query, (user_id, ))
+            query = f"SELECT age, first_name, last_name, vegetarian, vegan, gluten_free, allergies, extra_info FROM {USERS_TABLE} WHERE id = %s"
+            cursor.execute(query, (user_id,))
             row = cursor.fetchone()
-            result = [
-                {"age": row[0],
-                "first_name": row[1],
-                    "last_name": row[2],
-                    "vegetarian": row[3],
-                    "vegan": row[4],
-                    "gluten_free": row[5],
-                    "allergies": row[6],
-                    "extra_info": row[7]}
-             ] 
-            return result if row else None
+            result = []
+            if row:
+                result.append({
+                    "age": row.get("age"),
+                    "first_name": row.get("first_name"),
+                    "last_name": row.get("last_name"),
+                    "vegetarian": row.get("vegetarian"),
+                    "vegan": row.get("vegan"),
+                    "gluten_free": row.get("gluten_free"),
+                    "allergies": row.get("allergies"),
+                    "extra_info": row.get("extra_info")
+                })
+                return result
+            else:
+                return None
         except mysql.connector.Error as err:
             logger.error(f"Error fetching user details for user_id '{user_id}': {err}")
             raise RuntimeError(f"Error fetching user details: {err}")
-    
+
         finally:
             if cursor:
                 cursor.close()
             if conn:
                 conn.close()
-            

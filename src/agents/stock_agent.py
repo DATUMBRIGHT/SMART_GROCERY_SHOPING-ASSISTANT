@@ -6,7 +6,9 @@ from datetime import datetime
 import yaml
 import os
 from dotenv import load_dotenv
-
+import asyncio
+import aiomysql
+from mysql.connector import pooling
 
 from loggers.custom_logger import logger
 
@@ -57,7 +59,8 @@ class StockProcessorAgent:
         self.create_stock_table()
         self.create_all_stock_db()
         logger.info("Stock database schema initialized.")
-
+       
+        
     def verify_users_table(self):
         try:
             conn = mysql.connector.connect(**self.db_config)
@@ -381,30 +384,26 @@ class StockProcessorAgent:
                 cursor.close()
             if conn:
                 conn.close()
-
-    def get_latest_stock_by_user(self, user_id):
-        """Fetch the latest stock item for the given user_id."""
-        conn, cursor = None, None
+    
+    def get_latest_stock_by_user(self,user_id):
+        """Fetch the latest stock entry for a specific user."""
         try:
             conn = mysql.connector.connect(**self.db_config)
-            cursor = conn.cursor(dictionary=True)  # Use dictionary cursor for column name access
+            cursor = conn.cursor(dictionary=True)
             cursor.execute(
-                f"""
-                SELECT * FROM {STOCK_TABLE}
-                WHERE user_id = %s AND stock_id = (
-                    SELECT MAX(stock_id) FROM {STOCK_TABLE} WHERE user_id = %s
-                )
-                """,
-                (user_id, user_id)
+                f"""SELECT * FROM {STOCK_TABLE}
+                    WHERE user_id = %s
+                    ORDER BY stock_id DESC
+                    LIMIT 1""",
+                (user_id,)
             )
-            return cursor.fetchall()  # Fetch a single row (latest stock item)
-        except mysql.connector.Error as e:
-            error_message = f"Error fetching latest stock item for user_id {user_id}: {e}"
-            logger.error(error_message)
-            raise RuntimeError(error_message)
-        finally:
-            # Close resources in one place
-            if cursor:
-                cursor.close()
-            if conn:
-                conn.close()
+            result = cursor.fetchone()
+            cursor.close()
+            conn.close()
+            return result if result else []
+        except Exception as e:
+            logger.error(f"Stock fetch error: {e}")
+            raise RuntimeError(f"Database error: {e}")
+    
+    
+    
