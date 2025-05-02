@@ -5997,3 +5997,997 @@ werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on 
 [2025-05-01 06:42:49,152: INFO] User with ID '8' fetched successfully.
 [2025-05-01 06:43:01,764: DEBUG] Latest filename: None
 [2025-05-01 06:43:01,777: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:10:56,588: INFO] Logger initialized
+[2025-05-02 05:10:56,589: ERROR] Error
+[2025-05-02 05:10:56,589: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:10:56,589: WARNING] Warning
+[2025-05-02 05:10:56,589: CRITICAL] Critical
+[2025-05-02 05:15:29,325: INFO] Logger initialized
+[2025-05-02 05:15:29,325: ERROR] Error
+[2025-05-02 05:15:29,326: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:15:29,326: WARNING] Warning
+[2025-05-02 05:15:29,326: CRITICAL] Critical
+[2025-05-02 05:16:48,027: INFO] Logger initialized
+[2025-05-02 05:16:48,028: ERROR] Error
+[2025-05-02 05:16:48,028: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:16:48,028: WARNING] Warning
+[2025-05-02 05:16:48,028: CRITICAL] Critical
+[2025-05-02 05:17:22,490: INFO] Logger initialized
+[2025-05-02 05:17:22,490: ERROR] Error
+[2025-05-02 05:17:22,490: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:17:22,490: WARNING] Warning
+[2025-05-02 05:17:22,490: CRITICAL] Critical
+[2025-05-02 05:17:45,463: INFO] Logger initialized
+[2025-05-02 05:17:45,463: ERROR] Error
+[2025-05-02 05:17:45,463: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:17:45,463: WARNING] Warning
+[2025-05-02 05:17:45,463: CRITICAL] Critical
+[2025-05-02 05:17:53,108: INFO] Users table verified.
+[2025-05-02 05:17:53,159: INFO] stockimages table schema created successfully.
+[2025-05-02 05:17:53,174: INFO] stock table schema created successfully.
+[2025-05-02 05:17:53,189: INFO] all_stock table schema created successfully.
+[2025-05-02 05:17:53,190: INFO] Stock database schema initialized.
+[2025-05-02 05:17:53,203: INFO] Users table verified.
+[2025-05-02 05:17:53,219: INFO] Database schema created successfully.
+[2025-05-02 05:17:53,234: INFO] Image database schema created successfully.
+[2025-05-02 05:17:53,247: INFO] Database schema created successfully.
+[2025-05-02 05:17:54,835: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:17:56,559: INFO] Logger initialized
+[2025-05-02 05:17:56,560: ERROR] Error
+[2025-05-02 05:17:56,560: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:17:56,560: WARNING] Warning
+[2025-05-02 05:17:56,560: CRITICAL] Critical
+[2025-05-02 05:18:04,135: INFO] Users table verified.
+[2025-05-02 05:18:04,149: INFO] stockimages table schema created successfully.
+[2025-05-02 05:18:04,165: INFO] stock table schema created successfully.
+[2025-05-02 05:18:04,180: INFO] all_stock table schema created successfully.
+[2025-05-02 05:18:04,180: INFO] Stock database schema initialized.
+[2025-05-02 05:18:04,193: INFO] Users table verified.
+[2025-05-02 05:18:04,203: INFO] Database schema created successfully.
+[2025-05-02 05:18:04,214: INFO] Image database schema created successfully.
+[2025-05-02 05:18:04,227: INFO] Database schema created successfully.
+[2025-05-02 05:18:05,603: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:18:17,888: ERROR] Unhandled error: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 278, in <lambda>
+    view_func=lambda **kw: self_ref().send_static_file(**kw),  # type: ignore # noqa: B950
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 326, in send_static_file
+    return send_from_directory(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/helpers.py", line 565, in send_from_directory
+    return werkzeug.utils.send_from_directory(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/werkzeug/utils.py", line 575, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+[2025-05-02 05:18:23,862: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:18:27,232: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:18:33,502: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:18:40,191: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:18:40,655: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:18:40,860: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:03,786: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:04,187: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:04,369: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:04,586: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:08,137: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:15,102: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:15,918: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:16,136: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:16,337: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:16,535: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:16,718: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:19:16,918: ERROR] Unhandled error: Install 'email_validator' for email validation support.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 401, in __call__
+    import email_validator
+ModuleNotFoundError: No module named 'email_validator'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/main.py", line 243, in login
+    if form.validate_on_submit():
+       ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask_wtf/form.py", line 86, in validate_on_submit
+    return self.is_submitted() and self.validate(extra_validators=extra_validators)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 330, in validate
+    return super().validate(extra)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/form.py", line 147, in validate
+    if not field.validate(self, extra):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 234, in validate
+    stop_validation = self._run_validation_chain(form, chain)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/fields/core.py", line 254, in _run_validation_chain
+    validator(form, self)
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/wtforms/validators.py", line 403, in __call__
+    raise Exception(
+Exception: Install 'email_validator' for email validation support.
+[2025-05-02 05:23:20,687: INFO] Logger initialized
+[2025-05-02 05:23:20,688: ERROR] Error
+[2025-05-02 05:23:20,689: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:23:20,689: WARNING] Warning
+[2025-05-02 05:23:20,689: CRITICAL] Critical
+[2025-05-02 05:23:29,267: INFO] Users table verified.
+[2025-05-02 05:23:29,291: INFO] stockimages table schema created successfully.
+[2025-05-02 05:23:29,305: INFO] stock table schema created successfully.
+[2025-05-02 05:23:29,316: INFO] all_stock table schema created successfully.
+[2025-05-02 05:23:29,316: INFO] Stock database schema initialized.
+[2025-05-02 05:23:29,329: INFO] Users table verified.
+[2025-05-02 05:23:29,342: INFO] Database schema created successfully.
+[2025-05-02 05:23:29,351: INFO] Image database schema created successfully.
+[2025-05-02 05:23:29,359: INFO] Database schema created successfully.
+[2025-05-02 05:23:30,914: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:23:47,213: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:23:47,222: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:23:47,223: INFO] User logged in successfully
+[2025-05-02 05:23:47,252: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:23:51,090: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:23:52,307: DEBUG] Latest filename: None
+[2025-05-02 05:23:52,323: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:20,779: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:24:20,793: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:24:20,793: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:24:23,144: DEBUG] Latest filename: None
+[2025-05-02 05:24:23,161: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:24,476: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:25,530: DEBUG] Latest filename: None
+[2025-05-02 05:24:25,543: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:26,601: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:24:26,619: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:24:26,619: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:24:27,602: DEBUG] Entering /chat route
+[2025-05-02 05:24:27,602: DEBUG] Session data: <SecureCookieSession {'age': None, 'allergies': 'seafood', 'csrf_token': '5aa0443eb305a0d824b662b981cf19da71a98f83', 'email': 'kingshahzy718@gmail.com', 'extra_info': 'asthma', 'first_name': None, 'gluten': 1, 'last_name': None, 'user_id': 8, 'username': 'kingshahzy', 'vegan': 1}>
+[2025-05-02 05:24:27,609: DEBUG] Chat history: 0 messages
+[2025-05-02 05:24:27,609: DEBUG] Handling GET request
+[2025-05-02 05:24:31,768: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:33,114: DEBUG] Latest filename: None
+[2025-05-02 05:24:33,126: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:38,801: ERROR] Unhandled error: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 278, in <lambda>
+    view_func=lambda **kw: self_ref().send_static_file(**kw),  # type: ignore # noqa: B950
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 326, in send_static_file
+    return send_from_directory(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/helpers.py", line 565, in send_from_directory
+    return werkzeug.utils.send_from_directory(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/werkzeug/utils.py", line 575, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+[2025-05-02 05:24:42,209: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:24:42,220: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:24:42,220: INFO] User logged in successfully
+[2025-05-02 05:24:42,271: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:44,008: DEBUG] Latest filename: None
+[2025-05-02 05:24:44,020: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:48,408: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:24:48,422: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:24:48,423: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:24:51,168: DEBUG] Latest filename: None
+[2025-05-02 05:24:51,178: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:24:54,641: ERROR] Unhandled error: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 278, in <lambda>
+    view_func=lambda **kw: self_ref().send_static_file(**kw),  # type: ignore # noqa: B950
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 326, in send_static_file
+    return send_from_directory(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/helpers.py", line 565, in send_from_directory
+    return werkzeug.utils.send_from_directory(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/werkzeug/utils.py", line 575, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+[2025-05-02 05:25:44,425: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:25:44,435: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:25:44,435: INFO] User logged in successfully
+[2025-05-02 05:25:44,466: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:25:53,696: DEBUG] Latest filename: None
+[2025-05-02 05:25:53,706: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:26:54,368: INFO] Logger initialized
+[2025-05-02 05:26:54,368: ERROR] Error
+[2025-05-02 05:26:54,368: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:26:54,369: WARNING] Warning
+[2025-05-02 05:26:54,369: CRITICAL] Critical
+[2025-05-02 05:27:03,585: INFO] Users table verified.
+[2025-05-02 05:27:03,599: INFO] stockimages table schema created successfully.
+[2025-05-02 05:27:03,609: INFO] stock table schema created successfully.
+[2025-05-02 05:27:03,620: INFO] all_stock table schema created successfully.
+[2025-05-02 05:27:03,620: INFO] Stock database schema initialized.
+[2025-05-02 05:27:03,637: INFO] Users table verified.
+[2025-05-02 05:27:03,648: INFO] Database schema created successfully.
+[2025-05-02 05:27:03,659: INFO] Image database schema created successfully.
+[2025-05-02 05:27:03,674: INFO] Database schema created successfully.
+[2025-05-02 05:27:05,401: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:27:05,621: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:27:08,788: DEBUG] Latest filename: None
+[2025-05-02 05:27:08,797: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:27:10,286: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:27:11,627: DEBUG] Latest filename: None
+[2025-05-02 05:27:11,639: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:27:12,725: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:27:14,156: DEBUG] Latest filename: None
+[2025-05-02 05:27:14,166: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:31:27,788: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:31:29,641: DEBUG] Latest filename: None
+[2025-05-02 05:31:29,655: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:31:30,857: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:31:30,869: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:31:30,870: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:31:31,784: DEBUG] Entering /chat route
+[2025-05-02 05:31:31,785: DEBUG] Session data: <SecureCookieSession {'age': None, 'allergies': 'seafood', 'csrf_token': '5aa0443eb305a0d824b662b981cf19da71a98f83', 'email': 'kingshahzy718@gmail.com', 'extra_info': 'asthma', 'first_name': None, 'gluten': 1, 'last_name': None, 'user_id': 8, 'username': 'kingshahzy', 'vegan': 1}>
+[2025-05-02 05:31:31,788: DEBUG] Chat history: 0 messages
+[2025-05-02 05:31:31,789: DEBUG] Handling GET request
+[2025-05-02 05:31:35,379: ERROR] Unhandled error: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 278, in <lambda>
+    view_func=lambda **kw: self_ref().send_static_file(**kw),  # type: ignore # noqa: B950
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 326, in send_static_file
+    return send_from_directory(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/helpers.py", line 565, in send_from_directory
+    return werkzeug.utils.send_from_directory(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/werkzeug/utils.py", line 575, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+[2025-05-02 05:31:38,191: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:31:38,202: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:31:38,203: INFO] User logged in successfully
+[2025-05-02 05:31:38,235: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:31:39,765: DEBUG] Latest filename: None
+[2025-05-02 05:31:39,780: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:37:56,572: INFO] Logger initialized
+[2025-05-02 05:37:56,572: ERROR] Error
+[2025-05-02 05:37:56,573: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:37:56,573: WARNING] Warning
+[2025-05-02 05:37:56,573: CRITICAL] Critical
+[2025-05-02 05:38:05,054: INFO] Users table verified.
+[2025-05-02 05:38:05,063: INFO] stockimages table schema created successfully.
+[2025-05-02 05:38:05,075: INFO] stock table schema created successfully.
+[2025-05-02 05:38:05,083: INFO] all_stock table schema created successfully.
+[2025-05-02 05:38:05,083: INFO] Stock database schema initialized.
+[2025-05-02 05:38:05,094: INFO] Users table verified.
+[2025-05-02 05:38:05,101: INFO] Database schema created successfully.
+[2025-05-02 05:38:05,109: INFO] Image database schema created successfully.
+[2025-05-02 05:38:05,117: INFO] Database schema created successfully.
+[2025-05-02 05:38:06,854: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:38:07,114: ERROR] Unhandled error: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 278, in <lambda>
+    view_func=lambda **kw: self_ref().send_static_file(**kw),  # type: ignore # noqa: B950
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 326, in send_static_file
+    return send_from_directory(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/helpers.py", line 565, in send_from_directory
+    return werkzeug.utils.send_from_directory(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/werkzeug/utils.py", line 575, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+[2025-05-02 05:38:10,637: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:38:10,646: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:38:10,646: INFO] User logged in successfully
+[2025-05-02 05:38:10,692: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:12,436: DEBUG] Latest filename: None
+[2025-05-02 05:38:12,449: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:15,942: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:38:15,951: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:38:15,952: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:38:17,025: DEBUG] Latest filename: None
+[2025-05-02 05:38:17,037: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:18,399: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:19,397: DEBUG] Latest filename: None
+[2025-05-02 05:38:19,409: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:20,751: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:38:20,763: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:38:20,763: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:38:21,657: DEBUG] Latest filename: None
+[2025-05-02 05:38:21,666: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:22,367: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:38:44,977: INFO] Logger initialized
+[2025-05-02 05:38:44,977: ERROR] Error
+[2025-05-02 05:38:44,977: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:38:44,977: WARNING] Warning
+[2025-05-02 05:38:44,977: CRITICAL] Critical
+[2025-05-02 05:38:53,664: INFO] Users table verified.
+[2025-05-02 05:38:53,673: INFO] stockimages table schema created successfully.
+[2025-05-02 05:38:53,681: INFO] stock table schema created successfully.
+[2025-05-02 05:38:53,691: INFO] all_stock table schema created successfully.
+[2025-05-02 05:38:53,691: INFO] Stock database schema initialized.
+[2025-05-02 05:38:53,699: INFO] Users table verified.
+[2025-05-02 05:38:53,708: INFO] Database schema created successfully.
+[2025-05-02 05:38:53,715: INFO] Image database schema created successfully.
+[2025-05-02 05:38:53,724: INFO] Database schema created successfully.
+[2025-05-02 05:38:54,910: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:39:09,258: INFO] Logger initialized
+[2025-05-02 05:39:09,258: ERROR] Error
+[2025-05-02 05:39:09,258: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:39:09,258: WARNING] Warning
+[2025-05-02 05:39:09,258: CRITICAL] Critical
+[2025-05-02 05:39:16,946: INFO] Users table verified.
+[2025-05-02 05:39:16,956: INFO] stockimages table schema created successfully.
+[2025-05-02 05:39:16,965: INFO] stock table schema created successfully.
+[2025-05-02 05:39:16,976: INFO] all_stock table schema created successfully.
+[2025-05-02 05:39:16,976: INFO] Stock database schema initialized.
+[2025-05-02 05:39:16,988: INFO] Users table verified.
+[2025-05-02 05:39:16,998: INFO] Database schema created successfully.
+[2025-05-02 05:39:17,007: INFO] Image database schema created successfully.
+[2025-05-02 05:39:17,016: INFO] Database schema created successfully.
+[2025-05-02 05:39:17,988: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:39:18,243: ERROR] Unhandled error: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+Traceback (most recent call last):
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 278, in <lambda>
+    view_func=lambda **kw: self_ref().send_static_file(**kw),  # type: ignore # noqa: B950
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/app.py", line 326, in send_static_file
+    return send_from_directory(
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/flask/helpers.py", line 565, in send_from_directory
+    return werkzeug.utils.send_from_directory(  # type: ignore[return-value]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/groc-venv/lib/python3.12/site-packages/werkzeug/utils.py", line 575, in send_from_directory
+    raise NotFound()
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+[2025-05-02 05:39:53,041: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:39:53,051: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:39:53,051: INFO] User logged in successfully
+[2025-05-02 05:39:53,074: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:39:54,935: DEBUG] Latest filename: None
+[2025-05-02 05:39:54,944: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:40:49,766: INFO] Logger initialized
+[2025-05-02 05:40:49,766: ERROR] Error
+[2025-05-02 05:40:49,766: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-02 05:40:49,766: WARNING] Warning
+[2025-05-02 05:40:49,766: CRITICAL] Critical
+[2025-05-02 05:40:58,721: INFO] Users table verified.
+[2025-05-02 05:40:58,732: INFO] stockimages table schema created successfully.
+[2025-05-02 05:40:58,742: INFO] stock table schema created successfully.
+[2025-05-02 05:40:58,751: INFO] all_stock table schema created successfully.
+[2025-05-02 05:40:58,751: INFO] Stock database schema initialized.
+[2025-05-02 05:40:58,765: INFO] Users table verified.
+[2025-05-02 05:40:58,774: INFO] Database schema created successfully.
+[2025-05-02 05:40:58,782: INFO] Image database schema created successfully.
+[2025-05-02 05:40:58,791: INFO] Database schema created successfully.
+[2025-05-02 05:41:00,010: INFO] GroceryAnalyzer initialized
+[2025-05-02 05:41:00,308: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:41:06,917: INFO] User with email 'kingshahzy718@gmail.com' authenticated successfully.
+[2025-05-02 05:41:06,925: INFO] User with email 'kingshahzy718@gmail.com' fetched successfully.
+[2025-05-02 05:41:06,925: INFO] User logged in successfully
+[2025-05-02 05:41:06,971: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:41:08,650: DEBUG] Latest filename: None
+[2025-05-02 05:41:08,660: INFO] User with ID '8' fetched successfully.
+[2025-05-02 05:41:10,160: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-02 05:41:10,172: INFO] Fetched latest filename for user 8: None
+[2025-05-02 05:41:10,172: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-02 05:41:11,172: INFO] User with ID '8' fetched successfully.

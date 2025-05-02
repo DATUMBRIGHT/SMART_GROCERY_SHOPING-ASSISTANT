@@ -26,8 +26,6 @@ from db_managers.db_manager import DBManager
 import requests
 import csv
 from io import StringIO
-import aiohttp
-
 import torch
 torch.set_num_threads(1)
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -810,7 +808,7 @@ def index():
         receipt_items = receipt_agent.fetch_receipt_items_by_id(receipt_id, user_id) if receipt_id else []
         
         # Fetch filename for the receipt image
-        filename = session.get('last_receipt_file') or  receipt_agent.get_latest_filename(user_id,receipt_id)
+        filename = session.get('last_receipt_file') or  receipt_agent.get_latest_filename(user_id,receipt_id) 
         
         # Fetch user data for consistency with dashboard
         user = db_manager.fetch_user_id(user_id)
@@ -1138,11 +1136,6 @@ def clear_chat():
         return redirect(url_for('chat_page'))
 
 
-@app.errorhandler(Exception)
-def handle_error(error):
-    logger.error(f"Unhandled error: {error}", exc_info=True)
-    flash("An unexpected error occurred", 'danger')
-    return redirect(url_for('chat_page')), 500
 
 @app.route('/chat/history')
 def chat_history():
