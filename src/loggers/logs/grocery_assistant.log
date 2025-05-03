@@ -7425,3 +7425,52 @@ werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on 
 [2025-05-03 00:35:30,543: INFO] Database schema created successfully.
 [2025-05-03 00:35:30,550: INFO] Image database schema created successfully.
 [2025-05-03 00:35:30,557: INFO] Database schema created successfully.
+[2025-05-03 00:35:32,454: INFO] GroceryAnalyzer initialized
+[2025-05-03 00:37:44,533: DEBUG] Latest filename: None
+[2025-05-03 00:37:44,543: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:38:25,384: DEBUG] Saved file: /Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/uploads/3df90d6423764a4290f8fd61239a51f2.jpg, exists: True
+[2025-05-03 00:38:25,385: INFO] Receipt image read successfully.
+[2025-05-03 00:38:27,895: INFO] Processed item: name='NFS Grocery' quantity=1 weight=1.0 category='Grocery' price=3.25 purchase_date='2010-11-08' expiration_date='2010-11-15'
+[2025-05-03 00:38:27,895: INFO] Processed item: name='Produce' quantity=1 weight=1.0 category='Produce' price=5.5 purchase_date='2010-11-08' expiration_date='2010-11-15'
+[2025-05-03 00:38:27,937: INFO] Saved 2 items to receipts linked to receipt ID: 55
+[2025-05-03 00:38:27,946: INFO] Saved image path to database: 3df90d6423764a4290f8fd61239a51f2.jpg linked to receipt ID: 55
+[2025-05-03 00:38:27,947: INFO] Processed 2 receipt items
+[2025-05-03 00:38:27,978: INFO] Serving image: 3df90d6423764a4290f8fd61239a51f2.jpg
+[2025-05-03 00:38:30,546: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:42:16,537: INFO] Receipt 55 deleted successfully for user_id 8 (items: 2, images: 1).
+[2025-05-03 00:42:23,000: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:42:23,657: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:42:28,433: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:42:28,479: INFO] Serving image: 3df90d6423764a4290f8fd61239a51f2.jpg
+[2025-05-03 00:42:29,819: INFO] Fetched 0 items for user 8 with stock_id None.
+[2025-05-03 00:42:29,828: INFO] Fetched latest filename for user 8: None
+[2025-05-03 00:42:29,829: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-03 00:42:33,529: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:44:50,666: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:44:50,704: INFO] Serving image: 3df90d6423764a4290f8fd61239a51f2.jpg
+[2025-05-03 00:44:58,651: DEBUG] Latest filename: None
+[2025-05-03 00:44:58,653: DEBUG] Saved file: /Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/uploads/4d6c860c48344128b4eff0539ebb5ea9.jpg, exists: True
+[2025-05-03 00:44:58,654: INFO] Receipt image read successfully.
+[2025-05-03 00:45:01,079: INFO] Processed item: name='NFS Grocery' quantity=1 weight=1.0 category='Grocery' price=3.25 purchase_date='2010-11-08' expiration_date='2010-11-15'
+[2025-05-03 00:45:01,079: INFO] Processed item: name='Produce' quantity=1 weight=1.0 category='Produce' price=5.5 purchase_date='2010-11-08' expiration_date='2010-11-15'
+[2025-05-03 00:45:01,105: INFO] Saved 2 items to receipts linked to receipt ID: 56
+[2025-05-03 00:45:01,121: INFO] Saved image path to database: 4d6c860c48344128b4eff0539ebb5ea9.jpg linked to receipt ID: 56
+[2025-05-03 00:45:01,121: INFO] Processed 2 receipt items
+[2025-05-03 00:45:01,172: INFO] Serving image: 4d6c860c48344128b4eff0539ebb5ea9.jpg
+[2025-05-03 00:45:03,184: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:46:59,409: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:48:45,331: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:50:50,303: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:51:42,795: ERROR] Error processing query: 'GroceryAnalyzer' object has no attribute 'query'
+[2025-05-03 00:55:40,834: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:56:27,967: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:56:28,867: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:56:28,903: INFO] Serving image: 4d6c860c48344128b4eff0539ebb5ea9.jpg
+[2025-05-03 00:56:29,861: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:56:33,975: DEBUG] Entering /chat route
+[2025-05-03 00:56:33,975: DEBUG] Session data: <SecureCookieSession {'age': None, 'allergies': 'seafood', 'csrf_token': 'a4f52b219edc0697a5debcd02a38afff1a9ac565', 'email': 'kingshahzy718@gmail.com', 'extra_info': 'asthma', 'first_name': None, 'gluten': 1, 'last_name': None, 'last_receipt_file': '4d6c860c48344128b4eff0539ebb5ea9.jpg', 'last_receipt_id': 56, 'receipt_items': [{'category': 'Grocery', 'expiration_date': '2010-11-15', 'name': 'NFS Grocery', 'price': 3.25, 'purchase_date': '2010-11-08', 'quantity': 1, 'weight': 1.0}, {'category': 'Produce', 'expiration_date': '2010-11-15', 'name': 'Produce', 'price': 5.5, 'purchase_date': '2010-11-08', 'quantity': 1, 'weight': 1.0}], 'user_id': 8, 'username': 'kingshahzy', 'vegan': 1}>
+[2025-05-03 00:56:33,977: DEBUG] Chat history: 0 messages
+[2025-05-03 00:56:33,977: DEBUG] Handling GET request
+[2025-05-03 00:56:35,405: INFO] User with ID '8' fetched successfully.
+[2025-05-03 00:56:35,458: INFO] Serving image: 4d6c860c48344128b4eff0539ebb5ea9.jpg
+[2025-05-03 00:56:36,196: INFO] User with ID '8' fetched successfully.
