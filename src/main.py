@@ -5,6 +5,8 @@ from wtforms.validators import DataRequired, NumberRange, Optional, Email, Lengt
 from wtforms import validators
 from flask import session
 import mysql.connector
+from db_managers.email_sender import EmailSender
+from db_managers.scheduler import Scheduler
 import json
 import os
 from pathlib import Path
@@ -69,6 +71,8 @@ app.config['SESSION_COOKIE_SECURE'] = True  # Only send over HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 chat_lock = Lock()
+app_context = app.app_context()
+scheduler = Scheduler(app = app)
 # Ensure upload folder exists
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 
@@ -77,6 +81,13 @@ csrf = CSRFProtect(app)
 
 # Initialize database connection pool
 db_pool = pooling.MySQLConnectionPool(pool_name="mypool", pool_size=5, **DB_CONFIG)
+
+
+
+#email sender
+email_sender = EmailSender()
+
+
 
 # Initialize agents and analyzer
 stock_agent = StockProcessorAgent(api_key=GEMINI_API_KEY)
@@ -183,6 +194,9 @@ def signup():
             session['user_id'] = user_id
             session['username'] = form.username.data
             session['email'] = form.email.data
+            email_sender.send_welcome_email(recipient_email=session['email'],
+                                            username = session['username'] or 'user',
+                                            email = session['email'])
 
             # HTMX response
             if request.headers.get('HX-Request'):
@@ -259,6 +273,9 @@ def login():
                 session['allergies'] = user_details['allergies']
                 
                 logger.info("User logged in successfully")
+                email_sender.send_email(recipient_email=session['email'],
+                                        subject="Login Notification",
+                                        body=f"User {session['username']} logged in at {arrow.now().format('YYYY-MM-DD HH:mm:ss')}")
                 if request.headers.get('HX-Request'):
                     response = make_response('<div class="text-green-500 font-semibold">Login successful! Redirecting...</div>')
                     response.headers['HX-Redirect'] = url_for('dashboard')
@@ -399,6 +416,19 @@ def dashboard():
         
         cursor.close()
         conn.close()
+
+        #send grocery summary
+        if not scheduler:
+            logger.info('scheduler doeesnt exist reinitializing')
+            scheduler.start(func = lambda :email_sender.send_grocery_summary(app_context, session['email'], 
+                                                                             low_stock, 
+                                                                             expiring_soon),
+                                                                             id ='grocery_summary',
+                                                                             replace_existing = False,
+                                                                              misfire_grace_time=60,  # Grace period before marking a missed execution
+                                                                            max_instances=1,  
+                                                                            next_run_time=None)
+        
     except mysql.connector.Error as e:
         logger.error(f"Database error: {e}")
         monthly_spending = []
@@ -407,7 +437,7 @@ def dashboard():
         most_purchased = 'None'
         vegetarian_count = 0
         receipt_frequency = 0
-    
+        
     return render_template(
         'dashboard.html',
         all_receipt_items=all_receipt_items,
@@ -436,6 +466,8 @@ def dashboard():
         user=user,
         form=form
     )
+
+    
 
 @app.route('/upload/receipt', methods=['GET', 'POST'])
 def upload_receipt():
@@ -1134,7 +1166,6 @@ def clear_chat():
         logger.error(f"Failed to clear chat history: {e}", exc_info=True)
         flash("Error clearing chat history", "danger")
         return redirect(url_for('chat_page'))
-
 
 
 @app.route('/chat/history')
