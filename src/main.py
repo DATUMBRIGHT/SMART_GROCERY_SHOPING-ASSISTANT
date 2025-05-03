@@ -5,8 +5,8 @@ from wtforms.validators import DataRequired, NumberRange, Optional, Email, Lengt
 from wtforms import validators
 from flask import session
 import mysql.connector
-from db_managers.email_sender import EmailSender
-from db_managers.scheduler import Scheduler
+from src.db_managers.email_sender import EmailSender
+from src.db_managers.scheduler import Scheduler
 import json
 import os
 from pathlib import Path
@@ -20,11 +20,11 @@ from collections import defaultdict
 from mysql.connector import pooling
 from datetime import datetime, timedelta
 from markdown import markdown
-from agents.grocery_agent import ReceiptProcessorAgent
-from agents.stock_agent import StockProcessorAgent
-from agents.grocery_analyzer import GroceryAnalyzer
+from src.agents.grocery_agent import ReceiptProcessorAgent
+from src.agents.stock_agent import StockProcessorAgent
+from src.agents.grocery_analyzer import GroceryAnalyzer
 from loggers.custom_logger import logger
-from db_managers.db_manager import DBManager
+from src.db_managers.db_manager import DBManager
 import requests
 import csv
 from io import StringIO
