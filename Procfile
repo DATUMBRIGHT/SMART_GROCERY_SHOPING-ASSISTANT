@@ -1,0 +1,2 @@
+gunicorn src.main:app
+
