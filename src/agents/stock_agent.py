@@ -6,11 +6,9 @@ from datetime import datetime
 import yaml
 import os
 from dotenv import load_dotenv
-import asyncio
-import aiomysql
 from mysql.connector import pooling
 
-from loggers.custom_logger import logger
+from src.loggers.custom_logger import logger
 
 # Load environment variables and configuration
 load_dotenv()

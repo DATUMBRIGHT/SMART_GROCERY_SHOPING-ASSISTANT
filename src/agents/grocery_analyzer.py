@@ -6,7 +6,7 @@ import arrow
 from sentence_transformers import SentenceTransformer
 from functools import lru_cache
 from dotenv import load_dotenv
-from loggers.custom_logger import logger
+from src.loggers.custom_logger import logger
 import requests
 from flask import Flask, session, request, render_template, redirect, url_for, flash
 from wtforms import Form, StringField, validators
