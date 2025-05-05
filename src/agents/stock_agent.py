@@ -8,7 +8,7 @@ import os
 from dotenv import load_dotenv
 from mysql.connector import pooling
 
-from src.loggers.custom_logger import logger
+from loggers.custom_logger import logger
 
 # Load environment variables and configuration
 load_dotenv()

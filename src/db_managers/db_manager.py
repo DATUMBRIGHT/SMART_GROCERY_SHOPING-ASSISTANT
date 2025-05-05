@@ -2,7 +2,7 @@ import os
 import yaml
 import mysql.connector
 from werkzeug.security import check_password_hash,generate_password_hash
-from src.loggers.custom_logger import logger
+from loggers.custom_logger import logger
 from dotenv import load_dotenv
 
 

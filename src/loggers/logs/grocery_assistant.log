@@ -7474,3 +7474,63 @@ werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on 
 [2025-05-03 00:56:35,405: INFO] User with ID '8' fetched successfully.
 [2025-05-03 00:56:35,458: INFO] Serving image: 4d6c860c48344128b4eff0539ebb5ea9.jpg
 [2025-05-03 00:56:36,196: INFO] User with ID '8' fetched successfully.
+[2025-05-04 23:53:56,823: INFO] Logger initialized
+[2025-05-04 23:53:56,824: ERROR] Error
+[2025-05-04 23:53:56,824: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-04 23:53:56,824: WARNING] Warning
+[2025-05-04 23:53:56,824: CRITICAL] Critical
+[2025-05-04 23:55:14,966: INFO] Users table verified.
+[2025-05-04 23:55:15,005: INFO] stockimages table schema created successfully.
+[2025-05-04 23:55:15,024: INFO] stock table schema created successfully.
+[2025-05-04 23:55:15,046: INFO] all_stock table schema created successfully.
+[2025-05-04 23:55:15,046: INFO] Stock database schema initialized.
+[2025-05-04 23:55:15,063: INFO] Users table verified.
+[2025-05-04 23:55:15,082: INFO] Database schema created successfully.
+[2025-05-04 23:55:15,098: INFO] Image database schema created successfully.
+[2025-05-04 23:55:15,115: INFO] Database schema created successfully.
+[2025-05-04 23:55:16,421: INFO] GroceryAnalyzer initialized
+[2025-05-04 23:55:18,288: INFO] Logger initialized
+[2025-05-04 23:55:18,289: ERROR] Error
+[2025-05-04 23:55:18,289: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-04 23:55:18,289: WARNING] Warning
+[2025-05-04 23:55:18,289: CRITICAL] Critical
+[2025-05-04 23:55:26,038: INFO] Users table verified.
+[2025-05-04 23:55:26,058: INFO] stockimages table schema created successfully.
+[2025-05-04 23:55:26,074: INFO] stock table schema created successfully.
+[2025-05-04 23:55:26,092: INFO] all_stock table schema created successfully.
+[2025-05-04 23:55:26,092: INFO] Stock database schema initialized.
+[2025-05-04 23:55:26,111: INFO] Users table verified.
+[2025-05-04 23:55:26,129: INFO] Database schema created successfully.
+[2025-05-04 23:55:26,145: INFO] Image database schema created successfully.
+[2025-05-04 23:55:26,169: INFO] Database schema created successfully.
+[2025-05-04 23:55:27,205: INFO] GroceryAnalyzer initialized
+[2025-05-05 00:02:35,722: INFO] Logger initialized
+[2025-05-05 00:02:35,722: ERROR] Error
+[2025-05-05 00:02:35,722: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-05 00:02:35,722: WARNING] Warning
+[2025-05-05 00:02:35,723: CRITICAL] Critical
+[2025-05-05 00:02:46,333: INFO] Users table verified.
+[2025-05-05 00:02:46,349: INFO] stockimages table schema created successfully.
+[2025-05-05 00:02:46,369: INFO] stock table schema created successfully.
+[2025-05-05 00:02:46,382: INFO] all_stock table schema created successfully.
+[2025-05-05 00:02:46,382: INFO] Stock database schema initialized.
+[2025-05-05 00:02:46,404: INFO] Users table verified.
+[2025-05-05 00:02:46,417: INFO] Database schema created successfully.
+[2025-05-05 00:02:46,434: INFO] Image database schema created successfully.
+[2025-05-05 00:02:46,451: INFO] Database schema created successfully.
+[2025-05-05 00:02:47,768: INFO] GroceryAnalyzer initialized
+[2025-05-05 00:02:48,231: INFO] Logger initialized
+[2025-05-05 00:02:48,231: ERROR] Error
+[2025-05-05 00:02:48,231: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-05 00:02:48,231: WARNING] Warning
+[2025-05-05 00:02:48,231: CRITICAL] Critical
+[2025-05-05 00:02:56,238: INFO] Users table verified.
+[2025-05-05 00:02:56,260: INFO] stockimages table schema created successfully.
+[2025-05-05 00:02:56,277: INFO] stock table schema created successfully.
+[2025-05-05 00:02:56,293: INFO] all_stock table schema created successfully.
+[2025-05-05 00:02:56,293: INFO] Stock database schema initialized.
+[2025-05-05 00:02:56,307: INFO] Users table verified.
+[2025-05-05 00:02:56,317: INFO] Database schema created successfully.
+[2025-05-05 00:02:56,329: INFO] Image database schema created successfully.
+[2025-05-05 00:02:56,340: INFO] Database schema created successfully.
+[2025-05-05 00:02:57,569: INFO] GroceryAnalyzer initialized
