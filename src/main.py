@@ -7,7 +7,6 @@ from flask import session
 import mysql.connector
 from src.db_managers.email_sender import EmailSender
 from src.db_managers.scheduler import Scheduler
-import json
 import os
 from pathlib import Path
 from werkzeug.utils import secure_filename
@@ -23,9 +22,8 @@ from markdown import markdown
 from src.agents.grocery_agent import ReceiptProcessorAgent
 from src.agents.stock_agent import StockProcessorAgent
 from src.agents.grocery_analyzer import GroceryAnalyzer
-from loggers.custom_logger import logger
+from src.loggers.custom_logger import logger
 from src.db_managers.db_manager import DBManager
-import requests
 import csv
 from io import StringIO
 import torch
