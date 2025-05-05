@@ -2,10 +2,9 @@ import os
 import yaml
 import mysql.connector
 from werkzeug.security import check_password_hash,generate_password_hash
-from loggers.custom_logger import logger
+from src.loggers.custom_logger import logger
 from dotenv import load_dotenv
-import aiomysql
-import asyncio
+
 
 load_dotenv()
 
