@@ -1,0 +1,110 @@
+<style>
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    background-color: #1f2937; /* Tailwind gray-800 */
+    color: #fff;
+    text-align: center;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%; /* Show above */
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.2s;
+    white-space: nowrap;
+  }
+
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
+</style>
+
+<div id="receipts-table" class="table-container">
+    <div class="flex space-x-4 mb-4">
+      <div class="tooltip">
+        <input type="date" id="start-date" class="border rounded p-2 disabled-feature" disabled>
+        <span class="tooltiptext">Pro version only</span>
+      </div>
+      
+      <div class="tooltip">
+        <input type="date" id="end-date" class="border rounded p-2 disabled-feature" disabled>
+        <span class="tooltiptext">Pro version only</span>
+      </div>
+      
+      <div class="tooltip">
+        <select name="sort-by" class="border rounded p-2 disabled-feature" disabled>
+          <option value="created_at">Sort by Date</option>
+          <option value="total_amount">Sort by Amount</option>
+          <option value="total_items">Sort by Items</option>
+        </select>
+        <span class="tooltiptext">Pro version only</span>
+      </div>
+      
+      <div class="tooltip">
+        <select name="sort-order" class="border rounded p-2 disabled-feature" disabled>
+          <option value="desc">Descending</option>
+          <option value="asc">Ascending</option>
+        </select>
+        <span class="tooltiptext">Pro version only</span>
+      </div>
+
+    </div>
+    {% if uploaded_receipts %}
+      <table class="table w-full">
+        <thead>
+          <tr class="table-header">
+            <th class="table-cell"><i class="fas fa-id-badge mr-1"></i>ID</th>
+            <th class="table-cell"><i class="fas fa-dollar-sign mr-1"></i>Total Amount</th>
+            <th class="table-cell"><i class="fas fa-cubes mr-1"></i>Total Items</th>
+            <th class="table-cell"><i class="fas fa-calendar-alt mr-1"></i>Created At</th>
+            <th class="table-cell"><i class="fas fa-cog mr-1"></i>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for receipt in uploaded_receipts %}
+            <tr class="table-row">
+              <td class="table-cell">{{ receipt.id }}</td>
+              <td class="table-cell">${{ receipt.total_amount | round(2) }}</td>
+              <td class="table-cell">{{ receipt.total_items }}</td>
+              <td class="table-cell">{{ receipt.created_at }}</td>
+              <td class="table-cell">
+                <button class="text-blue-500 hover:underline" hx-get="/dashboard/receipt-items/{{ receipt.id }}" hx-target="#items-{{ receipt.id }}" hx-swap="outerHTML">
+                  View Items
+                </button>
+                <button class="text-red-500 hover:underline"
+        hx-post="/dashboard/delete-receipt/{{ receipt.id }}"
+        hx-confirm="Delete this receipt?"
+        hx-target="#receipts-table"
+        hx-swap="outerHTML">
+    Delete
+</button> 
+              </td>
+            </tr>
+            <tr id="items-{{ receipt.id }}"></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="no-items text-center text-gray-500 py-4">
+        <i class="fas fa-exclamation-circle mr-2"></i>No receipts found. Upload a receipt to start tracking!
+      </p>
+    {% endif %}
+  </div>
+  <script>
+
+document.addEventListener('htmx:configRequest', (event) => {
+    const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+    event.detail.headers['X-CSRFToken'] = csrfToken;
+});
+  </script>
+  

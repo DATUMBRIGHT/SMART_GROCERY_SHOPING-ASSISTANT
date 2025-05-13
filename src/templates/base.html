@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grocery Assistant - {% block title %}{% endblock %}</title>
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" onload="console.log('Tailwind CSS loaded')" onerror="console.error('Failed to load Tailwind CSS')">
+  <!-- Custom CSS -->
+  <link href="{{ url_for('static', filename='css/base.css') }}" rel="stylesheet" onload="console.log('styles.css loaded')" onerror="console.error('Failed to load styles.css')">
+  <!-- htmx CDN -->
+  <script src="https://unpkg.com/htmx.org@1.9.10" onload="console.log('htmx loaded')" onerror="console.error('Failed to load htmx')"></script>
+  <!-- Custom JS -->
+  <script defer src="{{ url_for('static', filename='js/scripts.js') }}" onload="console.log('scripts.js loaded')" onerror="console.error('Failed to load scripts.js')"></script>
+  <!-- Google Fonts: Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" onload="console.log('Google Fonts loaded')" onerror="console.error('Failed to load Google Fonts')">
+  <style>
+    .htmx-indicator {
+      opacity: 0;
+      transition: opacity 200ms ease-in;
+    }
+    .htmx-request .htmx-indicator {
+      opacity: 1;
+    }
+    .htmx-request.htmx-indicator {
+      opacity: 1;
+    }
+
+    .input-error {
+      animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translateX(-1px); }
+      20%, 80% { transform: translateX(2px); }
+      30%, 50%, 70% { transform: translateX(-4px); }
+      40%, 60% { transform: translateX(4px); }
+    }
+  </style>
+
+</head>
+<body>
+  
+
+  <!-- Navbar -->
+  <nav class="bg-gradient-to-r from-green-400 to-green-600 shadow-lg p-4">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+      <a href="{{ url_for('dashboard') }}" class="text-2xl font-bold text-white uppercase tracking-wide">
+        Grocery Shopping Assistant
+      </a>
+      <div class="space-x-6">
+        <a href="{{ url_for('dashboard') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors">Dashboard</a>
+        <a href="{{ url_for('index') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors">Receipts</a>
+        <a href="{{ url_for('stock') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors">Stock</a>
+        <a href="{{ url_for('chat_page') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors">Chat</a>
+        <a href="{{ url_for('logout') }}" class="text-white font-semibold hover:text-yellow-300 transition-colors" onclick="return confirm('Are you sure you want to quit?')">Logout</a>
+      </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="max-w-4xl mx-auto mt-6">
+        {% for category, message in messages %}
+          <div class="p-4 mb-4 rounded-lg {% if category == 'success' %}bg-green-100 text-green-800{% elif category == 'danger' %}bg-red-100 text-red-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Content Block -->
+  {% block content %}{% endblock %}
+</body>
+</html>

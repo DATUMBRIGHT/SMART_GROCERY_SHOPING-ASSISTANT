@@ -1,0 +1,27 @@
+database:
+  host: db
+  port: 3306
+  user: root
+  name: grocery_db
+  receipts_table: receipts
+  
+  tables:
+        stock: stock
+        users: users
+        receiptsimages: receiptimages
+        stockimages: stockimages
+        receipts: receipts
+        allstock: all_stock
+        
+  
+gemini:
+  model: gemini-1.5-flash
+  api_url: 
+  
+deepseek:
+  api_url: https://api.deepseek.com/chat/completions
+  model: deepseek-chat
+
+upload:
+  allowed_extensions: ['.png', '.jpeg', '.jpg']
+  max_content_length: 16777216  # 16MB in bytes

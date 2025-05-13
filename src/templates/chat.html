@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}Chat Assistant{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Chat Container -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col" style="min-height: 70vh;">
+        <!-- Chat Header -->
+        <div class="bg-green-600 p-6 border-b border-green-700">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-bold text-white flex items-center gap-3">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        Smart Grocery Assistant
+                    </h1>
+                </div>
+                <form hx-post="{{ url_for('clear_chat') }}" hx-target="#chat-messages" hx-swap="innerHTML">
+                    {{ form.hidden_tag() }}
+                    <button type="submit" class="px-4 py-2 bg-white/20 hover:bg-white/30 text-white rounded-lg transition-colors">
+                        Clear History
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-50">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="animate-fade-in {% if message.is_user %}ml-auto{% else %}mr-auto{% endif %} max-w-[85%]">
+                        <div class="{% if message.is_user %}bg-green-600 text-white{% else %}bg-white shadow-md{% endif %} rounded-xl p-4">
+                            <div class="prose prose-sm max-w-none">
+                                {{ message.text|safe }}
+                            </div>
+                            <div class="mt-2 text-xs {% if message.is_user %}text-green-100{% else %}text-gray-500{% endif %}">
+                                {{ message.timestamp }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="h-full flex items-center justify-center text-center text-gray-500">
+                    <div class="space-y-2">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                        <p class="text-sm">How can I help with your groceries today?</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Input Form -->
+        <form class="chat-form" 
+              hx-post="{{ url_for('chat_page') }}" 
+              hx-target="#chat-messages" 
+              hx-swap="beforeend" 
+              class="flex gap-3 p-6 w-full">
+            {{ form.hidden_tag() }}
+            <input type="text" 
+                   name="query"
+                   class="w-full p-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
+                   placeholder="Ask about expiration dates, recipes, or shopping lists..."
+                   required>
+            <button type="submit" class="p-3 bg-green-600 hover:bg-green-700 text-white rounded-xl transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    #chat-messages::-webkit-scrollbar {
+        width: 8px;
+    }
+    #chat-messages::-webkit-scrollbar-track {
+        background: rgba(0,0,0,0.05);
+    }
+    #chat-messages::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.1);
+        border-radius: 4px;
+    }
+    .alert-danger {
+        background-color: #fee2e2;
+        border-color: #fecaca;
+        color: #b91c1c;
+    }
+    .alert-warning {
+        background-color: #fef3c7;
+        border-color: #fde68a;
+        color: #b45309;
+    }
+    .alert-success {
+        background-color: #d1fae5;
+        border-color: #a7f3d0;
+        color: #065f46;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatMessages = document.getElementById('chat-messages');
+        const chatForm = document.querySelector('.chat-form');
+        
+        if (chatForm) {
+            chatForm.addEventListener('submit', (e) => {
+                const input = e.target.querySelector('input[name="query"]');
+                if (input) {
+                    input.value = '';
+                }
+            });
+        } else {
+            console.warn('Chat form not found');
+        }
+
+        htmx.on('htmx:afterSwap', (event) => {
+            if (event.detail.target.id === 'chat-messages') {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    });
+</script>
+{% endblock %}
+

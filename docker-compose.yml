@@ -1,0 +1,67 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    container_name: flask_app
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    working_dir: /app/src
+    environment:
+      FLASK_ENV: ${FLASK_ENV}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      STOCK_TABLE: ${STOCK_TABLE}
+      STOCK_IMAGES_TABLE: ${STOCK_IMAGES_TABLE}
+      USERS_TABLE: ${USERS_TABLE}
+      ALL_STOCK_TABLE: ${ALL_STOCK_TABLE}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      APP_SECRET_KEY: ${APP_SECRET_KEY}
+      GMAIL_ADDRESS: ${GMAIL_ADDRESS}
+      GMAIL_PASSWORD: ${GMAIL_PASSWORD}
+      SMTP_SERVER: ${SMTP_SERVER}
+      SMTP_PORTAL: ${SMTP_PORTAL}
+      DB_USER: ${DB_USER}
+      RECEIPTS_TABLE: ${RECEIPTS_TABLE}
+      GEMINI_MODEL: ${GEMINI_MODEL}
+      GEMINI_API_URL: ${GEMINI_API_URL}
+      DEEPSEEK_API_URL: ${DEEPSEEK_API_URL}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL}
+      UPLOAD_ALLOWED_EXTENSIONS: ${UPLOAD_ALLOWED_EXTENSIONS}
+      UPLOAD_MAX_CONTENT_LENGTH: ${UPLOAD_MAX_CONTENT_LENGTH}
+      MYSQL_DB: ${MYSQL_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:8
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  adminer:
+    image: adminer
+    container_name: adminer_ui
+    restart: always
+    ports:
+      - "8081:8080"
+
+volumes:
+  db_data:
+
+networks:
+  default:
+    name: grocery-network

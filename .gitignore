@@ -1,0 +1,17 @@
+*.pt
+*.bin
+*.ckpt
+*.csv
+*.parquet
+*.pkl
+*.pyc
+__pycache__/
+.env
+.dockerignore
+experiment/
+data/
+src/data/
+src/uploads
+groc-venv/
+groc-venv/
+SMART_GROCERY_SHOPING-ASSISTANT.git/

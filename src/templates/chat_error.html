@@ -1,0 +1,13 @@
+{% for message in messages %}
+    <div class="animate-fade-in {% if message.is_user %}ml-auto{% else %}mr-auto{% endif %} max-w-[85%]">
+        <div class="{% if message.is_user %}bg-green-600 text-white{% else %}bg-white shadow-md{% endif %} rounded-xl p-4">
+            <div class="prose prose-sm max-w-none">
+                {{ message.text|safe }}
+            </div>
+            <div class="mt-2 text-xs {% if message.is_user %}text-green-100{% else %}text-gray-500{% endif %}">
+                {{ message.timestamp }}
+            </div>
+        </div>
+    </div>
+{% endfor %}
+

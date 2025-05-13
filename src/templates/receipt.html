@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Receipts{% endblock %}
+{% block content %}
+<div class="receipt-container">
+  <!-- Welcome Message -->
+  <blockquote class="welcome-blockquote">
+    <h2 class="welcome-title">Welcome to AI Grocery Shopping Assistant</h2>
+    <p class="welcome-text">
+      We are here to help you manage your groceries better, save money, and eat healthier.<br>
+      Upload a picture of your most recent grocery shopping receipt to get started!
+    </p>
+  </blockquote>
+
+  <!-- Manage Receipts Header -->
+  <h1 class="section-header">Manage Receipts</h1>
+
+  <!-- Upload Receipt Form -->
+  <div class="form-container">
+    <h2 class="subsection-header">Upload Receipt</h2>
+    <form method="POST" action="{{ url_for('upload_receipt') }}" enctype="multipart/form-data" class="space-y-4">
+      {{ form.hidden_tag() }}
+      <div>
+        <label for="receipt_image" class="form-label">Upload Receipt Image</label>
+        {{ form.receipt_image(class="form-input", accept=".png,.jpeg,.jpg", required=True, id="receipt_image") }}
+      </div>
+      {{ form.submit(class="form-submit") }}
+    </form>
+  </div>
+
+  <!-- Clear Receipts Form -->
+  <form method="POST" action="{{ url_for('delete_receipt_page') }}"
+      onsubmit="return confirm('Are you sure you want to delete all receipts? This action cannot be undone.');"
+      class="mb-6">
+  {{ delete_form.hidden_tag() }}
+  {{ delete_form.submit(class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600") }}
+</form>
+  
+  
+<!-- Show Receipt Image -->
+<div class="flex justify-center">
+  <div class="max-h-96 overflow-y-auto p-4">
+    {% if filename %}
+      <img src="{{ url_for('serve_image', filename=filename) }}" alt="Receipt Image" class="receipt-image max-w-full h-auto mx-auto">
+    {% else %}
+      <p class="text-center text-gray-500">No receipt image uploaded yet.</p>
+    {% endif %}
+  </div>
+</div>
+ 
+  <!-- Receipt Database -->
+  <div>
+    <h2 class="subsection-header">Receipt Database</h2>
+    {% if receipt_items %}
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr class="table-header">
+              <th class="table-cell">ID</th>
+              <th class="table-cell">Name</th>
+              <th class="table-cell">Quantity</th>
+              <th class="table-cell">Weight</th>
+              <th class="table-cell">Category</th>
+              <th class="table-cell">Price</th>
+              <th class="table-cell">Purchase Date</th>
+              <th class="table-cell">Expiration Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in receipt_items %}
+              <tr class="table-row">
+                <td class="table-cell">{{ loop.index }}</td>
+                <td class="table-cell">{{ item.name }}</td>
+                <td class="table-cell">{{ item.quantity }}</td>
+                <td class="table-cell">{{ item.weight }}</td>
+                <td class="table-cell">{{ item.category }}</td>
+                <td class="table-cell">{{ item.price }}</td>
+                <td class="table-cell">{{ item.purchase_date }}</td>
+                <td class="table-cell">{{ item.expiration_date }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="no-items">No receipt items found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Stock{% endblock %}
+{% block content %}
+<div class="stock-container">
+  <!-- Manage Stock Header -->
+  <blockquote class="stock-blockquote">
+    <h1 class="stock-title">Manage Stock</h1>
+    <h3 class="stock-text">What do you have in your fridge today?</h3>
+  </blockquote>
+
+  <!-- Upload Stock Form -->
+  <div class="form-container">
+    <h2 class="subsection-header">Upload Stock Image</h2>
+    <form method="POST" action="{{ url_for('upload_stock') }}" enctype="multipart/form-data" class="space-y-4">
+      {{form.hidden_tag() }}
+      <div>
+        <label for="stock_image" class="form-label">Upload Stock Image</label>
+        {{form.stock_image(class="form-input", accept=".png,.jpeg,.jpg", required=True, id="stock_image") }}
+      </div>
+      {{form.submit(class="form-submit") }}
+    </form>
+  </div>
+
+  <!-- Show Stock Image -->
+<div class="flex justify-center">
+  <div class="max-h-96 overflow-y-auto p-4">
+    {% if filename %}
+      <img src="{{ url_for('serve_image', filename=filename) }}" alt="Stock Image" class="stock-image max-w-full h-auto mx-auto">
+    {% else %}
+      <p class="text-center text-gray-500">No receipt image uploaded yet.</p>
+    {% endif %}
+  </div>
+</div>
+ 
+  <!-- Stock Database -->
+  <div>
+    <h2 class="subsection-header">Stock Database</h2>
+    {% if stock_items %}
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr class="table-header">
+              <th class="table-cell">ID</th>
+              <th class="table-cell">Name</th>
+              <th class="table-cell">Quantity</th>
+              <th class="table-cell">Weight</th>
+              <th class="table-cell">Category</th>
+              <th class="table-cell">Shelf Life (days)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in stock_items %}
+              <tr class="table-row">
+                <td class="table-cell">{{ loop.index }}</td>
+                <td class="table-cell">{{ item.name }}</td>
+                <td class="table-cell">{{ item.quantity }}</td>
+                <td class="table-cell">{{ item.weight }}</td>
+                <td class="table-cell">{{ item.category }}</td>
+                <td class="table-cell">{{ item.shelf_life }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <!-- Clear Stock Form -->
+      <form method="POST" action="{{ url_for('delete_stock') }}" onsubmit="return confirm('Are you sure you want to delete all stock items? This action cannot be undone.');" class="form-clear-container">
+        {{ dsf.hidden_tag() }}
+        <button type="submit" class="clear-button">Clear Stock</button>
+      </form>
+    {% else %}
+      <p class="no-items">No stock items found.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
