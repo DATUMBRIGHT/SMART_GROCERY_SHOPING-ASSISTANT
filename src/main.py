@@ -48,12 +48,15 @@ try:
         ALLOWED_EXTENSIONS = set(config['upload']['allowed_extensions'])
         MAX_CONTENT_LENGTH = config['upload']['max_content_length']
         DB_CONFIG = {
-            "host": config['database']['host'],
-            "user": config['database']['user'],
-            "password": os.getenv('DB_PASSWORD'),
-            "database": config['database']['name'],
-            "port": config['database']['port']
-        }
+         
+         "host": os.getenv("MYSQL_HOST", "flaskapp-mysql-server.mysql.database.azure.com"),
+        "port": int(os.getenv("MYSQL_PORT", 3306)),
+        "user": os.getenv("MYSQL_USER", "flaskappadmin@flaskapp-mysql-server"),
+        "password": os.getenv("MYSQL_PASSWORD","fuckshit_1Z"),
+        "database": os.getenv("MYSQL_DB", "grocery_db"),
+        "ssl_ca": os.getenv("MYSQL_SSL_CA", "/etc/ssl/certs/DigiCertGlobalRootCA.crt.pem"),
+        "ssl_verify_cert": (os.getenv('MYSQL_SSL_MODE', 'Required') == 'Required'),
+    }
 except FileNotFoundError:
     raise Exception("Configuration file not found at: " + CONFIG_PATH)
 except KeyError as e:

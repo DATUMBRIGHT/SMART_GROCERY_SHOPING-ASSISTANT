@@ -1,0 +1,150 @@
+[2025-05-14 04:15:17,660: INFO] Logger initialized
+[2025-05-14 04:15:17,661: ERROR] Error
+[2025-05-14 04:15:17,661: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-14 04:15:17,662: WARNING] Warning
+[2025-05-14 04:15:17,663: CRITICAL] Critical
+[2025-05-14 04:15:37,013: INFO] Table 'users' created or already exists.
+[2025-05-14 04:15:37,134: INFO] Users table verified.
+[2025-05-14 04:15:37,214: INFO] all_stock table schema created successfully.
+[2025-05-14 04:15:37,283: INFO] stockimages table schema created successfully.
+[2025-05-14 04:15:37,350: INFO] stock table schema created successfully.
+[2025-05-14 04:15:37,351: INFO] Stock database schema initialized.
+[2025-05-14 04:15:37,413: INFO] Users table verified.
+[2025-05-14 04:15:37,491: INFO] Database schema created successfully.
+[2025-05-14 04:15:37,556: INFO] Database schema created successfully.
+[2025-05-14 04:15:37,640: INFO] Image database schema created successfully.
+[2025-05-14 04:15:42,402: INFO] GroceryAnalyzer initialized
+[2025-05-14 04:15:45,026: INFO] Logger initialized
+[2025-05-14 04:15:45,026: ERROR] Error
+[2025-05-14 04:15:45,027: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-14 04:15:45,027: WARNING] Warning
+[2025-05-14 04:15:45,027: CRITICAL] Critical
+[2025-05-14 04:15:52,215: INFO] Table 'users' created or already exists.
+[2025-05-14 04:15:52,282: INFO] Users table verified.
+[2025-05-14 04:15:52,353: INFO] all_stock table schema created successfully.
+[2025-05-14 04:15:52,417: INFO] stockimages table schema created successfully.
+[2025-05-14 04:15:52,487: INFO] stock table schema created successfully.
+[2025-05-14 04:15:52,487: INFO] Stock database schema initialized.
+[2025-05-14 04:15:52,547: INFO] Users table verified.
+[2025-05-14 04:15:52,613: INFO] Database schema created successfully.
+[2025-05-14 04:15:52,681: INFO] Database schema created successfully.
+[2025-05-14 04:15:52,753: INFO] Image database schema created successfully.
+[2025-05-14 04:15:53,709: INFO] GroceryAnalyzer initialized
+[2025-05-14 04:31:49,901: INFO] Logger initialized
+[2025-05-14 04:31:49,902: ERROR] Error
+[2025-05-14 04:31:49,903: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-14 04:31:49,903: WARNING] Warning
+[2025-05-14 04:31:49,903: CRITICAL] Critical
+[2025-05-14 04:32:03,331: INFO] Table 'users' created or already exists.
+[2025-05-14 04:32:03,473: INFO] Users table verified.
+[2025-05-14 04:32:03,614: INFO] all_stock table schema created successfully.
+[2025-05-14 04:32:03,759: INFO] stockimages table schema created successfully.
+[2025-05-14 04:32:03,862: INFO] stock table schema created successfully.
+[2025-05-14 04:32:03,863: INFO] Stock database schema initialized.
+[2025-05-14 04:32:03,952: INFO] Users table verified.
+[2025-05-14 04:32:04,070: INFO] Database schema created successfully.
+[2025-05-14 04:32:04,198: INFO] Database schema created successfully.
+[2025-05-14 04:32:04,336: INFO] Image database schema created successfully.
+[2025-05-14 04:32:09,537: INFO] GroceryAnalyzer initialized
+[2025-05-14 04:32:11,928: INFO] Logger initialized
+[2025-05-14 04:32:11,929: ERROR] Error
+[2025-05-14 04:32:11,929: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-14 04:32:11,929: WARNING] Warning
+[2025-05-14 04:32:11,930: CRITICAL] Critical
+[2025-05-14 04:32:23,693: INFO] Table 'users' created or already exists.
+[2025-05-14 04:32:23,768: INFO] Users table verified.
+[2025-05-14 04:32:23,842: INFO] all_stock table schema created successfully.
+[2025-05-14 04:32:23,908: INFO] stockimages table schema created successfully.
+[2025-05-14 04:32:23,970: INFO] stock table schema created successfully.
+[2025-05-14 04:32:23,971: INFO] Stock database schema initialized.
+[2025-05-14 04:32:24,027: INFO] Users table verified.
+[2025-05-14 04:32:24,091: INFO] Database schema created successfully.
+[2025-05-14 04:32:24,153: INFO] Database schema created successfully.
+[2025-05-14 04:32:24,214: INFO] Image database schema created successfully.
+[2025-05-14 04:32:25,323: INFO] GroceryAnalyzer initialized
+[2025-05-18 13:00:33,471: INFO] Logger initialized
+[2025-05-18 13:00:33,473: ERROR] Error
+[2025-05-18 13:00:33,473: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-18 13:00:33,473: WARNING] Warning
+[2025-05-18 13:00:33,473: CRITICAL] Critical
+[2025-05-18 13:05:09,527: INFO] Logger initialized
+[2025-05-18 13:05:09,527: ERROR] Error
+[2025-05-18 13:05:09,527: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-18 13:05:09,528: WARNING] Warning
+[2025-05-18 13:05:09,528: CRITICAL] Critical
+[2025-05-18 13:05:20,261: INFO] Table 'users' created or already exists.
+[2025-05-18 13:05:20,274: INFO] Users table verified.
+[2025-05-18 13:05:20,291: INFO] all_stock table schema created successfully.
+[2025-05-18 13:05:20,301: INFO] stockimages table schema created successfully.
+[2025-05-18 13:05:20,311: INFO] stock table schema created successfully.
+[2025-05-18 13:05:20,311: INFO] Stock database schema initialized.
+[2025-05-18 13:05:20,320: INFO] Users table verified.
+[2025-05-18 13:05:20,329: INFO] Database schema created successfully.
+[2025-05-18 13:05:20,346: INFO] Database schema created successfully.
+[2025-05-18 13:05:20,356: INFO] Image database schema created successfully.
+[2025-05-18 13:05:21,572: INFO] GroceryAnalyzer initialized
+[2025-05-18 13:05:24,270: INFO] Logger initialized
+[2025-05-18 13:05:24,270: ERROR] Error
+[2025-05-18 13:05:24,270: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-18 13:05:24,270: WARNING] Warning
+[2025-05-18 13:05:24,270: CRITICAL] Critical
+[2025-05-18 13:05:34,536: INFO] Table 'users' created or already exists.
+[2025-05-18 13:05:34,549: INFO] Users table verified.
+[2025-05-18 13:05:34,559: INFO] all_stock table schema created successfully.
+[2025-05-18 13:05:34,569: INFO] stockimages table schema created successfully.
+[2025-05-18 13:05:34,576: INFO] stock table schema created successfully.
+[2025-05-18 13:05:34,576: INFO] Stock database schema initialized.
+[2025-05-18 13:05:34,584: INFO] Users table verified.
+[2025-05-18 13:05:34,595: INFO] Database schema created successfully.
+[2025-05-18 13:05:34,606: INFO] Database schema created successfully.
+[2025-05-18 13:05:34,616: INFO] Image database schema created successfully.
+[2025-05-18 13:05:35,801: INFO] GroceryAnalyzer initialized
+[2025-05-18 13:07:32,387: INFO] User 'Angel.Scott' created with ID: 9
+[2025-05-18 13:07:33,735: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:08:21,195: DEBUG] Latest filename: None
+[2025-05-18 13:08:21,227: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:08:47,651: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:08:55,498: DEBUG] Latest filename: None
+[2025-05-18 13:08:55,508: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:09:58,425: DEBUG] Saved file: /Users/brighttenkorangofori/Desktop/projects/GROCERY_ASSISTANT/src/uploads/09212fbfa64b405b8b319735bf47466c.jpg, exists: True
+[2025-05-18 13:09:58,425: INFO] Receipt image read successfully.
+[2025-05-18 13:10:01,580: INFO] Processed item: name='DOZ FREE RANGE EGG' quantity=1 weight=1.0 category='dairy' price=3.89 purchase_date='2019-11-21' expiration_date='2019-11-28'
+[2025-05-18 13:10:01,581: INFO] Processed item: name='GV ORGANIC MILK 2%' quantity=1 weight=1.0 category='dairy' price=4.19 purchase_date='2019-11-21' expiration_date='2019-12-01'
+[2025-05-18 13:10:01,581: INFO] Processed item: name='SBUX FRENCH ROAST WL' quantity=1 weight=1.0 category='coffee' price=8.99 purchase_date='2019-11-21' expiration_date='2020-05-21'
+[2025-05-18 13:10:01,600: INFO] Saved 3 items to receipts linked to receipt ID: 57
+[2025-05-18 13:10:01,614: INFO] Saved image path to database: 09212fbfa64b405b8b319735bf47466c.jpg linked to receipt ID: 57
+[2025-05-18 13:10:01,614: INFO] Processed 3 receipt items
+[2025-05-18 13:10:01,646: INFO] Serving image: 09212fbfa64b405b8b319735bf47466c.jpg
+[2025-05-18 13:10:13,571: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:10:55,103: INFO] Fetched 0 items for user 9 with stock_id None.
+[2025-05-18 13:10:55,117: INFO] Fetched latest filename for user 9: None
+[2025-05-18 13:10:55,117: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-18 13:10:56,814: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:10:57,934: INFO] Fetched 0 items for user 9 with stock_id None.
+[2025-05-18 13:10:57,946: INFO] Fetched latest filename for user 9: None
+[2025-05-18 13:10:57,961: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-18 13:11:09,160: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:11:21,200: INFO] Fetched 0 items for user 9 with stock_id None.
+[2025-05-18 13:11:21,213: INFO] Fetched latest filename for user 9: None
+[2025-05-18 13:11:21,213: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-18 13:11:22,773: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:11:22,801: INFO] Serving image: 09212fbfa64b405b8b319735bf47466c.jpg
+[2025-05-18 13:11:23,913: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:11:39,080: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:11:39,173: INFO] Serving image: 09212fbfa64b405b8b319735bf47466c.jpg
+[2025-05-18 13:11:40,130: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:12:11,104: INFO] Receipt 57 deleted successfully for user_id 9 (items: 3, images: 1).
+[2025-05-18 13:12:16,508: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:12:16,553: INFO] Serving image: 09212fbfa64b405b8b319735bf47466c.jpg
+[2025-05-18 13:12:22,031: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:12:23,055: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:12:23,314: INFO] Serving image: 09212fbfa64b405b8b319735bf47466c.jpg
+[2025-05-18 13:12:26,758: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:12:28,488: INFO] Fetched 0 items for user 9 with stock_id None.
+[2025-05-18 13:12:28,500: INFO] Fetched latest filename for user 9: None
+[2025-05-18 13:12:28,500: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-18 13:12:30,879: INFO] User with ID '9' fetched successfully.
+[2025-05-18 13:12:37,592: INFO] Fetched 0 items for user 9 with stock_id None.
+[2025-05-18 13:12:37,603: INFO] Fetched latest filename for user 9: None
+[2025-05-18 13:12:37,603: DEBUG] Stock: Rendering stock.html with filename=None
+[2025-05-18 13:12:39,084: INFO] User with ID '9' fetched successfully.
