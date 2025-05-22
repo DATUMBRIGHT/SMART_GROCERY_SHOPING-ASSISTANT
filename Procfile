@@ -1,1 +1,1 @@
-web: gunicorn --workers 4 --timeout 600 --bind=0.0.0.0:$PORT src.main:app
+web: gunicorn main:app --chdir src --bind 0.0.0.0:8000 --timeout 90
