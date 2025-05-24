@@ -1,1 +1,2 @@
-web: gunicorn main:app --chdir src --bind 0.0.0.0:8000 --timeout 90
+gunicorn main:app --chdir src --timeout 120 --log-level debug
+
