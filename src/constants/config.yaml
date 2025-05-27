@@ -1,7 +1,7 @@
 database:
   host: flaskapp-mysql-server.mysql.database.azure.com
   port: 3306
-  user: root
+  user: flaskappadmin
   name: grocery_db
   receipts_table: receipts
   

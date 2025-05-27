@@ -423,3 +423,23 @@
 [2025-05-26 22:08:20,299: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
 [2025-05-26 22:08:20,299: WARNING] Warning
 [2025-05-26 22:08:20,299: CRITICAL] Critical
+[2025-05-26 23:05:32,582: INFO] Logger initialized
+[2025-05-26 23:05:32,582: INFO] Logger initialized
+[2025-05-26 23:05:32,582: INFO] Logger initialized
+[2025-05-26 23:05:32,582: INFO] Logger initialized
+[2025-05-26 23:05:32,583: ERROR] Error
+[2025-05-26 23:05:32,583: ERROR] Error
+[2025-05-26 23:05:32,583: ERROR] Error
+[2025-05-26 23:05:32,583: ERROR] Error
+[2025-05-26 23:05:32,584: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 23:05:32,584: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 23:05:32,584: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 23:05:32,584: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 23:05:32,585: WARNING] Warning
+[2025-05-26 23:05:32,585: WARNING] Warning
+[2025-05-26 23:05:32,585: WARNING] Warning
+[2025-05-26 23:05:32,585: WARNING] Warning
+[2025-05-26 23:05:32,585: CRITICAL] Critical
+[2025-05-26 23:05:32,586: CRITICAL] Critical
+[2025-05-26 23:05:32,586: CRITICAL] Critical
+[2025-05-26 23:05:32,586: CRITICAL] Critical
