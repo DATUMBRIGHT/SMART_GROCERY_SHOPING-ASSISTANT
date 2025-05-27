@@ -148,3 +148,121 @@
 [2025-05-18 13:12:37,603: INFO] Fetched latest filename for user 9: None
 [2025-05-18 13:12:37,603: DEBUG] Stock: Rendering stock.html with filename=None
 [2025-05-18 13:12:39,084: INFO] User with ID '9' fetched successfully.
+[2025-05-24 10:31:21,983: INFO] Logger initialized
+[2025-05-24 10:31:21,985: ERROR] Error
+[2025-05-24 10:31:21,985: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:31:21,986: WARNING] Warning
+[2025-05-24 10:31:21,986: CRITICAL] Critical
+[2025-05-24 10:40:16,599: INFO] Logger initialized
+[2025-05-24 10:40:16,601: ERROR] Error
+[2025-05-24 10:40:16,601: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:40:16,602: WARNING] Warning
+[2025-05-24 10:40:16,602: CRITICAL] Critical
+[2025-05-24 10:44:26,845: INFO] Logger initialized
+[2025-05-24 10:44:26,865: ERROR] Error
+[2025-05-24 10:44:26,865: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:44:26,866: WARNING] Warning
+[2025-05-24 10:44:26,866: CRITICAL] Critical
+[2025-05-24 10:45:44,358: INFO] Logger initialized
+[2025-05-24 10:45:44,358: ERROR] Error
+[2025-05-24 10:45:44,358: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:45:44,358: WARNING] Warning
+[2025-05-24 10:45:44,358: CRITICAL] Critical
+[2025-05-24 10:46:10,526: INFO] Logger initialized
+[2025-05-24 10:46:10,526: ERROR] Error
+[2025-05-24 10:46:10,526: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:46:10,526: WARNING] Warning
+[2025-05-24 10:46:10,526: CRITICAL] Critical
+[2025-05-24 10:48:38,248: INFO] Logger initialized
+[2025-05-24 10:48:38,248: ERROR] Error
+[2025-05-24 10:48:38,248: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:48:38,248: WARNING] Warning
+[2025-05-24 10:48:38,248: CRITICAL] Critical
+[2025-05-24 10:50:22,487: INFO] Logger initialized
+[2025-05-24 10:50:22,488: ERROR] Error
+[2025-05-24 10:50:22,488: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:50:22,488: WARNING] Warning
+[2025-05-24 10:50:22,488: CRITICAL] Critical
+[2025-05-24 10:56:03,877: INFO] Logger initialized
+[2025-05-24 10:56:03,878: ERROR] Error
+[2025-05-24 10:56:03,878: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:56:03,878: WARNING] Warning
+[2025-05-24 10:56:03,878: CRITICAL] Critical
+[2025-05-24 10:57:58,980: INFO] Logger initialized
+[2025-05-24 10:57:58,980: ERROR] Error
+[2025-05-24 10:57:58,981: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 10:57:58,981: WARNING] Warning
+[2025-05-24 10:57:58,981: CRITICAL] Critical
+[2025-05-24 11:01:31,667: INFO] Logger initialized
+[2025-05-24 11:01:31,668: ERROR] Error
+[2025-05-24 11:01:31,668: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 11:01:31,668: WARNING] Warning
+[2025-05-24 11:01:31,668: CRITICAL] Critical
+[2025-05-24 11:04:46,153: INFO] Logger initialized
+[2025-05-24 11:04:46,154: ERROR] Error
+[2025-05-24 11:04:46,154: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 11:04:46,154: WARNING] Warning
+[2025-05-24 11:04:46,154: CRITICAL] Critical
+[2025-05-24 11:06:05,497: INFO] Logger initialized
+[2025-05-24 11:06:05,498: ERROR] Error
+[2025-05-24 11:06:05,498: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-24 11:06:05,498: WARNING] Warning
+[2025-05-24 11:06:05,498: CRITICAL] Critical
+[2025-05-26 20:28:17,003: INFO] Logger initialized
+[2025-05-26 20:28:17,004: ERROR] Error
+[2025-05-26 20:28:17,004: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:28:17,004: WARNING] Warning
+[2025-05-26 20:28:17,004: CRITICAL] Critical
+[2025-05-26 20:31:53,441: INFO] Logger initialized
+[2025-05-26 20:31:53,442: ERROR] Error
+[2025-05-26 20:31:53,442: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:31:53,442: WARNING] Warning
+[2025-05-26 20:31:53,442: CRITICAL] Critical
+[2025-05-26 20:33:30,235: INFO] Logger initialized
+[2025-05-26 20:33:30,236: ERROR] Error
+[2025-05-26 20:33:30,236: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:33:30,236: WARNING] Warning
+[2025-05-26 20:33:30,236: CRITICAL] Critical
+[2025-05-26 20:33:58,461: INFO] Table 'users' created or already exists.
+[2025-05-26 20:33:58,499: INFO] Users table verified.
+[2025-05-26 20:33:58,510: INFO] all_stock table schema created successfully.
+[2025-05-26 20:33:58,518: INFO] stockimages table schema created successfully.
+[2025-05-26 20:33:58,526: INFO] stock table schema created successfully.
+[2025-05-26 20:33:58,526: INFO] Stock database schema initialized.
+[2025-05-26 20:33:58,535: INFO] Users table verified.
+[2025-05-26 20:33:58,545: INFO] Database schema created successfully.
+[2025-05-26 20:33:58,568: INFO] Database schema created successfully.
+[2025-05-26 20:33:58,578: INFO] Image database schema created successfully.
+[2025-05-26 20:33:59,938: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:34:01,587: INFO] Logger initialized
+[2025-05-26 20:34:01,588: ERROR] Error
+[2025-05-26 20:34:01,588: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:34:01,588: WARNING] Warning
+[2025-05-26 20:34:01,588: CRITICAL] Critical
+[2025-05-26 20:34:23,675: INFO] Table 'users' created or already exists.
+[2025-05-26 20:34:23,688: INFO] Users table verified.
+[2025-05-26 20:34:23,697: INFO] all_stock table schema created successfully.
+[2025-05-26 20:34:23,706: INFO] stockimages table schema created successfully.
+[2025-05-26 20:34:23,722: INFO] stock table schema created successfully.
+[2025-05-26 20:34:23,722: INFO] Stock database schema initialized.
+[2025-05-26 20:34:23,731: INFO] Users table verified.
+[2025-05-26 20:34:23,739: INFO] Database schema created successfully.
+[2025-05-26 20:34:23,749: INFO] Database schema created successfully.
+[2025-05-26 20:34:23,759: INFO] Image database schema created successfully.
+[2025-05-26 20:34:25,123: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:37:18,089: INFO] Logger initialized
+[2025-05-26 20:37:18,089: ERROR] Error
+[2025-05-26 20:37:18,089: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:37:18,089: WARNING] Warning
+[2025-05-26 20:37:18,089: CRITICAL] Critical
+[2025-05-26 20:37:31,404: INFO] Table 'users' created or already exists.
+[2025-05-26 20:37:31,419: INFO] Users table verified.
+[2025-05-26 20:37:31,435: INFO] all_stock table schema created successfully.
+[2025-05-26 20:37:31,443: INFO] stockimages table schema created successfully.
+[2025-05-26 20:37:31,453: INFO] stock table schema created successfully.
+[2025-05-26 20:37:31,454: INFO] Stock database schema initialized.
+[2025-05-26 20:37:31,466: INFO] Users table verified.
+[2025-05-26 20:37:31,477: INFO] Database schema created successfully.
+[2025-05-26 20:37:31,490: INFO] Database schema created successfully.
+[2025-05-26 20:37:31,503: INFO] Image database schema created successfully.
+[2025-05-26 20:37:33,156: INFO] GroceryAnalyzer initialized
