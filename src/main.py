@@ -60,7 +60,7 @@ try:
         DB_CONFIG = {
             "host": os.getenv("MYSQL_HOST", "flaskapp-mysql-server.mysql.database.azure.com"),
             "port": 3306,
-            "user": os.getenv("MYSQL_HOST","flaskappadmin"),
+            "user": os.getenv("MYSQL_USER","flaskappadmin"),
             "password": os.getenv("MYSQL_PASSWORD", "fuckshit_1Z"),  # ⚠️ replace in production
             "database": os.getenv("MYSQL_DB", "grocery_db"),
             "ssl_ca":  os.getenv('DB_SSL_CA', '/app/certs/BaltimoreCyberTrustRoot.crt.pem'),
