@@ -266,3 +266,160 @@
 [2025-05-26 20:37:31,490: INFO] Database schema created successfully.
 [2025-05-26 20:37:31,503: INFO] Image database schema created successfully.
 [2025-05-26 20:37:33,156: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:42:39,648: INFO] Logger initialized
+[2025-05-26 20:42:39,648: INFO] Logger initialized
+[2025-05-26 20:42:39,648: INFO] Logger initialized
+[2025-05-26 20:42:39,647: INFO] Logger initialized
+[2025-05-26 20:42:39,648: ERROR] Error
+[2025-05-26 20:42:39,648: ERROR] Error
+[2025-05-26 20:42:39,648: ERROR] Error
+[2025-05-26 20:42:39,648: ERROR] Error
+[2025-05-26 20:42:39,649: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:42:39,649: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:42:39,649: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:42:39,649: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:42:39,649: WARNING] Warning
+[2025-05-26 20:42:39,649: WARNING] Warning
+[2025-05-26 20:42:39,649: WARNING] Warning
+[2025-05-26 20:42:39,649: WARNING] Warning
+[2025-05-26 20:42:39,650: CRITICAL] Critical
+[2025-05-26 20:42:39,650: CRITICAL] Critical
+[2025-05-26 20:42:39,650: CRITICAL] Critical
+[2025-05-26 20:42:39,650: CRITICAL] Critical
+[2025-05-26 20:42:53,135: INFO] Table 'users' created or already exists.
+[2025-05-26 20:42:53,143: INFO] Table 'users' created or already exists.
+[2025-05-26 20:42:53,148: INFO] Users table verified.
+[2025-05-26 20:42:53,155: INFO] Users table verified.
+[2025-05-26 20:42:53,160: INFO] all_stock table schema created successfully.
+[2025-05-26 20:42:53,167: INFO] all_stock table schema created successfully.
+[2025-05-26 20:42:53,170: INFO] stockimages table schema created successfully.
+[2025-05-26 20:42:53,179: INFO] stockimages table schema created successfully.
+[2025-05-26 20:42:53,182: INFO] stock table schema created successfully.
+[2025-05-26 20:42:53,183: INFO] Stock database schema initialized.
+[2025-05-26 20:42:53,190: INFO] stock table schema created successfully.
+[2025-05-26 20:42:53,191: INFO] Stock database schema initialized.
+[2025-05-26 20:42:53,193: INFO] Users table verified.
+[2025-05-26 20:42:53,204: INFO] Database schema created successfully.
+[2025-05-26 20:42:53,205: INFO] Users table verified.
+[2025-05-26 20:42:53,214: INFO] Database schema created successfully.
+[2025-05-26 20:42:53,219: INFO] Database schema created successfully.
+[2025-05-26 20:42:53,228: INFO] Image database schema created successfully.
+[2025-05-26 20:42:53,229: INFO] Table 'users' created or already exists.
+[2025-05-26 20:42:53,232: INFO] Database schema created successfully.
+[2025-05-26 20:42:53,246: INFO] Image database schema created successfully.
+[2025-05-26 20:42:53,245: INFO] Users table verified.
+[2025-05-26 20:42:53,259: INFO] all_stock table schema created successfully.
+[2025-05-26 20:42:53,270: INFO] stockimages table schema created successfully.
+[2025-05-26 20:42:53,280: INFO] stock table schema created successfully.
+[2025-05-26 20:42:53,280: INFO] Stock database schema initialized.
+[2025-05-26 20:42:53,296: INFO] Users table verified.
+[2025-05-26 20:42:53,305: INFO] Database schema created successfully.
+[2025-05-26 20:42:53,317: INFO] Database schema created successfully.
+[2025-05-26 20:42:53,326: INFO] Image database schema created successfully.
+[2025-05-26 20:42:54,081: INFO] Table 'users' created or already exists.
+[2025-05-26 20:42:54,096: INFO] Users table verified.
+[2025-05-26 20:42:54,113: INFO] all_stock table schema created successfully.
+[2025-05-26 20:42:54,127: INFO] stockimages table schema created successfully.
+[2025-05-26 20:42:54,142: INFO] stock table schema created successfully.
+[2025-05-26 20:42:54,143: INFO] Stock database schema initialized.
+[2025-05-26 20:42:54,157: INFO] Users table verified.
+[2025-05-26 20:42:54,169: INFO] Database schema created successfully.
+[2025-05-26 20:42:54,182: INFO] Database schema created successfully.
+[2025-05-26 20:42:54,193: INFO] Image database schema created successfully.
+[2025-05-26 20:42:54,549: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:42:54,681: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:42:54,697: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:42:55,837: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:55:30,509: INFO] Logger initialized
+[2025-05-26 20:55:30,510: INFO] Logger initialized
+[2025-05-26 20:55:30,510: INFO] Logger initialized
+[2025-05-26 20:55:30,511: INFO] Logger initialized
+[2025-05-26 20:55:30,511: ERROR] Error
+[2025-05-26 20:55:30,511: ERROR] Error
+[2025-05-26 20:55:30,512: ERROR] Error
+[2025-05-26 20:55:30,512: ERROR] Error
+[2025-05-26 20:55:30,512: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:55:30,512: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:55:30,513: WARNING] Warning
+[2025-05-26 20:55:30,518: CRITICAL] Critical
+[2025-05-26 20:55:30,512: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:55:30,513: WARNING] Warning
+[2025-05-26 20:55:30,512: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 20:55:30,520: CRITICAL] Critical
+[2025-05-26 20:55:30,520: WARNING] Warning
+[2025-05-26 20:55:30,520: WARNING] Warning
+[2025-05-26 20:55:30,521: CRITICAL] Critical
+[2025-05-26 20:55:30,521: CRITICAL] Critical
+[2025-05-26 20:55:44,788: INFO] Table 'users' created or already exists.
+[2025-05-26 20:55:44,801: INFO] Users table verified.
+[2025-05-26 20:55:44,812: INFO] all_stock table schema created successfully.
+[2025-05-26 20:55:44,825: INFO] stockimages table schema created successfully.
+[2025-05-26 20:55:44,838: INFO] stock table schema created successfully.
+[2025-05-26 20:55:44,839: INFO] Stock database schema initialized.
+[2025-05-26 20:55:44,842: INFO] Table 'users' created or already exists.
+[2025-05-26 20:55:44,851: INFO] Table 'users' created or already exists.
+[2025-05-26 20:55:44,852: INFO] Users table verified.
+[2025-05-26 20:55:44,855: INFO] Users table verified.
+[2025-05-26 20:55:44,863: INFO] Database schema created successfully.
+[2025-05-26 20:55:44,864: INFO] Users table verified.
+[2025-05-26 20:55:44,868: INFO] all_stock table schema created successfully.
+[2025-05-26 20:55:44,876: INFO] Database schema created successfully.
+[2025-05-26 20:55:44,876: INFO] all_stock table schema created successfully.
+[2025-05-26 20:55:44,880: INFO] stockimages table schema created successfully.
+[2025-05-26 20:55:44,888: INFO] stockimages table schema created successfully.
+[2025-05-26 20:55:44,888: INFO] Image database schema created successfully.
+[2025-05-26 20:55:44,892: INFO] stock table schema created successfully.
+[2025-05-26 20:55:44,893: INFO] Stock database schema initialized.
+[2025-05-26 20:55:44,902: INFO] stock table schema created successfully.
+[2025-05-26 20:55:44,903: INFO] Stock database schema initialized.
+[2025-05-26 20:55:44,906: INFO] Users table verified.
+[2025-05-26 20:55:44,917: INFO] Users table verified.
+[2025-05-26 20:55:44,919: INFO] Database schema created successfully.
+[2025-05-26 20:55:44,929: INFO] Database schema created successfully.
+[2025-05-26 20:55:44,930: INFO] Database schema created successfully.
+[2025-05-26 20:55:44,943: INFO] Image database schema created successfully.
+[2025-05-26 20:55:44,943: INFO] Database schema created successfully.
+[2025-05-26 20:55:44,955: INFO] Image database schema created successfully.
+[2025-05-26 20:55:46,633: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:55:46,694: INFO] Table 'users' created or already exists.
+[2025-05-26 20:55:46,707: INFO] Users table verified.
+[2025-05-26 20:55:46,715: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:55:46,720: INFO] all_stock table schema created successfully.
+[2025-05-26 20:55:46,731: INFO] stockimages table schema created successfully.
+[2025-05-26 20:55:46,742: INFO] stock table schema created successfully.
+[2025-05-26 20:55:46,743: INFO] Stock database schema initialized.
+[2025-05-26 20:55:46,744: INFO] GroceryAnalyzer initialized
+[2025-05-26 20:55:46,754: INFO] Users table verified.
+[2025-05-26 20:55:46,767: INFO] Database schema created successfully.
+[2025-05-26 20:55:46,779: INFO] Database schema created successfully.
+[2025-05-26 20:55:46,789: INFO] Image database schema created successfully.
+[2025-05-26 20:55:48,028: INFO] GroceryAnalyzer initialized
+[2025-05-26 21:01:49,038: INFO] Authentication failed for email 'oforibright4u14@gmail.com'.
+[2025-05-26 21:01:49,041: INFO] Login failed due to invalid credentials
+[2025-05-26 21:01:53,149: INFO] Authentication failed for email 'oforibright4u14@gmail.com'.
+[2025-05-26 21:01:53,150: INFO] Login failed due to invalid credentials
+[2025-05-26 21:01:53,452: INFO] Authentication failed for email 'oforibright4u14@gmail.com'.
+[2025-05-26 21:01:53,453: INFO] Login failed due to invalid credentials
+[2025-05-26 21:01:53,560: INFO] Authentication failed for email 'oforibright4u14@gmail.com'.
+[2025-05-26 21:01:53,561: INFO] Login failed due to invalid credentials
+[2025-05-26 21:26:38,036: INFO] Logger initialized
+[2025-05-26 21:26:38,036: ERROR] Error
+[2025-05-26 21:26:38,037: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 21:26:38,037: WARNING] Warning
+[2025-05-26 21:26:38,037: CRITICAL] Critical
+[2025-05-26 21:26:50,684: INFO] Table 'users' created or already exists.
+[2025-05-26 21:26:50,698: INFO] Users table verified.
+[2025-05-26 21:26:50,706: INFO] all_stock table schema created successfully.
+[2025-05-26 21:26:50,715: INFO] stockimages table schema created successfully.
+[2025-05-26 21:26:50,724: INFO] stock table schema created successfully.
+[2025-05-26 21:26:50,724: INFO] Stock database schema initialized.
+[2025-05-26 21:26:50,731: INFO] Users table verified.
+[2025-05-26 21:26:50,740: INFO] Database schema created successfully.
+[2025-05-26 21:26:50,746: INFO] Database schema created successfully.
+[2025-05-26 21:26:50,753: INFO] Image database schema created successfully.
+[2025-05-26 21:26:52,052: INFO] GroceryAnalyzer initialized
+[2025-05-26 22:08:20,299: INFO] Logger initialized
+[2025-05-26 22:08:20,299: ERROR] Error
+[2025-05-26 22:08:20,299: DEBUG] Debug (won't appear unless logger level is set to DEBUG)
+[2025-05-26 22:08:20,299: WARNING] Warning
+[2025-05-26 22:08:20,299: CRITICAL] Critical

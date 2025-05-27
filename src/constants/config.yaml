@@ -1,5 +1,5 @@
 database:
-  host: localhost
+  host: flaskapp-mysql-server.mysql.database.azure.com
   port: 3306
   user: root
   name: grocery_db
