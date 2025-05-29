@@ -61,20 +61,7 @@ This project will produce a web application that:
 ### Project Plan:  
 <p>The project will be developed over the Spring 2025 term, starting with requirement gathering and design, followed by iterative development of image processing, database integration, and chatbot functionality. Testing will occur throughout, with a final deployment and demo by the term’s end. Weekly sprints will ensure steady progress, with milestones tied to core feature completion.</p>
 
-## 🏁 Milestones 
 
-| Date/Week      | Milestone             | Deliverables/Features                     |
-|----------------|-----------------------|-------------------------------------------|
-| Week 1 (Jan 6) | Scope/Spec            | Define project objectives and scope       |
-| Week 2 (Jan 13)| Spec                  | Finalize specifications and architecture  |
-| Week 4 (Jan 27)| Image Processing      | Receipt and stock image upload/processing |
-| Week 6 (Feb 10)| Database Integration  | MySQL setup and CRUD operations           |
-| Week 8 (Feb 24)| Chatbot Development   | AI chatbot with context retrieval         |
-| Week 10 (Mar 10)| UI/UX Completion     | Finalize responsive design and styling    |
-| Week 12 (Mar 24)| Testing/Optimization  | Bug fixes, performance tuning             |
-| Week 14 (Apr 7) | Deployment/Demo       | Deploy locally and present demo           |
-
-### 🧪 Test Cases
 
 <p>Testing will ensure each component functions as expected. Unit tests will verify image processing accuracy (e.g., correct extraction of item details), database operations (e.g., successful CRUD), and chatbot responses (e.g., relevance to queries). Integration tests will check end-to-end flows, such as uploading a receipt and querying its contents via chat.</p>
 <p>Sample test cases include:  
@@ -131,7 +118,7 @@ These instructions help build and run the project locally.
         <a href="https://github.com/[your-github-username]">
             <img src="https://avatars.githubusercontent.com/u/[your-user-id]?v=4" width="100;" alt="[Your Name]"/>
             <br />
-            <sub><b>[Your Name]</b></sub>
+            <sub><b> BRIGHT OFORI</b></sub>
         </a>
     </td>
     <!-- Add more team members here -->
@@ -139,15 +126,4 @@ These instructions help build and run the project locally.
 </table>
 
 
-#requirements.txt
 
-  ```
-  flask
-  mysql-connector-python
-  pyyaml
-  python-dotenv
-  sentence-transformers
-  faiss-cpu
-  requests
-  werkzeug
-'''
