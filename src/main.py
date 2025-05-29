@@ -58,13 +58,13 @@ try:
         ALLOWED_EXTENSIONS = set(config['upload']['allowed_extensions'])
         MAX_CONTENT_LENGTH = config['upload']['max_content_length']
         DB_CONFIG = {
-            "host": os.getenv("MYSQL_HOST", "flaskapp-mysql-server.mysql.database.azure.com"),
-            "port": 3306,
-            "user": os.getenv("MYSQL_USER","flaskappadmin"),
-            "password": os.getenv("MYSQL_PASSWORD", "fuckshit_1Z"),  # ⚠️ replace in production
-            "database": os.getenv("MYSQL_DB", "grocery_db"),
-            "ssl_ca":  os.getenv('DB_SSL_CA', '/app/certs/BaltimoreCyberTrustRoot.crt.pem'),
-     }
+        "host": os.getenv("MYSQL_HOST"),
+        "port": int(os.getenv("MYSQL_PORT", 3306)),
+        "user": os.getenv("MYSQL_USER"),
+        "password": os.getenv("MYSQL_PASSWORD"),
+        "database": os.getenv("MYSQL_DB"),
+        "ssl_ca": os.getenv("DB_SSL_CA")  # Only this is needed to enforce SSL
+    }
 
 except FileNotFoundError:
     raise Exception("Configuration file not found at: " + CONFIG_PATH)

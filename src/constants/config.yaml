@@ -3,7 +3,10 @@ database:
   port: 3306
   user: flaskappadmin
   name: grocery_db
+  password: fuckshit_1Z
   receipts_table: receipts
+  
+
   
   tables:
         stock: stock
