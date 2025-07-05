@@ -1,0 +1,10 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = true
+	ignorecase = true
+	precomposeunicode = true
+[remote "origin"]
+	url = https://github.com/DATUMBRIGHT/SMART_GROCERY_SHOPING-ASSISTANT
+	fetch = +refs/*:refs/*
+	mirror = true

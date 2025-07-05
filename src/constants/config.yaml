@@ -1,9 +1,12 @@
 database:
-  host: db
+  host: flaskapp-mysql-server.mysql.database.azure.com
   port: 3306
-  user: root
+  user: flaskappadmin
   name: grocery_db
+  password: fuckshit_1Z
   receipts_table: receipts
+  
+
   
   tables:
         stock: stock

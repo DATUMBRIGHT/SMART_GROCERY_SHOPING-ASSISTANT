@@ -1,14 +1,31 @@
-from flask import Flask, render_template, url_for, redirect, flash, request, jsonify, send_from_directory, make_response,Response
+import sys
+import os
+
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
+
+
+from agents.grocery_agent import ReceiptProcessorAgent
+from agents.stock_agent import StockProcessorAgent
+from agents.grocery_analyzer import GroceryAnalyzer
+from loggers.custom_logger import logger
+from db_managers.db_manager import DBManager
+from db_managers.email_sender import EmailSender
+from db_managers.scheduler import Scheduler
+import csv
+from io import StringIO
+
+from flask import Flask, render_template, url_for, redirect, flash, request, jsonify, send_from_directory, make_response, Response
 from flask_wtf import FlaskForm, CSRFProtect
 from wtforms import FileField, SubmitField, StringField, PasswordField, BooleanField, IntegerField
 from wtforms.validators import DataRequired, NumberRange, Optional, Email, Length, EqualTo
 from wtforms import validators
 from flask import session
 import mysql.connector
-from db_managers.email_sender import EmailSender
-from db_managers.scheduler import Scheduler
-import os
-from pathlib import Path
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import uuid
@@ -19,13 +36,6 @@ from collections import defaultdict
 from mysql.connector import pooling
 from datetime import datetime, timedelta
 from markdown import markdown
-from agents.grocery_agent import ReceiptProcessorAgent
-from agents.stock_agent import StockProcessorAgent
-from agents.grocery_analyzer import GroceryAnalyzer
-from loggers.custom_logger import logger
-from db_managers.db_manager import DBManager
-import csv
-from io import StringIO
 import torch
 torch.set_num_threads(1)
 os.environ["OMP_NUM_THREADS"] = "1"
@@ -48,12 +58,14 @@ try:
         ALLOWED_EXTENSIONS = set(config['upload']['allowed_extensions'])
         MAX_CONTENT_LENGTH = config['upload']['max_content_length']
         DB_CONFIG = {
-            "host": config['database']['host'],
-            "user": config['database']['user'],
-            "password": os.getenv('DB_PASSWORD'),
-            "database": config['database']['name'],
-            "port": config['database']['port']
-        }
+        "host": os.getenv("MYSQL_HOST"),
+        "port": int(os.getenv("MYSQL_PORT", 3306)),
+        "user": os.getenv("MYSQL_USER"),
+        "password": os.getenv("MYSQL_PASSWORD"),
+        "database": os.getenv("MYSQL_DB"),
+        "ssl_ca": os.getenv("DB_SSL_CA")  # Only this is needed to enforce SSL
+    }
+
 except FileNotFoundError:
     raise Exception("Configuration file not found at: " + CONFIG_PATH)
 except KeyError as e:
