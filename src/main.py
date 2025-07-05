@@ -62,7 +62,7 @@ except KeyError as e:
 # Initialize Flask app
 app = Flask(__name__)
 app.secret_key = os.getenv("APP_SECRET_KEY")
-app.config['UPLOAD_FOLDER'] = os.path.join(BASE_URL, 'uploads')
+app.config['UPLOAD_FOLDER'] = "https://dagshub.com/api/v1/repo-buckets/s3/DATUMBRIGHT"
 app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
 app.permanent_session_lifetime = 3600
 app.config['SESSION_COOKIE_SECURE'] = True  # Only send over HTTPS
